@@ -24,6 +24,8 @@ auf, dardurch wird dein Spiel neugestartet.
 
 Wärend du an deinem Spiel arbeitest, arbeite ich am Drumherum.
 So dass es dann alles auch supi aussieht!
+
+NEW COMMENT
 */
 
 JackDanger.AgentJackIEC = function() {
