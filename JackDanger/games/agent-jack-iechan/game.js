@@ -108,34 +108,6 @@ JackDanger.AgentJackIEC.prototype.availableLevels = {
 	Boss: 1
 };
 
-JackDanger.AgentJackIEC.prototype.getFrames = function (from, to, prefix) {
-	if (from > to)
-		return [];
-	
-	var frames = [];
-	var toListIndex = function (i) {
-		i = parseInt(i);
-		
-		if (i < 10)
-			return "000" + i;
-		else if (i < 100)
-			return "00" + i;
-		else if (i < 1000)
-			return "0" + i;
-		else if (i < 10000)
-			return i;
-	};
-	
-	for (var i = from; i <= to; i++) {
-		if (prefix === undefined)
-			frames.push(parseInt(i));
-		else
-			frames.push(prefix + toListIndex(i));
-	}
-	
-	return frames;
-};
-
 /////////////////
 // _MAZE Level //
 /////////////////
@@ -156,8 +128,8 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.initLevel = function () {
 	this.jack.scale.setTo(this.main.globalScale);
 	this.jack.anchor.setTo(0.5, 0.5);
 	
-	this.jack.animations.add("run_left_right", Phaser.Animation.generateFrameNames('run-lr-', 0, 16, '', 4), 25, true, false);
-	this.jack.animations.add("idle_anim", Phaser.Animation.generateFrameNames('idle', 0, 0, '', 4), 1, true, false);
+	this.jack.animations.add("run_lr", Phaser.Animation.generateFrameNames('run-lr-', 0, 16, '', 4), 25, true, false);
+	this.jack.animations.add("run_lr_idle", Phaser.Animation.generateFrameNames('idle', 0, 0, '', 4), 1, true, false);
 		
 	this.background = this.main.add.sprite(this.main.world.centerX, this.main.world.centerY, 'bg');
 	this.background.scale.setTo(5, 5);
@@ -201,7 +173,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.updateJackAnimation = function 
 	if (this.jack.body.velocity.y === 0 && this.jack.body.velocity.x === 0) {
 		this.jack.animations.play("idle_anim");
 	} else {
-		this.jack.animations.play("run_left_right");
+		this.jack.animations.play("run_lr");
 	}
 };
 
