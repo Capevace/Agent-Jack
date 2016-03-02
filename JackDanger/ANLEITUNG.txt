@@ -1,0 +1,64 @@
+Hallo!
+Herzlichwillkommen zu Achten Game++ Community Challenge!
+
+Dies ist ein ganz besonderes Projekt, wenn nun arbeiten
+viele Leute an einem Projekt. Und damit alles möglichst 
+reibungsfrei abläuft musst du ein paar Regeln einhalten.
+
+Du siehst folgende Ordner:
+assets
+games
+js
+
+Du darfst im assets und im js ordner NICHTS verändern.
+ansehen darfst du dir die natürlich!
+
+dein spiel packst du bitte da hin:
+games/mygame/blabla
+
+Du kannst im Grunde den mygame ordner umbenennen zu deinem
+titel. Am Ende landen alle diese Ordner nämlich zusammen
+und da dürfen dann nicht 10 mygame ordner vorhanden sein^^
+
+innerhalb des mygame ordners findest du die game.js.
+
+darin wirst du dein Spiel entwickeln.
+bitte schribe deinen gesamten Code in diese Datei!
+
+Falls du echt viel Code schreibst, kannst du, wärend
+du entwickelst natürlich alles in verschiedenen Dateien
+verteilen. Wenn du dein Spiel aber zu mir schickst,
+dann möchte ich, dass es nur eine .js gibt!
+
+Schicke deinen gezipten Ordner an lets-gamedev@gmx.de
+
+Innerhalb der game.js sind noch einige Anweisungen wie
+du mit der Datei umgehen musst.
+
+Dieses Framework wird sich sicher in den nächsten
+Wochen ändern, also besser werden. Weil ich sicher
+nicht an alles gedacht habe.
+
+Wenn es eine neue Version dieses Frameworks gibt sage
+ich dir bescheid:
+Twitter: @letsgamedev
+Facebook: https://www.facebook.com/LetsGameDev/
+Oder in den Livestreams auf YouTube
+
+Viel Spaß
+Tom
+
+PS:
+
+Hier kurz mal wie du mit der GamePad Klasse umzugehen hast.
+In der game.js hast du ein paar beispiele für die Richtungs
+tasten. Insgesamt gibt es:
+UP
+DOWN
+LEFT
+RIGHT
+JUMP
+SHOOT
+
+Das heißt natürlich nicht, dass du bei JUMP auch springen musst^^
+Die heißen einfach so.
