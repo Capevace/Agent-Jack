@@ -45,12 +45,9 @@ JackDanger.AgentJackIEC.prototype.preload = function() {
 	this.load.path = 'games/' + currentGameData.id + '/assets/';//nicht anfassen
 	
     //füge hie rein was du alles laden musst.
-    this.load.atlas("mygame");
-	this.load.image('player','../assetsraw/face.png');
 	this.load.image('bg','../assetsraw/ball.png');
 	
-//	this.load.spritesheet('jack_run', 'jack/jack_run.png', 14, 20);
-	this.load.atlasJSONHash('jack_run', 'jack/jack_run.png', 'jack/jack_run.json');
+	this.load.atlas('jack_run'); // Jack Running
 }
 
 //wird nach dem laden gestartet
@@ -108,6 +105,13 @@ JackDanger.AgentJackIEC.prototype.availableLevels = {
 	Boss: 1
 };
 
+JackDanger.AgentJackIEC.prototype.possibleDirections = {
+	UP: 0,
+	DOWN: 1,
+	LEFT: 2,
+	RIGHT: 3
+};
+
 /////////////////
 // _MAZE Level //
 /////////////////
@@ -124,13 +128,19 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.initLevel = function () {
 	this.main.physics.startSystem(Phaser.Physics.ARCADE);
 	
 	this.jack = this.main.add.sprite(this.main.world.centerX, this.main.world.centerY, 'jack_run');
+	this.jack.lastDirection = this.main.possibleDirections.RIGHT;
 	this.jack.frame = 0;
 	this.jack.scale.setTo(this.main.globalScale);
 	this.jack.anchor.setTo(0.5, 0.5);
 	
-	this.jack.animations.add("run_lr", Phaser.Animation.generateFrameNames('run-lr-', 0, 16, '', 4), 25, true, false);
-	this.jack.animations.add("run_lr_idle", Phaser.Animation.generateFrameNames('idle', 0, 0, '', 4), 1, true, false);
-		
+	// Jack Animation Run Left-Right
+	this.jack.animations.add("run-lr-idle", Phaser.Animation.generateFrameNames('run-lr-idle-', 0, 0, '', 4), 1, true, false);
+	this.jack.animations.add("run-lr", Phaser.Animation.generateFrameNames('run-lr-', 0, 16, '', 4), 25, true, false);
+	
+	// Jack Animation Run Up
+	this.jack.animations.add("run-up-idle", Phaser.Animation.generateFrameNames('run-up-idle-', 0, 0, '', 4), 1, true, false);
+	this.jack.animations.add("run-up", Phaser.Animation.generateFrameNames('run-up-', 0, 16, '', 4), 25, true, false);
+			
 	this.background = this.main.add.sprite(this.main.world.centerX, this.main.world.centerY, 'bg');
 	this.background.scale.setTo(5, 5);
 	
@@ -157,7 +167,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.updatePlayerControls = function
 		this.jack.body.velocity.x = 200;
 	}
 	
-	if (Pad.isDown(Pad.UP)) {
+	else if (Pad.isDown(Pad.UP)) {
 		this.jack.body.velocity.y = -200;
 	} else if (Pad.isDown(Pad.DOWN)) {
 		this.jack.body.velocity.y = 200;
@@ -167,13 +177,25 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.updatePlayerControls = function
 		this.jack.scale.x *= -1;
 	else if (this.jack.body.velocity.x < 0 && this.jack.scale.x > 0)
 		this.jack.scale.x *= -1;
+	
+	if ((this.jack.lastDirection == this.possibleDirections.UP || this.jack.lastDirection == this.possibleDirections.DOWN) && this.jack.scale.x < 0)
+		this.jack.scale.x *= -1;
+		
 };
 
 JackDanger.AgentJackIEC.prototype.Maze.prototype.updateJackAnimation = function (dt) {
 	if (this.jack.body.velocity.y === 0 && this.jack.body.velocity.x === 0) {
-		this.jack.animations.play("idle_anim");
+		this.jack.animations.play("run-lr-idle");
 	} else {
-		this.jack.animations.play("run_lr");
+		if (this.jack.lastDirection == this.possibleDirections.LEFT) {
+			this.jack.animations.play("run-lr");
+		} else if (this.jack.lastDirection == this.possibleDirections.RIGHT) {
+			this.jack.animations.play("run-lr");
+		} else if (this.jack.lastDirection == this.possibleDirections.UP) {
+			this.jack.animations.play("run-lr");
+		} else if (this.jack.lastDirection == this.possibleDirections.DOWN) {
+			
+		}
 	}
 };
 

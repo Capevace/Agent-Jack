@@ -136,7 +136,7 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":14,"h":20},
 	"sourceSize": {"w":14,"h":20}
 },
-"run-lr-idle":
+"run-lr-idle-0000":
 {
 	"frame": {"x":112,"y":20,"w":14,"h":20},
 	"rotated": false,
@@ -288,7 +288,7 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":14,"h":20},
 	"sourceSize": {"w":14,"h":20}
 },
-"run-up-idle":
+"run-up-idle-0000":
 {
 	"frame": {"x":0,"y":80,"w":13,"h":20},
 	"rotated": false,
@@ -303,6 +303,6 @@
 	"format": "RGBA8888",
 	"size": {"w":128,"h":128},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:863b2d6bfb7f0e963e8dce9084f13e3a:728244a6fd30c7aa7b8c648e35793ad3:14c3f6a9e91b4fe4c6f9062a34a0c4e0$"
+	"smartupdate": "$TexturePacker:SmartUpdate:779732b385b08a3b29280634ef8fc428:728244a6fd30c7aa7b8c648e35793ad3:14c3f6a9e91b4fe4c6f9062a34a0c4e0$"
 }
 }
