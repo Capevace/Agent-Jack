@@ -523,10 +523,10 @@
 "meta": {
 	"app": "http://www.codeandweb.com/texturepacker",
 	"version": "1.0",
-	"image": "jack-run.png",
+	"image": "jack_run.png",
 	"format": "RGBA8888",
 	"size": {"w":256,"h":256},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:43931b1fbfd4c7fa36fe6b5f7d581aba:4d5f8ff053f6ca698fb1110dc2bcb511:b1b531f5652b3860180c48c87dfc4e50$"
+	"smartupdate": "$TexturePacker:SmartUpdate:92f58dd7cf6a6342c31d2785975f7f14:4d5f8ff053f6ca698fb1110dc2bcb511:14c3f6a9e91b4fe4c6f9062a34a0c4e0$"
 }
 }

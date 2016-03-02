@@ -46,7 +46,7 @@ JackDanger.AgentJackIEC.prototype.preload = function() {
 
 	//füge hie rein was du alles laden musst.
 	this.load.image('bg','../assetsraw/ball.png');
-	this.load.image("maze-bg", "maze_bg.png");
+	this.load.image("maze-bg", "maze-bg.png");
 
 	this.load.atlas('jack-run'); // Jack Running
 }
@@ -131,8 +131,13 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.initLevel = function () {
 	this.main.physics.startSystem(Phaser.Physics.ARCADE);
 	
 	// World Background
-	this.background = this.main.add.sprite(this.main.world.centerX, this.main.world.centerY, 'bg');
-	this.background.scale.setTo(5, 5);
+	this.background = this.main.add.sprite(this.main.world.centerX, this.main.world.centerY, "maze-bg");
+	this.background.anchor.setTo(0.5, 0.5);
+	this.background.scale.setTo(this.main.globalScale);
+	
+	// Debug Ball
+//	this.ball = this.main.add.sprite(this.main.world.centerX, this.main.world.centerY, 'bg');
+//	this.ball.scale.setTo(5, 5);
 
 	// Setup Jack
 	this.jack = this.main.add.sprite(this.main.world.centerX, this.main.world.centerY, 'jack-run'); // Setup Sprite
@@ -150,10 +155,16 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.initLevel = function () {
 
 	// Jack Animation Run Up
 	this.jack.animations.add("run-up-idle", Phaser.Animation.generateFrameNames('run-up-idle-', 0, 0, '', 4), 1, true, false);
-	this.jack.animations.add("run-up", Phaser.Animation.generateFrameNames('run-up-', 0, 16, '', 4), 30, true, false);
+	this.jack.animations.add("run-up", Phaser.Animation.generateFrameNames('run-up-', 0, 17, '', 4), 30, true, false);
+	
+	// Jack Animation Run Down
+	this.jack.animations.add("run-down-idle", Phaser.Animation.generateFrameNames('run-down-idle-', 0, 0, '', 4), 1, true, false);
+	this.jack.animations.add("run-down", Phaser.Animation.generateFrameNames('run-down-', 0, 17, '', 4), 30, true, false);
+	
+	console.log(Phaser.Animation.generateFrameNames('run-down-', 0, 17, '', 4));
 
 	// Set Camera to follow player
-	this.main.camera.follow(this.jack);
+	this.main.camera.follow(this.jack, Phaser.Camera.FOLLOW_TOPDOWN_TIGHT);
 };
 
 JackDanger.AgentJackIEC.prototype.Maze.prototype.update = function (dt) {
@@ -203,7 +214,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.updateJackAnimation = function 
 		} else if (this.jack.lastDirection == this.possibleDirections.UP) {
 			this.jack.animations.play("run-up-idle");
 		} else if (this.jack.lastDirection == this.possibleDirections.DOWN) {
-			this.jack.animations.play("run-lr-idle");
+			this.jack.animations.play("run-down-idle");
 		}
 	} else {
 		// Walking animations for corresponding direcitons
@@ -215,7 +226,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.updateJackAnimation = function 
 		} else if (this.jack.lastDirection == this.possibleDirections.UP) {
 			this.jack.animations.play("run-up");
 		} else if (this.jack.lastDirection == this.possibleDirections.DOWN) {
-//			this.jack.animations.play("run-down");
+			this.jack.animations.play("run-down");
 		}
 	}
 };

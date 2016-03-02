@@ -6,7 +6,7 @@
         <key>texturePackerVersion</key>
         <string>4.0.2</string>
         <key>fileName</key>
-        <string>/Applications/MAMP/htdocs/Game Extra Assets/Settings.tps</string>
+        <string>/Users/Lukas/Documents/Games/Agent-Jack-ieChan/Game Extra Assets/Settings.tps</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -104,7 +104,7 @@
         <key>algorithmSettings</key>
         <struct type="AlgorithmSettings">
             <key>algorithm</key>
-            <enum type="AlgorithmSettings::AlgorithmId">MaxRects</enum>
+            <enum type="AlgorithmSettings::AlgorithmId">Basic</enum>
             <key>freeSizeMode</key>
             <enum type="AlgorithmSettings::AlgorithmFreeSizeMode">Best</enum>
             <key>sizeConstraints</key>
@@ -121,7 +121,7 @@
             <key>basic</key>
             <struct type="AlgorithmBasicSettings">
                 <key>sortBy</key>
-                <enum type="AlgorithmBasicSettings::SortBy">Best</enum>
+                <enum type="AlgorithmBasicSettings::SortBy">Name</enum>
                 <key>order</key>
                 <enum type="AlgorithmBasicSettings::Order">Ascending</enum>
             </struct>
@@ -147,7 +147,7 @@
             <key>data</key>
             <struct type="DataFile">
                 <key>name</key>
-                <filename>../JackDanger/games/agent-jack-iechan/assets/jack/jack_run.json</filename>
+                <filename>../JackDanger/games/agent-jack-iechan/assets/jack-run.json</filename>
             </struct>
         </map>
         <key>multiPack</key>
@@ -192,8 +192,71 @@
         </struct>
         <key>fileList</key>
         <array>
-            <filename>Jack/idle.png</filename>
-            <filename>Jack/run-lr</filename>
+            <filename>Jack/punch-lr-0000.png</filename>
+            <filename>Jack/punch-lr-0001.png</filename>
+            <filename>Jack/punch-lr-0002.png</filename>
+            <filename>Jack/punch-lr-0003.png</filename>
+            <filename>Jack/punch-lr-0004.png</filename>
+            <filename>Jack/punch-lr-0005.png</filename>
+            <filename>Jack/punch-lr-0006.png</filename>
+            <filename>Jack/punch-lr-0007.png</filename>
+            <filename>Jack/punch-lr-0008.png</filename>
+            <filename>Jack/run-down-0000.png</filename>
+            <filename>Jack/run-down-0001.png</filename>
+            <filename>Jack/run-down-0002.png</filename>
+            <filename>Jack/run-down-0003.png</filename>
+            <filename>Jack/run-down-0004.png</filename>
+            <filename>Jack/run-down-0005.png</filename>
+            <filename>Jack/run-down-0006.png</filename>
+            <filename>Jack/run-down-0007.png</filename>
+            <filename>Jack/run-down-0008.png</filename>
+            <filename>Jack/run-down-0009.png</filename>
+            <filename>Jack/run-down-0010.png</filename>
+            <filename>Jack/run-down-0011.png</filename>
+            <filename>Jack/run-down-0012.png</filename>
+            <filename>Jack/run-down-0013.png</filename>
+            <filename>Jack/run-down-0014.png</filename>
+            <filename>Jack/run-down-0015.png</filename>
+            <filename>Jack/run-down-0016.png</filename>
+            <filename>Jack/run-down-0017.png</filename>
+            <filename>Jack/run-down-idle-0000.png</filename>
+            <filename>Jack/run-lr-0000.png</filename>
+            <filename>Jack/run-lr-0001.png</filename>
+            <filename>Jack/run-lr-0002.png</filename>
+            <filename>Jack/run-lr-0003.png</filename>
+            <filename>Jack/run-lr-0004.png</filename>
+            <filename>Jack/run-lr-0005.png</filename>
+            <filename>Jack/run-lr-0006.png</filename>
+            <filename>Jack/run-lr-0007.png</filename>
+            <filename>Jack/run-lr-0008.png</filename>
+            <filename>Jack/run-lr-0009.png</filename>
+            <filename>Jack/run-lr-0010.png</filename>
+            <filename>Jack/run-lr-0011.png</filename>
+            <filename>Jack/run-lr-0012.png</filename>
+            <filename>Jack/run-lr-0013.png</filename>
+            <filename>Jack/run-lr-0014.png</filename>
+            <filename>Jack/run-lr-0015.png</filename>
+            <filename>Jack/run-lr-0016.png</filename>
+            <filename>Jack/run-lr-idle-0000.png</filename>
+            <filename>Jack/run-up-0000.png</filename>
+            <filename>Jack/run-up-0001.png</filename>
+            <filename>Jack/run-up-0002.png</filename>
+            <filename>Jack/run-up-0003.png</filename>
+            <filename>Jack/run-up-0004.png</filename>
+            <filename>Jack/run-up-0005.png</filename>
+            <filename>Jack/run-up-0006.png</filename>
+            <filename>Jack/run-up-0007.png</filename>
+            <filename>Jack/run-up-0008.png</filename>
+            <filename>Jack/run-up-0009.png</filename>
+            <filename>Jack/run-up-0010.png</filename>
+            <filename>Jack/run-up-0011.png</filename>
+            <filename>Jack/run-up-0012.png</filename>
+            <filename>Jack/run-up-0013.png</filename>
+            <filename>Jack/run-up-0014.png</filename>
+            <filename>Jack/run-up-0015.png</filename>
+            <filename>Jack/run-up-0016.png</filename>
+            <filename>Jack/run-up-0017.png</filename>
+            <filename>Jack/run-up-idle-0000.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>
