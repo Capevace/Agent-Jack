@@ -31,7 +31,7 @@ JackDanger.Preloader.prototype = {
         game.load.bitmapFont("testfont");
         //this.load.image("tiles");
        //this.load.image("items");
-       // this.load.atlas("atlas");
+        this.load.atlas("mygame");
 
     }
 };

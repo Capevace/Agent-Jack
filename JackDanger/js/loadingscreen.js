@@ -1,5 +1,5 @@
 JackDanger.LoadingScreen = function(){
-	this.jack = game.add.sprite(400, 200, "atlas", "face");
+	this.jack = game.add.sprite(400, 200, "mygame", "face");
 }
 
 

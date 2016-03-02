@@ -1,0 +1,20 @@
+{
+"frames": {
+	"ball": {
+		"frame": {"x":0, "y":0, "w":121, "h":121},
+		"spriteSourceSize": {"x":0,"y":0,"w":121,"h":121},
+		"sourceSize": {"w":121,"h":121}
+	},
+	"face": {
+		"frame": {"x":0, "y":122, "w":71, "h":71},
+		"spriteSourceSize": {"x":0,"y":0,"w":71,"h":71},
+		"sourceSize": {"w":71,"h":71}
+	}
+
+},
+"meta": {
+	"image": "mygame.png",
+	"size": {"w": 122, "h": 194},
+	"scale": "1"
+}
+}
