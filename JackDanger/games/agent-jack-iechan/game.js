@@ -57,7 +57,7 @@ JackDanger.AgentJackIEC.prototype.create = function() {
 	removeLoadingScreen();//nicht anfassen
 
 	this.initAJIEC();
-	
+
 }
 
 //wird jeden Frame aufgerufen
@@ -102,6 +102,53 @@ JackDanger.AgentJackIEC.prototype.loadLevel = function (level) {
 	}
 }
 
+// Raycasting disabled for now
+//JackDanger.AgentJackIEC.prototype.raycasting = {
+//	doRay: function (start, direction, bodies, distance, self) {
+//		distance = distance || 99999;
+//		direction = direction.normalize();
+//
+//		var ray = direction.multiply(distance, distance);
+//		var endPoint = start;
+//		endPoint.add(direction.x, direction.y);
+//
+//		console.log(start);
+//		console.log(ray);
+//		console.log(endPoint);
+//
+//		var behindCaster = endPoint.x < start.x;
+//		var underCaster = endPoint.y < start.y;
+//		for (var bodyIndex = 0; bodyIndex < bodies.length; bodyIndex++) {
+//			var body = bodies[bodyIndex];
+//			var bodyIsIn = (function (body, underCaster, behindCaster, start, endPoint) {
+//				// Make range
+//				var lowerPointX = (behindCaster) ? endPoint.x : start.x;
+//				var higherPointX = (behindCaster) ? start.x : endPoint.x;
+//				var lowerPointY = (underCaster) ? endPoint.y : start.y;
+//				var higherPointY = (underCaster) ? start.y : endPoint.y;
+//				
+//				// if is in X range
+//				if (body.center.x > lowerPointX && body.center.x < higherPointX) {
+//					// if is in Y range => in full range
+//					if (body.center.y > lowerPointY && body.center.y < higherPointY) {
+//						var leftTopCorner = body.center;
+//						var rightTopCorner = body.center;
+//						var leftBottomCorner = body.center;
+//						var rightBottomCorner = body.center;
+//						
+//						leftTopCorner.add(-body.halfWidth, body.halfHeight);
+//						rightTopCorner.add(body.halfWidth, body.halfHeight);
+//						leftBottomCorner.add(-body.halfWidth, -body.halfHeight);
+//						rightBottomCorner.add(body.halfWidth, -body.halfHeight);
+//						
+//						var isOnRay
+//					}
+//				}
+//			})(body, underCaster, behindCaster, start, endPoint);
+//		}
+//	}
+//};
+
 JackDanger.AgentJackIEC.prototype.availableLevels = {
 	Maze: 0,
 	Boss: 1
@@ -136,6 +183,9 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.initLevel = function () {
 	this.background.anchor.setTo(0.5, 0.5);
 	this.background.scale.setTo(this.main.globalScale);
 
+	// Hittable Enemies
+	this.enemies = [];
+
 	// Debug Ball
 	//	this.ball = this.main.add.sprite(this.main.world.centerX, this.main.world.centerY, 'bg');
 	//	this.ball.scale.setTo(5, 5);
@@ -143,9 +193,9 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.initLevel = function () {
 	// Setup Jack
 	this.jack = this.main.add.sprite(this.main.world.centerX, this.main.world.centerY, 'jack'); // Setup Sprite
 	this.main.physics.arcade.enable(this.jack); // Enable physics
-	this.jack.walkSpeed = 175; // Set Walk Speed
+	this.jack.walkSpeed = 150; // Set Walk Speed
 	this.jack.hitSpeed = 50;
-	this.jack.fullSpeed = 175;
+	this.jack.fullSpeed = 150;
 	this.jack.lastDirection = this.possibleDirections.RIGHT; // Declare last Direction
 	this.jack.scale.setTo(this.main.globalScale); // Set Scale to global scale
 	this.jack.anchor.setTo(0.5, 0.5); // Set Anchor to center
@@ -154,24 +204,53 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.initLevel = function () {
 	this.jack.lockMovement = false;
 	this.jack.lockActions = false;
 	this.jack.isHitting = false;
-	
-	this.jack.onHit = function (game) {
-		this.walkAnimationBlocked = true;
-		this.lockActions = true;
-		this.isHitting = true;
-		this.walkSpeed = this.hitSpeed;
-		
-		if (this.lastDirection == game.possibleDirections.LEFT || this.lastDirection == game.possibleDirections.RIGHT) {
+	this.jack.xHittingDistance = {primary: 47.16, secondary: 14.5};
+	this.jack.yHittingDistance = {primary: 37.0, secondary: 17.16};
+
+	this.jack.onHit = function (main) {
+		this.walkAnimationBlocked = true; // Lock walk animation, so punch animation can be shown
+		this.lockActions = true; // Disable anymore punches while one punch is happening
+		this.isHitting = true; // Set hitting to true
+		this.walkSpeed = this.hitSpeed; // Slow down player
+
+		// Select and play punch animation for current direction
+		if (this.lastDirection == main.possibleDirections.LEFT || this.lastDirection == main.possibleDirections.RIGHT) {
 			this.animations.play("punch-lr");
-		} else if (this.lastDirection == game.possibleDirections.UP) {
+		} else if (this.lastDirection == main.possibleDirections.UP) {
 			this.animations.play("punch-up");			
-		} else if (this.lastDirection == game.possibleDirections.DOWN) {
+		} else if (this.lastDirection == main.possibleDirections.DOWN) {
 			this.animations.play("punch-lr");			
 		}
-		
+
+		// Add animation complete handler => hit complete
 		this.animations.currentAnim.onComplete.add(this.onHitComplete, this);
-	};
-	
+
+		// Look through enemies if any are punchable
+		main.enemies.forEach(function (enemy, index, enemies) {
+			var distanceX = Math.abs(enemy.body.center.x - main.jack.body.center.x);
+			var distanceY = Math.abs(enemy.body.center.y - main.jack.body.center.y);
+			var totalDistance = Math.sqrt(distanceX*distanceX + distanceY*distanceY);
+			
+			if (totalDistance > main.jack.xHittingDistance.primary && totalDistance > main.jack.yHittingDistance.primary)
+				return;
+			
+			if (main.jack.lastDirection == main.possibleDirections.LEFT || main.jack.lastDirection == main.possibleDirections.RIGHT) {
+				if (distanceX <= main.jack.xHittingDistance.primary && distanceY <= main.jack.xHittingDistance.secondary) {
+					// Can be hit
+					if (enemy.onJackHit != undefined)
+						enemy.onJackHit();
+				}
+			} else { 
+				if (distanceY <= main.jack.yHittingDistance.primary && distanceX <= main.jack.yHittingDistance.secondary) {
+					// Can be hit
+					if (enemy.onJackHit != undefined)
+						enemy.onJackHit();
+				}
+			}
+
+		});
+	}
+
 	this.jack.onHitComplete = function () {
 		this.walkAnimationBlocked = false;
 		this.lockActions = false;
@@ -182,21 +261,34 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.initLevel = function () {
 	// Jack Animations
 	// Jack Animation Run Left-Right
 	this.jack.animations.add("run-lr-idle", Phaser.Animation.generateFrameNames('run-lr-idle-', 0, 0, '', 4), 1, true, false);
-	this.jack.animations.add("run-lr", Phaser.Animation.generateFrameNames('run-lr-', 0, 16, '', 4), 30, true, false);
+	this.jack.animations.add("run-lr", Phaser.Animation.generateFrameNames('run-lr-', 0, 16, '', 4), 40, true, false);
 
 	// Jack Animation Run Up
 	this.jack.animations.add("run-up-idle", Phaser.Animation.generateFrameNames('run-up-idle-', 0, 0, '', 4), 1, true, false);
-	this.jack.animations.add("run-up", Phaser.Animation.generateFrameNames('run-up-', 0, 17, '', 4), 30, true, false);
+	this.jack.animations.add("run-up", Phaser.Animation.generateFrameNames('run-up-', 0, 17, '', 4), 40, true, false);
 
 	// Jack Animation Run Down
 	this.jack.animations.add("run-down-idle", Phaser.Animation.generateFrameNames('run-down-idle-', 0, 0, '', 4), 1, true, false);
-	this.jack.animations.add("run-down", Phaser.Animation.generateFrameNames('run-down-', 0, 17, '', 4), 30, true, false);
+	this.jack.animations.add("run-down", Phaser.Animation.generateFrameNames('run-down-', 0, 17, '', 4), 40, true, false);
 
 	this.jack.animations.add("punch-lr", Phaser.Animation.generateFrameNames('punch-lr-', 0, 5, '', 4), 20, false, false);
 	this.jack.animations.add("punch-up", Phaser.Animation.generateFrameNames('punch-up-', 0, 5, '', 4), 20, false, false);
 
+	this.enemy = this.main.add.sprite(this.main.world.centerX + 2, this.main.world.centerY + 2, 'jack', 'run-lr-idle-0000');
+	this.main.physics.arcade.enable(this.enemy);
+	this.enemy.scale.setTo(this.main.globalScale); // Set Scale to global scale
+	this.enemy.anchor.setTo(0.5, 0.5); // Set Anchor to center
+	this.enemy.body.collideWorldBounds = true;
+	this.enemy.onJackHit = function () {
+		logInfo("I'm hit! Meeediiiic!!");
+		this.kill();
+	};
+	this.enemies.push(this.enemy);
+
 	// Set Camera to follow player
 	this.main.camera.follow(this.jack, Phaser.Camera.FOLLOW_TOPDOWN_TIGHT);
+
+	//	this.main.raycasting.doRay(new Phaser.Point(0, 0), new Phaser.Point(0.75, 0.2), [], 100);
 };
 
 JackDanger.AgentJackIEC.prototype.Maze.prototype.update = function (dt) {
@@ -207,7 +299,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.update = function (dt) {
 
 JackDanger.AgentJackIEC.prototype.Maze.prototype.updatePlayerControls = function (dt) {
 	this.jack.body.velocity = {x: 0, y: 0};
-	
+
 	if (!this.jack.lockMovement) {
 		if (Pad.isDown(Pad.UP)) {
 			this.jack.body.velocity.y -= this.jack.walkSpeed;
