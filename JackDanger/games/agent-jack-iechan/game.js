@@ -49,7 +49,7 @@ JackDanger.AgentJackIEC.prototype.preload = function() {
 	this.load.image("maze-bg", "maze-bg.png");
 
 	this.load.atlas('jack'); // Jack Running
-	
+
 	this.load.audio('jack-hit', 'sounds/punch-hit.wav');
 	this.load.audio('jack-nohit', 'sounds/punch-nohit.wav');
 }
@@ -58,7 +58,7 @@ JackDanger.AgentJackIEC.prototype.preload = function() {
 JackDanger.AgentJackIEC.prototype.create = function() {
 	Pad.init();//nicht anfassen
 	removeLoadingScreen();//nicht anfassen
-	
+
 	this.initAJIEC();
 }
 
@@ -180,17 +180,12 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.initLevel = function () {
 	this.initialized = true;
 
 	// Possible Directions for Jack
-	this.possibleDirections = {
-		UP: 0,
-		DOWN: 1,
-		LEFT: 2,
-		RIGHT: 3
-	};
+
 
 	// Setup World + Physics
 	this.main.world.setBounds(0, 0, 800, 2527);
 	this.main.physics.startSystem(Phaser.Physics.ARCADE);
-	
+
 	this.backgroundLayer = this.main.add.group();
 	this.playerLayer = this.main.add.group();
 
@@ -207,16 +202,16 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.initLevel = function () {
 		},
 		remove: function (body) {
 			var index = this.bodies.indexOf(body);
-			
+
 			if (index != -1)
 				this.bodies.splice(index, 1);
 		},
-		forEach: function (callback) {
+		forEach: function (callback, jack) {
 			if (this.bodies.length == 0)
-				callback(null, -1, this.bodies);
-			
+				callback(null, -1, this.bodies, jack);
+
 			for (var i = 0; i < this.bodies.length; i++) {
-				if (callback(this.bodies[i], i, this.bodies))
+				if (callback(this.bodies[i], i, this.bodies, jack))
 					i = this.bodies.length;
 			}
 		},
@@ -228,116 +223,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.initLevel = function () {
 	//	this.ball.scale.setTo(5, 5);
 
 	// Setup Jack
-	this.jack = this.main.add.sprite(this.main.world.centerX, this.main.world.height-300, 'jack'); // Setup Sprite
-	this.playerLayer.add(this.jack);
-	this.main.physics.arcade.enable(this.jack); // Enable physics
-	this.jack.walkSpeed = 150; // Set Walk Speed
-	this.jack.hitSpeed = 50;
-	this.jack.fullSpeed = 150;
-	this.jack.lastDirection = this.possibleDirections.RIGHT; // Declare last Direction
-	this.jack.scale.setTo(this.main.globalScale); // Set Scale to global scale
-	this.jack.anchor.setTo(0.5, 0.5); // Set Anchor to center
-	this.jack.body.collideWorldBounds = true; // Enable collision with world bounds
-	this.jack.shooting = false;
-	this.jack.lockMovement = false;
-	this.jack.lockActions = false;
-	this.jack.isHitting = false;
-	this.jack.xHittingDistance = {primary: 50, secondary: 50};
-	this.jack.yHittingDistance = {primary: 50, secondary: 50};
-	this.jack.sound = {
-		hit: this.main.add.audio("jack-hit"),
-		noHit: this.main.add.audio("jack-nohit")
-	};
-
-	this.jack.onHit = function (main) {
-		this.walkAnimationBlocked = true; // Lock walk animation, so punch animation can be shown
-		this.lockActions = true; // Disable anymore punches while one punch is happening
-		this.isHitting = true; // Set hitting to true
-		this.walkSpeed = this.hitSpeed; // Slow down player
-
-		// Select and play punch animation for current direction
-		if (this.lastDirection == main.possibleDirections.LEFT || this.lastDirection == main.possibleDirections.RIGHT) {
-			this.animations.play("punch-lr");
-		} else if (this.lastDirection == main.possibleDirections.UP) {
-			this.animations.play("punch-up");			
-		} else if (this.lastDirection == main.possibleDirections.DOWN) {
-			this.animations.play("punch-down");			
-		}
-
-		// Add animation complete handler => hit complete
-		this.animations.currentAnim.onComplete.add(this.onHitComplete, this);
-		
-		// Look through enemies if any are punchable
-		main.enemies.forEach(function (enemy, index, enemies) {
-			// Bodies are actually empty, play nohit
-			if (index == -1) {
-				main.jack.sound.noHit.play();
-				return;
-			}
-			
-			var distanceX = Math.abs(enemy.body.center.x - main.jack.body.center.x);
-			var distanceY = Math.abs(enemy.body.center.y - main.jack.body.center.y);
-			var totalDistance = Math.sqrt(distanceX*distanceX + distanceY*distanceY);
-			
-			if (totalDistance > main.jack.xHittingDistance.primary && totalDistance > main.jack.yHittingDistance.primary) {
-				main.jack.sound.noHit.play();
-				return;
-			}
-			
-			if (main.jack.lastDirection == main.possibleDirections.LEFT || main.jack.lastDirection == main.possibleDirections.RIGHT) {
-				if (distanceX <= main.jack.xHittingDistance.primary && distanceY <= main.jack.xHittingDistance.secondary) {
-					// Can be hit
-					main.jack.sound.hit.play();
-					
-					if (enemy.onJackHit != undefined)
-						enemy.onJackHit();
-					
-					return true;
-				} else {
-					main.jack.sound.noHit.play();
-				}
-			} else { 
-				if (distanceY <= main.jack.yHittingDistance.primary && distanceX <= main.jack.yHittingDistance.secondary) {
-					// Can be hit
-					main.jack.sound.hit.play();
-					
-					if (enemy.onJackHit != undefined)
-						enemy.onJackHit();
-					
-					return true;
-				} else {
-					main.jack.sound.noHit.play();
-				}
-			}
-			// This is en comment
-			return false;
-		});
-	}
-
-	this.jack.onHitComplete = function () {
-		this.walkAnimationBlocked = false;
-		this.lockActions = false;
-		this.isHitting = false;
-		this.walkSpeed = this.fullSpeed;
-	};
-
-	// Jack Animations
-	// Jack Animation Run Left-Right
-	this.jack.animations.add("run-lr-idle", Phaser.Animation.generateFrameNames('run-lr-idle-', 0, 0, '', 4), 1, true, false);
-	this.jack.animations.add("run-lr", Phaser.Animation.generateFrameNames('run-lr-', 0, 16, '', 4), 40, true, false);
-
-	// Jack Animation Run Up
-	this.jack.animations.add("run-up-idle", Phaser.Animation.generateFrameNames('run-up-idle-', 0, 0, '', 4), 1, true, false);
-	this.jack.animations.add("run-up", Phaser.Animation.generateFrameNames('run-up-', 0, 17, '', 4), 40, true, false);
-
-	// Jack Animation Run Down
-	this.jack.animations.add("run-down-idle", Phaser.Animation.generateFrameNames('run-down-idle-', 0, 0, '', 4), 1, true, false);
-	this.jack.animations.add("run-down", Phaser.Animation.generateFrameNames('run-down-', 0, 17, '', 4), 40, true, false);
-
-	// Jack Animation Punching
-	this.jack.animations.add("punch-lr", Phaser.Animation.generateFrameNames('punch-lr-', 0, 6, '', 4), 20, false, false);
-	this.jack.animations.add("punch-up", Phaser.Animation.generateFrameNames('punch-up-', 0, 5, '', 4), 20, false, false);
-	this.jack.animations.add("punch-down", Phaser.Animation.generateFrameNames('kick-down-', 0, 10, '', 4), 30, false, false);
+	this.jack = new this.Jack(this.main.world.centerX, this.main.world.height - 300, this.main);
 
 	this.enemy = this.main.add.sprite(this.main.world.centerX + 2, this.main.world.centerY + 2, 'jack', 'run-lr-idle-0000');
 	this.playerLayer.add(this.enemy);
@@ -355,7 +241,8 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.initLevel = function () {
 	this.enemies.push(this.enemy);
 
 	// Set Camera to follow player
-	this.main.camera.follow(this.jack, Phaser.Camera.FOLLOW_TOPDOWN_TIGHT);
+	this.main.camera.follow(this.jack.sprite, Phaser.Camera.FOLLOW_TOPDOWN_TIGHT);
+	console.log(this.main.game);
 
 	//	this.main.raycasting.doRay(new Phaser.Point(0, 0), new Phaser.Point(0.75, 0.2), [], 100);
 };
@@ -363,55 +250,55 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.initLevel = function () {
 JackDanger.AgentJackIEC.prototype.Maze.prototype.update = function (dt) {
 	//	logInfo("Update Maze");
 	this.updatePlayerControls(dt);
-	this.updateJackAnimation(dt);
+	this.jack.updateJackAnimation(dt);
+
+	this.jack.updateJackPhysics(dt);
 	this.sortDepth();
-	
-//	this.main.world.forEach(function (child, playerBottomY) {
-//		if ((child.position.y - this.jack.height * 0.5) > )
-//	}, this, true, this.jack.position.y - this.jack.height * 0.5);
+	this.debug();
 };
 
 JackDanger.AgentJackIEC.prototype.Maze.prototype.sortDepth = function () {
 	this.playerLayer.customSort(function (a, b) {
 		var aY = a.position.y + a.height/2;
 		var bY = b.position.y + b.height/2;
-		
+
 		if (aY > bY)
 			return 1;
 		else if (aY < bY)
 			return -1;
-		
+
 		return 0;
 	}, this);
 };
 
 JackDanger.AgentJackIEC.prototype.Maze.prototype.updatePlayerControls = function (dt) {
-	this.jack.body.velocity = {x: 0, y: 0};
+	console.log(this.jack);
+	this.jack.sprite.body.velocity = {x: 0, y: 0};
 
 	if (!this.jack.lockMovement) {
 		if (Pad.isDown(Pad.UP)) {
-			this.jack.body.velocity.y -= this.jack.walkSpeed;
-			this.jack.lastDirection = this.possibleDirections.UP;
+			this.jack.sprite.body.velocity.y -= this.jack.walkSpeed;
+			this.jack.lastDirection = this.jack.possibleDirections.UP;
 		} else if (Pad.isDown(Pad.DOWN)) {
-			this.jack.body.velocity.y += this.jack.walkSpeed;
-			this.jack.lastDirection = this.possibleDirections.DOWN;
+			this.jack.sprite.body.velocity.y += this.jack.walkSpeed;
+			this.jack.lastDirection = this.jack.possibleDirections.DOWN;
 		}
 
 		if (Pad.isDown(Pad.LEFT)) {
-			this.jack.body.velocity.x -= this.jack.walkSpeed;
-			this.jack.lastDirection = this.possibleDirections.LEFT;
+			this.jack.sprite.body.velocity.x -= this.jack.walkSpeed;
+			this.jack.lastDirection = this.jack.possibleDirections.LEFT;
 		} else if (Pad.isDown(Pad.RIGHT)) {
-			this.jack.body.velocity.x += this.jack.walkSpeed;
-			this.jack.lastDirection = this.possibleDirections.RIGHT;
+			this.jack.sprite.body.velocity.x += this.jack.walkSpeed;
+			this.jack.lastDirection = this.jack.possibleDirections.RIGHT;
 		}
 
-		if (this.jack.body.velocity.x > 0 && this.jack.scale.x < 0)
-			this.jack.scale.x *= -1;
-		else if (this.jack.body.velocity.x < 0 && this.jack.scale.x > 0)
-			this.jack.scale.x *= -1;
+		if (this.jack.sprite.body.velocity.x > 0 && this.jack.sprite.scale.x < 0)
+			this.jack.sprite.scale.x *= -1;
+		else if (this.jack.sprite.body.velocity.x < 0 && this.jack.sprite.scale.x > 0)
+			this.jack.sprite.scale.x *= -1;
 
-		if ((this.jack.lastDirection == this.possibleDirections.UP || this.jack.lastDirection == this.possibleDirections.DOWN) && this.jack.scale.x < 0)
-			this.jack.scale.x *= -1;
+		if ((this.jack.lastDirection == this.jack.possibleDirections.UP || this.jack.lastDirection == this.jack.possibleDirections.DOWN) && this.jack.sprite.scale.x < 0)
+			this.jack.sprite.scale.x *= -1;
 	}
 
 	if (!this.jack.lockActions) {
@@ -423,39 +310,13 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.updatePlayerControls = function
 
 		if (Pad.justDown(Pad.JUMP)) {
 			logInfo("JUMP");
-			this.jack.animations.play("run-down-idle");
+			this.jack.sprite.animations.play("run-down-idle");
 		}
 	}
 };
 
-JackDanger.AgentJackIEC.prototype.Maze.prototype.updateJackAnimation = function (dt) {	
-	if (this.jack.walkAnimationBlocked)
-		return;
-
-	if (this.jack.body.velocity.y === 0 && this.jack.body.velocity.x === 0) {
-		// Idle Animations for last directions
-		if (this.jack.lastDirection == this.possibleDirections.LEFT) {
-			this.jack.animations.play("run-lr-idle");
-		} else if (this.jack.lastDirection == this.possibleDirections.RIGHT) {
-			this.jack.animations.play("run-lr-idle");
-		} else if (this.jack.lastDirection == this.possibleDirections.UP) {
-			this.jack.animations.play("run-up-idle");
-		} else if (this.jack.lastDirection == this.possibleDirections.DOWN) {
-			this.jack.animations.play("run-down-idle");
-		}
-	} else {
-		// Walking animations for corresponding direcitons
-
-		if (this.jack.lastDirection == this.possibleDirections.LEFT) {
-			this.jack.animations.play("run-lr");
-		} else if (this.jack.lastDirection == this.possibleDirections.RIGHT) {
-			this.jack.animations.play("run-lr");
-		} else if (this.jack.lastDirection == this.possibleDirections.UP) {
-			this.jack.animations.play("run-up");
-		} else if (this.jack.lastDirection == this.possibleDirections.DOWN) {
-			this.jack.animations.play("run-down");
-		}
-	}
+JackDanger.AgentJackIEC.prototype.Maze.prototype.debug = function () {
+	//	this.main.game.debug.body(this.jack);
 };
 
 JackDanger.AgentJackIEC.prototype.Maze.prototype.disposeLevel = function () {
@@ -464,12 +325,188 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.disposeLevel = function () {
 	logInfo("Dispose Maze");
 };
 
+//////////////
+// JACK [Maze]
+//////////////
 
+JackDanger.AgentJackIEC.prototype.Maze.prototype.Jack = function (x, y, main) {
+	// Set Jack + parent (main)
+	this.sprite = main.add.sprite(x, y, 'jack'); // Setup Sprite
+	this.main = main;
+	this.main.maze.playerLayer.add(this.sprite);
+	this.main.physics.arcade.enable(this.sprite); // Enable physics
+	
+	// Scale + anchor
+	this.sprite.scale.setTo(this.main.globalScale); // Set Scale to global scale
+	this.sprite.anchor.setTo(0.5, 0.5); // Set Anchor to center
+	
+	// Physics settings
+	this.sprite.body.collideWorldBounds = true; // Enable collision with world bounds
+	
+	// Jack States
+	this.shooting = false;
+	this.lockMovement = false;
+	this.lockActions = false;
+	this.isHitting = false;
+	this.lastDirection = 0;
 
+	
+	// Jack stats
+	this.xHittingDistance = {primary: 50, secondary: 50};
+	this.yHittingDistance = {primary: 50, secondary: 50};
+	this.walkSpeed = 150;
+	this.hitSpeed = 50;
+	this.fullSpeed = 150;
+	
+	// Jack's sounds
+	this.sound = {
+		hit: this.main.add.audio("jack-hit"),
+		noHit: this.main.add.audio("jack-nohit")
+	};
 
+	
+	////
+	// Jack Animations
+	////
+	
+	// Jack Animation Run Left-Right
+	this.sprite.animations.add("run-lr-idle", Phaser.Animation.generateFrameNames('run-lr-idle-', 0, 0, '', 4), 1, true, false);
+	this.sprite.animations.add("run-lr", Phaser.Animation.generateFrameNames('run-lr-', 0, 16, '', 4), 40, true, false);
 
+	// Jack Animation Run Up
+	this.sprite.animations.add("run-up-idle", Phaser.Animation.generateFrameNames('run-up-idle-', 0, 0, '', 4), 1, true, false);
+	this.sprite.animations.add("run-up", Phaser.Animation.generateFrameNames('run-up-', 0, 17, '', 4), 40, true, false);
 
+	// Jack Animation Run Down
+	this.sprite.animations.add("run-down-idle", Phaser.Animation.generateFrameNames('run-down-idle-', 0, 0, '', 4), 1, true, false);
+	this.sprite.animations.add("run-down", Phaser.Animation.generateFrameNames('run-down-', 0, 17, '', 4), 40, true, false);
 
+	// Jack Animation Punching
+	this.sprite.animations.add("punch-lr", Phaser.Animation.generateFrameNames('punch-lr-', 0, 6, '', 4), 20, false, false);
+	this.sprite.animations.add("punch-up", Phaser.Animation.generateFrameNames('punch-up-', 0, 5, '', 4), 20, false, false);
+	this.sprite.animations.add("punch-down", Phaser.Animation.generateFrameNames('kick-down-', 0, 10, '', 4), 30, false, false);
+};
+
+JackDanger.AgentJackIEC.prototype.Maze.prototype.Jack.prototype = {
+	// Possible walking directions for jack
+	possibleDirections: {
+		LEFT: 0,
+		RIGHT: 1,
+		UP: 2,
+		DOWN: 3
+	},
+	
+	// Update for Jack's animation
+	updateJackAnimation: function (dt) {	
+		if (this.walkAnimationBlocked)
+			return;
+
+		if (this.sprite.body.velocity.y === 0 && this.sprite.body.velocity.x === 0) {
+			// Idle Animations for last directions
+			if (this.lastDirection == this.possibleDirections.LEFT) {
+				this.sprite.animations.play("run-lr-idle");
+			} else if (this.lastDirection == this.possibleDirections.RIGHT) {
+				this.sprite.animations.play("run-lr-idle");
+			} else if (this.lastDirection == this.possibleDirections.UP) {
+				this.sprite.animations.play("run-up-idle");
+			} else if (this.lastDirection == this.possibleDirections.DOWN) {
+				this.sprite.animations.play("run-down-idle");
+			}
+		} else {
+			// Walking animations for corresponding direcitons
+
+			if (this.lastDirection == this.possibleDirections.LEFT) {
+				this.sprite.animations.play("run-lr");
+			} else if (this.lastDirection == this.possibleDirections.RIGHT) {
+				this.sprite.animations.play("run-lr");
+			} else if (this.lastDirection == this.possibleDirections.UP) {
+				this.sprite.animations.play("run-up");
+			} else if (this.lastDirection == this.possibleDirections.DOWN) {
+				this.sprite.animations.play("run-down");
+			}
+		}
+	},
+	
+	// Update Physics for Jack
+	updateJackPhysics: function (dt) {
+		this.sprite.body.width = 70;
+		this.sprite.body.height = 80;
+	},
+	
+	// On Player press punch
+	onHit: function () {
+		this.walkAnimationBlocked = true; // Lock walk animation, so punch animation can be shown
+		this.lockActions = true; // Disable anymore punches while one punch is happening
+		this.isHitting = true; // Set hitting to true
+		this.walkSpeed = this.hitSpeed; // Slow down player
+
+		// Select and play punch animation for current direction
+		if (this.lastDirection == this.possibleDirections.LEFT || this.lastDirection == this.possibleDirections.RIGHT) {
+			this.sprite.animations.play("punch-lr");
+		} else if (this.lastDirection == this.possibleDirections.UP) {
+			this.sprite.animations.play("punch-up");			
+		} else if (this.lastDirection == this.possibleDirections.DOWN) {
+			this.sprite.animations.play("punch-down");			
+		}
+
+		// Add animation complete handler => hit complete
+		this.sprite.animations.currentAnim.onComplete.add(this.onHitComplete, this);
+
+		// Look through enemies if any are punchable
+		this.main.maze.enemies.forEach(function (enemy, index, enemies, jack) {
+			// Bodies are actually empty, play nohit
+			if (index == -1) {
+				jack.sound.noHit.play();
+				return;
+			}
+
+			var distanceX = Math.abs(enemy.body.center.x - jack.sprite.body.center.x);
+			var distanceY = Math.abs(enemy.body.center.y - jack.sprite.body.center.y);
+			var totalDistance = Math.sqrt(distanceX*distanceX + distanceY*distanceY);
+
+			if (totalDistance > jack.xHittingDistance.primary && totalDistance > jack.yHittingDistance.primary) {
+				jack.sound.noHit.play();
+				return;
+			}
+
+			if (jack.lastDirection == jack.possibleDirections.LEFT || jack.lastDirection == jack.possibleDirections.RIGHT) {
+				if (distanceX <= jack.xHittingDistance.primary && distanceY <= jack.xHittingDistance.secondary) {
+					// Can be hit
+					jack.sound.hit.play();
+
+					if (enemy.onJackHit != undefined)
+						enemy.onJackHit();
+
+					return true;
+				} else {
+					jack.sound.noHit.play();
+				}
+			} else { 
+				if (distanceY <= jack.yHittingDistance.primary && distanceX <= jack.yHittingDistance.secondary) {
+					// Can be hit
+					jack.sound.hit.play();
+
+					if (enemy.onJackHit != undefined)
+						enemy.onJackHit();
+
+					return true;
+				} else {
+					jack.sound.noHit.play();
+				}
+			}
+			// This is en comment
+			return false;
+		}, this);
+	},
+	
+	// On hit animation complete
+	onHitComplete: function () {
+		this.walkAnimationBlocked = false;
+		this.lockActions = false;
+		this.isHitting = false;
+		this.walkSpeed = this.fullSpeed;
+	}
+};
 
 
 
