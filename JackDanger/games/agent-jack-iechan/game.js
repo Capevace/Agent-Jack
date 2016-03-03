@@ -223,7 +223,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.initLevel = function () {
 		} else if (this.lastDirection == main.possibleDirections.UP) {
 			this.animations.play("punch-up");			
 		} else if (this.lastDirection == main.possibleDirections.DOWN) {
-			this.animations.play("punch-lr");			
+			this.animations.play("punch-down");			
 		}
 
 		// Add animation complete handler => hit complete
@@ -275,8 +275,10 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.initLevel = function () {
 	this.jack.animations.add("run-down-idle", Phaser.Animation.generateFrameNames('run-down-idle-', 0, 0, '', 4), 1, true, false);
 	this.jack.animations.add("run-down", Phaser.Animation.generateFrameNames('run-down-', 0, 17, '', 4), 40, true, false);
 
-	this.jack.animations.add("punch-lr", Phaser.Animation.generateFrameNames('punch-lr-', 0, 5, '', 4), 20, false, false);
+	// Jack Animation Punching
+	this.jack.animations.add("punch-lr", Phaser.Animation.generateFrameNames('punch-lr-', 0, 6, '', 4), 20, false, false);
 	this.jack.animations.add("punch-up", Phaser.Animation.generateFrameNames('punch-up-', 0, 5, '', 4), 20, false, false);
+	this.jack.animations.add("punch-down", Phaser.Animation.generateFrameNames('kick-down-', 0, 10, '', 4), 30, false, false);
 
 	this.enemy = this.main.add.sprite(this.main.world.centerX + 2, this.main.world.centerY + 2, 'jack', 'run-lr-idle-0000');
 	this.playerLayer.add(this.enemy);
@@ -301,7 +303,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.update = function (dt) {
 	this.updatePlayerControls(dt);
 	this.updateJackAnimation(dt);
 	this.sortDepth();
-
+	
 //	this.main.world.forEach(function (child, playerBottomY) {
 //		if ((child.position.y - this.jack.height * 0.5) > )
 //	}, this, true, this.jack.position.y - this.jack.height * 0.5);

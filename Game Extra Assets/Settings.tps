@@ -88,9 +88,9 @@
         <key>maxTextureSize</key>
         <QSize>
             <key>width</key>
-            <int>2048</int>
+            <int>1024</int>
             <key>height</key>
-            <int>2048</int>
+            <int>1024</int>
         </QSize>
         <key>fixedTextureSize</key>
         <QSize>
@@ -108,7 +108,7 @@
             <key>freeSizeMode</key>
             <enum type="AlgorithmSettings::AlgorithmFreeSizeMode">Best</enum>
             <key>sizeConstraints</key>
-            <enum type="AlgorithmSettings::SizeConstraints">POT</enum>
+            <enum type="AlgorithmSettings::SizeConstraints">AnySize</enum>
             <key>forceSquared</key>
             <true/>
             <key>forceWordAligned</key>
@@ -192,12 +192,6 @@
         </struct>
         <key>fileList</key>
         <array>
-            <filename>Jack/punch-lr-0000.png</filename>
-            <filename>Jack/punch-lr-0001.png</filename>
-            <filename>Jack/punch-lr-0002.png</filename>
-            <filename>Jack/punch-lr-0003.png</filename>
-            <filename>Jack/punch-lr-0004.png</filename>
-            <filename>Jack/punch-lr-0005.png</filename>
             <filename>Jack/run-down-0000.png</filename>
             <filename>Jack/run-down-0001.png</filename>
             <filename>Jack/run-down-0002.png</filename>
@@ -254,12 +248,6 @@
             <filename>Jack/run-up-0016.png</filename>
             <filename>Jack/run-up-0017.png</filename>
             <filename>Jack/run-up-idle-0000.png</filename>
-            <filename>Jack/punch-up-0000.png</filename>
-            <filename>Jack/punch-up-0001.png</filename>
-            <filename>Jack/punch-up-0002.png</filename>
-            <filename>Jack/punch-up-0003.png</filename>
-            <filename>Jack/punch-up-0004.png</filename>
-            <filename>Jack/punch-up-0005.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>
