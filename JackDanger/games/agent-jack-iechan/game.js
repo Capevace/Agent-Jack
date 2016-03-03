@@ -55,13 +55,8 @@ JackDanger.AgentJackIEC.prototype.preload = function() {
 JackDanger.AgentJackIEC.prototype.create = function() {
 	Pad.init();//nicht anfassen
 	removeLoadingScreen();//nicht anfassen
-<<<<<<< HEAD
 	
 	logInfo("YAY! Es geht!");
-=======
-
-	logInfo("Somehing");
->>>>>>> gh-pages
 	this.initAJIEC();
 }
 
