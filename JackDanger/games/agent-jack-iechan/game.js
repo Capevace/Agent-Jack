@@ -56,7 +56,6 @@ JackDanger.AgentJackIEC.prototype.create = function() {
 	Pad.init();//nicht anfassen
 	removeLoadingScreen();//nicht anfassen
 	
-	logInfo("YAY! Es geht!");
 	this.initAJIEC();
 }
 
@@ -282,7 +281,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.initLevel = function () {
 	this.enemy = this.main.add.sprite(this.main.world.centerX + 2, this.main.world.centerY + 2, 'jack', 'run-lr-idle-0000');
 	this.playerLayer.add(this.enemy);
 	this.main.physics.arcade.enable(this.enemy);
-	this.enemy.scale.setTo(this.main.globalScale); // Set Scale to global scale
+	this.enemy.scale.setTo(this.main.globalScale, this.main.globalScale + 1); // Set Scale to global scale
 	this.enemy.anchor.setTo(0.5, 0.5); // Set Anchor to center
 	this.enemy.body.collideWorldBounds = true;
 	this.enemy.onJackHit = function () {
@@ -301,12 +300,25 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.update = function (dt) {
 	//	logInfo("Update Maze");
 	this.updatePlayerControls(dt);
 	this.updateJackAnimation(dt);
+	this.sortDepth();
 
 //	this.main.world.forEach(function (child, playerBottomY) {
 //		if ((child.position.y - this.jack.height * 0.5) > )
 //	}, this, true, this.jack.position.y - this.jack.height * 0.5);
+};
 
-	this.playerLayer.sort("y", Phaser.Group.SORT_ASCENDING);
+JackDanger.AgentJackIEC.prototype.Maze.prototype.sortDepth = function () {
+	this.playerLayer.customSort(function (a, b) {
+		var aY = a.position.y + a.height/2;
+		var bY = b.position.y + b.height/2;
+		
+		if (aY > bY)
+			return 1;
+		else if (aY < bY)
+			return -1;
+		
+		return 0;
+	}, this);
 };
 
 JackDanger.AgentJackIEC.prototype.Maze.prototype.updatePlayerControls = function (dt) {
