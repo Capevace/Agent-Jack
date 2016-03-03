@@ -272,7 +272,6 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.sortDepth = function () {
 };
 
 JackDanger.AgentJackIEC.prototype.Maze.prototype.updatePlayerControls = function (dt) {
-	console.log(this.jack);
 	this.jack.sprite.body.velocity = {x: 0, y: 0};
 
 	if (!this.jack.lockMovement) {
