@@ -309,7 +309,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.initLevel = function () {
 					main.jack.sound.noHit.play();
 				}
 			}
-			
+			// This is en comment
 			return false;
 		});
 	}
