@@ -1,4 +1,4 @@
-# Agent-Jack-ieChan
+# Agent-Jack
 ## Game++ game
 ### Install http-server
 ```bash
