@@ -49,6 +49,9 @@ JackDanger.AgentJackIEC.prototype.preload = function() {
 	this.load.image("maze-bg", "maze-bg.png");
 
 	this.load.atlas('jack'); // Jack Running
+	
+	this.load.audio('jack-hit', 'sounds/punch-hit.wav');
+	this.load.audio('jack-nohit', 'sounds/punch-nohit.wav');
 }
 
 //wird nach dem laden gestartet
@@ -198,7 +201,27 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.initLevel = function () {
 	this.backgroundLayer.add(this.background);
 
 	// Hittable Enemies
-	this.enemies = [];
+	this.enemies = {
+		push: function (body) {
+			this.bodies.push(body);
+		},
+		remove: function (body) {
+			var index = this.bodies.indexOf(body);
+			
+			if (index != -1)
+				this.bodies.splice(index, 1);
+		},
+		forEach: function (callback) {
+			if (this.bodies.length == 0)
+				callback(null, -1, this.bodies);
+			
+			for (var i = 0; i < this.bodies.length; i++) {
+				if (callback(this.bodies[i], i, this.bodies))
+					i = this.bodies.length;
+			}
+		},
+		bodies: []
+	};
 
 	// Debug Ball
 	//	this.ball = this.main.add.sprite(this.main.world.centerX, this.main.world.centerY, 'bg');
@@ -219,8 +242,12 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.initLevel = function () {
 	this.jack.lockMovement = false;
 	this.jack.lockActions = false;
 	this.jack.isHitting = false;
-	this.jack.xHittingDistance = {primary: 47.16, secondary: 14.5};
-	this.jack.yHittingDistance = {primary: 37.0, secondary: 17.16};
+	this.jack.xHittingDistance = {primary: 50, secondary: 50};
+	this.jack.yHittingDistance = {primary: 50, secondary: 50};
+	this.jack.sound = {
+		hit: this.main.add.audio("jack-hit"),
+		noHit: this.main.add.audio("jack-nohit")
+	};
 
 	this.jack.onHit = function (main) {
 		this.walkAnimationBlocked = true; // Lock walk animation, so punch animation can be shown
@@ -239,30 +266,51 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.initLevel = function () {
 
 		// Add animation complete handler => hit complete
 		this.animations.currentAnim.onComplete.add(this.onHitComplete, this);
-
+		
 		// Look through enemies if any are punchable
 		main.enemies.forEach(function (enemy, index, enemies) {
+			// Bodies are actually empty, play nohit
+			if (index == -1) {
+				main.jack.sound.noHit.play();
+				return;
+			}
+			
 			var distanceX = Math.abs(enemy.body.center.x - main.jack.body.center.x);
 			var distanceY = Math.abs(enemy.body.center.y - main.jack.body.center.y);
 			var totalDistance = Math.sqrt(distanceX*distanceX + distanceY*distanceY);
 			
-			if (totalDistance > main.jack.xHittingDistance.primary && totalDistance > main.jack.yHittingDistance.primary)
+			if (totalDistance > main.jack.xHittingDistance.primary && totalDistance > main.jack.yHittingDistance.primary) {
+				main.jack.sound.noHit.play();
 				return;
+			}
 			
 			if (main.jack.lastDirection == main.possibleDirections.LEFT || main.jack.lastDirection == main.possibleDirections.RIGHT) {
 				if (distanceX <= main.jack.xHittingDistance.primary && distanceY <= main.jack.xHittingDistance.secondary) {
 					// Can be hit
+					main.jack.sound.hit.play();
+					
 					if (enemy.onJackHit != undefined)
 						enemy.onJackHit();
+					
+					return true;
+				} else {
+					main.jack.sound.noHit.play();
 				}
 			} else { 
 				if (distanceY <= main.jack.yHittingDistance.primary && distanceX <= main.jack.yHittingDistance.secondary) {
 					// Can be hit
+					main.jack.sound.hit.play();
+					
 					if (enemy.onJackHit != undefined)
 						enemy.onJackHit();
+					
+					return true;
+				} else {
+					main.jack.sound.noHit.play();
 				}
 			}
-
+			
+			return false;
 		});
 	}
 
@@ -299,8 +347,11 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.initLevel = function () {
 	this.enemy.body.collideWorldBounds = true;
 	this.enemy.onJackHit = function () {
 		logInfo("I'm hit! Meeediiiic!!");
+		this.body.enable = false;
 		this.kill();
+		this.enemyList.remove(this);
 	};
+	this.enemy.enemyList = this.enemies;
 	this.enemies.push(this.enemy);
 
 	// Set Camera to follow player
