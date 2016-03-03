@@ -188,7 +188,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.initLevel = function () {
 	};
 
 	// Setup World + Physics
-	this.main.world.setBounds(0, 0, 800, 1920);
+	this.main.world.setBounds(0, 0, 800, 2527);
 	this.main.physics.startSystem(Phaser.Physics.ARCADE);
 	
 	this.backgroundLayer = this.main.add.group();
@@ -197,7 +197,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.initLevel = function () {
 	// World Background
 	this.background = this.main.add.sprite(this.main.world.centerX, this.main.world.centerY, "maze-bg");
 	this.background.anchor.setTo(0.5, 0.5);
-	this.background.scale.setTo(this.main.globalScale);
+	this.background.scale.setTo(3.55);
 	this.backgroundLayer.add(this.background);
 
 	// Hittable Enemies
@@ -228,7 +228,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.initLevel = function () {
 	//	this.ball.scale.setTo(5, 5);
 
 	// Setup Jack
-	this.jack = this.main.add.sprite(this.main.world.centerX, this.main.world.centerY, 'jack'); // Setup Sprite
+	this.jack = this.main.add.sprite(this.main.world.centerX, this.main.world.height-300, 'jack'); // Setup Sprite
 	this.playerLayer.add(this.jack);
 	this.main.physics.arcade.enable(this.jack); // Enable physics
 	this.jack.walkSpeed = 150; // Set Walk Speed
