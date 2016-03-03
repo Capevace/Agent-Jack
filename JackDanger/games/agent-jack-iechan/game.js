@@ -153,6 +153,17 @@ JackDanger.AgentJackIEC.prototype.availableLevels = {
 	Boss: 1
 };
 
+
+
+
+
+
+
+
+
+
+
+
 /////////////////
 // _MAZE Level //
 /////////////////
@@ -401,6 +412,14 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.disposeLevel = function () {
 
 	logInfo("Dispose Maze");
 };
+
+
+
+
+
+
+
+
 
 
 /////////////////
