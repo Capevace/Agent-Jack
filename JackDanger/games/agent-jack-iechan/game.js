@@ -177,11 +177,15 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.initLevel = function () {
 	// Setup World + Physics
 	this.main.world.setBounds(0, 0, 800, 1920);
 	this.main.physics.startSystem(Phaser.Physics.ARCADE);
+	
+	this.backgroundLayer = this.main.add.group();
+	this.playerLayer = this.main.add.group();
 
 	// World Background
 	this.background = this.main.add.sprite(this.main.world.centerX, this.main.world.centerY, "maze-bg");
 	this.background.anchor.setTo(0.5, 0.5);
 	this.background.scale.setTo(this.main.globalScale);
+	this.backgroundLayer.add(this.background);
 
 	// Hittable Enemies
 	this.enemies = [];
@@ -192,6 +196,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.initLevel = function () {
 
 	// Setup Jack
 	this.jack = this.main.add.sprite(this.main.world.centerX, this.main.world.centerY, 'jack'); // Setup Sprite
+	this.playerLayer.add(this.jack);
 	this.main.physics.arcade.enable(this.jack); // Enable physics
 	this.jack.walkSpeed = 150; // Set Walk Speed
 	this.jack.hitSpeed = 50;
@@ -275,6 +280,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.initLevel = function () {
 	this.jack.animations.add("punch-up", Phaser.Animation.generateFrameNames('punch-up-', 0, 5, '', 4), 20, false, false);
 
 	this.enemy = this.main.add.sprite(this.main.world.centerX + 2, this.main.world.centerY + 2, 'jack', 'run-lr-idle-0000');
+	this.playerLayer.add(this.enemy);
 	this.main.physics.arcade.enable(this.enemy);
 	this.enemy.scale.setTo(this.main.globalScale); // Set Scale to global scale
 	this.enemy.anchor.setTo(0.5, 0.5); // Set Anchor to center
@@ -295,6 +301,12 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.update = function (dt) {
 	//	logInfo("Update Maze");
 	this.updatePlayerControls(dt);
 	this.updateJackAnimation(dt);
+
+//	this.main.world.forEach(function (child, playerBottomY) {
+//		if ((child.position.y - this.jack.height * 0.5) > )
+//	}, this, true, this.jack.position.y - this.jack.height * 0.5);
+
+	this.playerLayer.sort("y", Phaser.Group.SORT_ASCENDING);
 };
 
 JackDanger.AgentJackIEC.prototype.Maze.prototype.updatePlayerControls = function (dt) {
