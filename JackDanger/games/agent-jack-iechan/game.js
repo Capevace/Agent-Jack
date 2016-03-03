@@ -56,8 +56,8 @@ JackDanger.AgentJackIEC.prototype.create = function() {
 	Pad.init();//nicht anfassen
 	removeLoadingScreen();//nicht anfassen
 
+	logInfo("Somehing");
 	this.initAJIEC();
-
 }
 
 //wird jeden Frame aufgerufen
