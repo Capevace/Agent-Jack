@@ -1,79 +1,59 @@
 /*
-Hallo!
-Das hir ist deine Spielevorlage!
-Ich hoffe, ich habe alles gut genug dokumentiert.
-
-Alles was hier MyGame heißt musst du umbennen in etwas sehr
-individuelles. So wie KotzeMannGRKDM
-Die wirren Buchstaben können wichtig sein, falls jemand anderes
-auch KotzeMann entwickelt!
-
-WICHTIG
-
-Wenn dein Spiel geschafft ist, dann rufe
-
-onVictory();
-
-auf! Später wird da dann ein richtiger Gewonnenbildschrim erscheinen!
-
-Wenn man in deinem Spiel verliert dann rufe
-
-onLose()
-
-auf, dardurch wird dein Spiel neugestartet.
-
-Wärend du an deinem Spiel arbeitest, arbeite ich am Drumherum.
-So dass es dann alles auch supi aussieht!
-
-NEW COMMENT
+Game Name: Agent Jack "I. Chan" Danger
+Game type: Fighting Game
 */
 
-JackDanger.AgentJackIEC = function() {
-
-};
-
-//hier musst du deine Eintragungen vornhemen.
-addMyGame("agent-jack-iechan", "Agent Jack ieChan", "TriDev", "Packe deine moves aus und infiltriere die Basis.", JackDanger.AgentJackIEC);
 
 
+//   _____          __  __ ______ 
+//  / ____|   /\   |  \/  |  ____|
+// | |  __   /  \  | \  / | |__   
+// | | |_ | / /\ \ | |\/| |  __|  
+// | |__| |/ ____ \| |  | | |____ 
+//  \_____/_/    \_\_|  |_|______|
+// 
+JackDanger.AgentJackIEC = function() {};
+
+// Add Game to game register
+addMyGame("agent-jack-iechan", "Agent Jack \"I. Chan\" Danger", "TriDev", "Packe dicke moves aus und infiltriere die Basis.", JackDanger.AgentJackIEC);
+
+// Initialize Minigame Launching
 JackDanger.AgentJackIEC.prototype.init = function() {
-	logInfo("init Game");
-	addLoadingScreen(this);//nicht anfassen
+	// Show loading screen
+	addLoadingScreen(this);
 }
 
+// Load assets for preload
 JackDanger.AgentJackIEC.prototype.preload = function() {
 	this.load.path = 'games/' + currentGameData.id + '/assets/';//nicht anfassen
 
-	//füge hie rein was du alles laden musst.
+	// Debug Ball
 	this.load.image('bg','../assetsraw/ball.png');
+
+	// Maze Background
 	this.load.image("maze-bg", "maze-bg.png");
 
-	this.load.atlas('jack'); // Jack Running
+	// Jack (Maze) Atlas
+	this.load.atlas("jack", "jack.png", "jack.json", Phaser.Loader.TEXTURE_ATLAS_JSON_HASH); // Jack Running
 
+	// Enemy
+	this.load.atlas("enemy", "enemy.png", "enemy.json", Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
+
+	// Entities (Scenery)
+	this.load.atlas("scenery", "scenery.png", "scenery.json", Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
+
+	// Jack (Maze) Sounds
 	this.load.audio('jack-hit', 'sounds/punch-hit.wav');
 	this.load.audio('jack-nohit', 'sounds/punch-nohit.wav');
 }
 
-//wird nach dem laden gestartet
+// Executed after preload
 JackDanger.AgentJackIEC.prototype.create = function() {
-	Pad.init();//nicht anfassen
-	removeLoadingScreen();//nicht anfassen
+	// Init controls & remove loading screen
+	Pad.init();
+	removeLoadingScreen();
 
-	this.initAJIEC();
-}
-
-//wird jeden Frame aufgerufen
-JackDanger.AgentJackIEC.prototype.update = function() {
-	var dt = this.time.physicsElapsedMS * 0.001;
-
-	if (this.currentLevel == this.availableLevels.Maze) {
-		this.maze.update(dt);
-	} else if (this.currentLevel == this.availableLevels.Boss) {
-		this.boss.update(dt);
-	}
-}
-
-JackDanger.AgentJackIEC.prototype.initAJIEC = function () {
+	// Init Minigame
 	this.stage.smoothed = false;
 
 	this.currentLevel = this.availableLevels.Maze;
@@ -84,7 +64,18 @@ JackDanger.AgentJackIEC.prototype.initAJIEC = function () {
 	this.globalScale = 4;
 
 	this.loadLevel(this.availableLevels.Maze);
-};
+}
+
+// Gets executed every frame
+JackDanger.AgentJackIEC.prototype.update = function() {
+	var dt = this.time.physicsElapsedMS * 0.001;
+
+	if (this.currentLevel == this.availableLevels.Maze) {
+		this.maze.update(dt);
+	} else if (this.currentLevel == this.availableLevels.Boss) {
+		this.boss.update(dt);
+	}
+}
 
 JackDanger.AgentJackIEC.prototype.loadLevel = function (level) {
 	if (level == this.availableLevels.Maze) {
@@ -104,53 +95,6 @@ JackDanger.AgentJackIEC.prototype.loadLevel = function (level) {
 	}
 }
 
-// Raycasting disabled for now
-//JackDanger.AgentJackIEC.prototype.raycasting = {
-//	doRay: function (start, direction, bodies, distance, self) {
-//		distance = distance || 99999;
-//		direction = direction.normalize();
-//
-//		var ray = direction.multiply(distance, distance);
-//		var endPoint = start;
-//		endPoint.add(direction.x, direction.y);
-//
-//		console.log(start);
-//		console.log(ray);
-//		console.log(endPoint);
-//
-//		var behindCaster = endPoint.x < start.x;
-//		var underCaster = endPoint.y < start.y;
-//		for (var bodyIndex = 0; bodyIndex < bodies.length; bodyIndex++) {
-//			var body = bodies[bodyIndex];
-//			var bodyIsIn = (function (body, underCaster, behindCaster, start, endPoint) {
-//				// Make range
-//				var lowerPointX = (behindCaster) ? endPoint.x : start.x;
-//				var higherPointX = (behindCaster) ? start.x : endPoint.x;
-//				var lowerPointY = (underCaster) ? endPoint.y : start.y;
-//				var higherPointY = (underCaster) ? start.y : endPoint.y;
-//				
-//				// if is in X range
-//				if (body.center.x > lowerPointX && body.center.x < higherPointX) {
-//					// if is in Y range => in full range
-//					if (body.center.y > lowerPointY && body.center.y < higherPointY) {
-//						var leftTopCorner = body.center;
-//						var rightTopCorner = body.center;
-//						var leftBottomCorner = body.center;
-//						var rightBottomCorner = body.center;
-//						
-//						leftTopCorner.add(-body.halfWidth, body.halfHeight);
-//						rightTopCorner.add(body.halfWidth, body.halfHeight);
-//						leftBottomCorner.add(-body.halfWidth, -body.halfHeight);
-//						rightBottomCorner.add(body.halfWidth, -body.halfHeight);
-//						
-//						var isOnRay
-//					}
-//				}
-//			})(body, underCaster, behindCaster, start, endPoint);
-//		}
-//	}
-//};
-
 JackDanger.AgentJackIEC.prototype.availableLevels = {
 	Maze: 0,
 	Boss: 1
@@ -166,37 +110,183 @@ JackDanger.AgentJackIEC.prototype.availableLevels = {
 
 
 
-
-/////////////////
-// _MAZE Level //
-/////////////////
+//  __  __           ____________ 
+// |  \/  |   /\    |___  /  ____|
+// | \  / |  /  \      / /| |__   
+// | |\/| | / /\ \    / / |  __|  
+// | |  | |/ ____ \  / /__| |____ 
+// |_|  |_/_/    \_\/_____|______|
+//                                                          
 JackDanger.AgentJackIEC.prototype.Maze = function (parent) {
 	this.initialized = false;
 	this.main = parent;
-};
+}
 
-JackDanger.AgentJackIEC.prototype.Maze.prototype.initLevel = function () {
-	logInfo("Init Maze");
-	this.initialized = true;
+JackDanger.AgentJackIEC.prototype.Maze.prototype = {
+	initLevel: function () {
+		logInfo("Init Maze");
+		this.initialized = true;
 
-	// Possible Directions for Jack
+		// Setup World + Physics
+		this.main.world.setBounds(0, 0, 800, 2848);
+		this.main.physics.startSystem(Phaser.Physics.ARCADE);
+
+		// Setup Sprite Layers
+		this.backgroundLayer = this.main.add.group();
+		this.entityLayer = this.main.add.group();
+
+		// Setup Scene
+		this.setupScene();
+
+		// Hittable Enemies
+		this.enemies = {
+			push: function (body) {
+				this.bodies.push(body);
+			},
+			remove: function (body) {
+				var index = this.bodies.indexOf(body);
+
+				if (index != -1)
+					this.bodies.splice(index, 1);
+			},
+			forEach: function (callback, jack) {
+				if (this.bodies.length == 0)
+					callback(null, -1, this.bodies, jack);
+
+				for (var i = 0; i < this.bodies.length; i++) {
+					var body = this.bodies[i];
+					if (body.dead) {
+						// Remove object out of array
+						this.bodies.splice(i, 1);
+
+						// go back one index. for loop would skip next item otherwise
+						i--;
+						continue;
+					} else {
+						if (callback(body, i, this.bodies, jack))
+							i = this.bodies.length;
+					}
+				}
+			},
+			bodies: []
+		};
 
 
-	// Setup World + Physics
-	this.main.world.setBounds(0, 0, 800, 2527);
-	this.main.physics.startSystem(Phaser.Physics.ARCADE);
+		// Debug Ball
+		//	this.ball = this.main.add.sprite(this.main.world.centerX, this.main.world.centerY, 'bg');
+		//	this.ball.scale.setTo(5, 5);
 
-	this.backgroundLayer = this.main.add.group();
-	this.playerLayer = this.main.add.group();
+		// Setup Jack
+		this.jack = new this.Jack().init(this.main.world.centerX, this.main.world.height - 300, this.main);
 
-	// World Background
-	this.background = this.main.add.sprite(this.main.world.centerX, this.main.world.centerY, "maze-bg");
-	this.background.anchor.setTo(0.5, 0.5);
-	this.background.scale.setTo(3.55);
-	this.backgroundLayer.add(this.background);
+		//		this.enemy = this.main.add.sprite(this.main.world.centerX + 2, this.main.world.centerY + 2, 'jack', 'run-lr-idle-0000');
+		//		this.main.physics.arcade.enable(this.enemy);
+		//		this.enemy.scale.setTo(this.main.globalScale, this.main.globalScale + 1); // Set Scale to global scale
+		//		this.enemy.anchor.setTo(0.5, 0.5); // Set Anchor to center
+		//		this.enemy.body.collideWorldBounds = true;
+		//		this.enemy.onJackHit = function () {
+		//			logInfo("I'm hit! Meeediiiic!!");
+		//			this.body.enable = false;
+		//			this.kill();
+		////			this.enemyList.remove(this);
+		//		};
+		//		this.enemy.enemyList = this.enemies;
+		//		this.enemies.push(this.enemy);
+		//		this.entityLayer.add(this.enemy);
 
-	// Hittable Enemies
-	this.enemies = {
+		// 
+
+		// Set Camera to follow player
+		this.main.camera.follow(this.jack.sprite, Phaser.Camera.FOLLOW_TOPDOWN_TIGHT);
+	},
+
+
+	setupScene: function () {
+		// Set World Background
+		this.scene = {};
+
+		this.scene.background = this.main.add.sprite(this.main.world.centerX, this.main.world.height, "maze-bg");
+		this.scene.background.anchor.setTo(0.5, 1);
+		this.scene.background.scale.setTo(this.main.globalScale);
+		this.backgroundLayer.add(this.scene.background);
+
+		this.scene.gate = {
+			main: this.main,
+			opened: false,
+			moving: false
+		};
+
+		// Add Gate L
+		this.scene.gate.gateDoorL = this.main.add.sprite(0, 0, "scenery", "gate/gate-door");
+		this.main.physics.arcade.enable(this.scene.gate.gateDoorL);
+		this.scene.gate.gateDoorL.anchor.setTo(0.5, 0);
+		this.scene.gate.gateDoorL.scale.setTo(this.main.globalScale);
+		this.scene.gate.gateDoorL.position.setTo(this.main.world.centerX + 16 - this.scene.gate.gateDoorL.width/2, this.main.world.height-568 - 64);
+		this.scene.gate.gateDoorL.body.immovable = true;
+		this.scene.gate.gateDoorL.body.sourceWidth = 25;
+		this.scene.gate.gateDoorL.body.sourceHeight = 15;
+		this.entityLayer.add(this.scene.gate.gateDoorL);
+		this.collidersWithPlayer.push(this.scene.gate.gateDoorL.body);
+
+		// Add Gate L
+		this.scene.gate.gateDoorR = this.main.add.sprite(0, 0, "scenery", "gate/gate-door");
+		this.main.physics.arcade.enable(this.scene.gate.gateDoorR);
+		this.scene.gate.gateDoorR.anchor.setTo(0.5, 0);
+		this.scene.gate.gateDoorR.scale.setTo(-this.main.globalScale, this.main.globalScale);
+		this.scene.gate.gateDoorR.position.setTo(this.main.world.centerX - 16 - this.scene.gate.gateDoorR.width/2, this.main.world.height-568 - 64);
+		this.scene.gate.gateDoorR.body.immovable = true;
+		this.scene.gate.gateDoorR.body.sourceWidth = 25;
+		this.scene.gate.gateDoorR.body.sourceHeight = 15;
+		this.entityLayer.add(this.scene.gate.gateDoorR);
+		this.collidersWithPlayer.push(this.scene.gate.gateDoorR.body);
+
+		this.scene.gate.openGate = function () {
+			if (this.opened || this.moving)
+				return;
+			
+			this.moving = true;
+			var gate = this;
+			var gateL = this.gateDoorL;
+			var gateR = this.gateDoorR;
+			var closeGate = this.closeGate;
+
+			gateL.body.velocity.x = -25;
+			gateR.body.velocity.x = 25;
+
+
+			setTimeout(function () {
+				gateL.body.velocity.x = 0;
+				gateR.body.velocity.x = 0;
+				gate.opened = true;
+				gate.moving = false;
+			}, 3500);
+		};
+
+		this.scene.gate.closeGate = function () {
+			if (this.opened || this.moving)
+				return;
+			
+			this.moving = true;
+			var gateL = this.gateDoorL;
+			var gateR = this.gateDoorR;
+
+			gateL.body.velocity.x = 25;
+			gateR.body.velocity.x = -25;
+
+			setTimeout(function () {
+				gateL.body.velocity.x = 0;
+				gateR.body.velocity.x = 0;
+				gate.opened = false;
+				gate.moving = false;
+			}, 3500);
+		};
+		
+		this.main.input.keyboard.addKey(Phaser.Keyboard.L).onDown.add(this.scene.gate.openGate, this.scene.gate); 
+//		this.scene.gate.openGate();
+	},
+
+	
+	collidersWithPlayer: {
 		push: function (body) {
 			this.bodies.push(body);
 		},
@@ -206,187 +296,146 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.initLevel = function () {
 			if (index != -1)
 				this.bodies.splice(index, 1);
 		},
-		forEach: function (callback, jack) {
+		forEach: function (callback, main) {
 			if (this.bodies.length == 0)
-				callback(null, -1, this.bodies, jack);
+				callback(null, -1, this.bodies, main);
 
 			for (var i = 0; i < this.bodies.length; i++) {
-				if (callback(this.bodies[i], i, this.bodies, jack))
-					i = this.bodies.length;
+				var body = this.bodies[i];
+				if (body.dead) {
+					// Remove object out of array
+					this.bodies.splice(i, 1);
+
+					// go back one index. for loop would skip next item otherwise
+					i--;
+					continue;
+				} else {
+					if (callback(body, i, this.bodies, main))
+						i = this.bodies.length;
+				}
 			}
 		},
 		bodies: []
-	};
+	},
 
-	// Debug Ball
-	//	this.ball = this.main.add.sprite(this.main.world.centerX, this.main.world.centerY, 'bg');
-	//	this.ball.scale.setTo(5, 5);
+	
+	update: function (dt) {
+		// Update Jack
+		this.jack.update(dt);
 
-	// Setup Jack
-	this.jack = new this.Jack(this.main.world.centerX, this.main.world.height - 300, this.main);
+		// Sort depth after all other code was run
+		this.sortDepth();
+		this.debug();
+	},
 
-	this.enemy = this.main.add.sprite(this.main.world.centerX + 2, this.main.world.centerY + 2, 'jack', 'run-lr-idle-0000');
-	this.playerLayer.add(this.enemy);
-	this.main.physics.arcade.enable(this.enemy);
-	this.enemy.scale.setTo(this.main.globalScale, this.main.globalScale + 1); // Set Scale to global scale
-	this.enemy.anchor.setTo(0.5, 0.5); // Set Anchor to center
-	this.enemy.body.collideWorldBounds = true;
-	this.enemy.onJackHit = function () {
-		logInfo("I'm hit! Meeediiiic!!");
-		this.body.enable = false;
-		this.kill();
-		this.enemyList.remove(this);
-	};
-	this.enemy.enemyList = this.enemies;
-	this.enemies.push(this.enemy);
 
-	// Set Camera to follow player
-	this.main.camera.follow(this.jack.sprite, Phaser.Camera.FOLLOW_TOPDOWN_TIGHT);
-	console.log(this.main.game);
+	sortDepth: function () {
+		this.entityLayer.customSort(function (a, b) {
+			var aY = a.position.y + a.height/2;
+			var bY = b.position.y + b.height/2;
 
-	//	this.main.raycasting.doRay(new Phaser.Point(0, 0), new Phaser.Point(0.75, 0.2), [], 100);
-};
+			if (aY > bY)
+				return 1;
+			else if (aY < bY)
+				return -1;
 
-JackDanger.AgentJackIEC.prototype.Maze.prototype.update = function (dt) {
-	//	logInfo("Update Maze");
-	this.updatePlayerControls(dt);
-	this.jack.updateJackAnimation(dt);
+			return 0;
+		}, this);
+	},
 
-	this.jack.updateJackPhysics(dt);
-	this.sortDepth();
-	this.debug();
-};
 
-JackDanger.AgentJackIEC.prototype.Maze.prototype.sortDepth = function () {
-	this.playerLayer.customSort(function (a, b) {
-		var aY = a.position.y + a.height/2;
-		var bY = b.position.y + b.height/2;
+	disposeLevel: function () {
+		if (!this.initialized) return;
 
-		if (aY > bY)
-			return 1;
-		else if (aY < bY)
-			return -1;
+		logInfo("Dispose Maze");
+	},
 
-		return 0;
-	}, this);
-};
 
-JackDanger.AgentJackIEC.prototype.Maze.prototype.updatePlayerControls = function (dt) {
-	this.jack.sprite.body.velocity = {x: 0, y: 0};
-
-	if (!this.jack.lockMovement) {
-		if (Pad.isDown(Pad.UP)) {
-			this.jack.sprite.body.velocity.y -= this.jack.walkSpeed;
-			this.jack.lastDirection = this.jack.possibleDirections.UP;
-		} else if (Pad.isDown(Pad.DOWN)) {
-			this.jack.sprite.body.velocity.y += this.jack.walkSpeed;
-			this.jack.lastDirection = this.jack.possibleDirections.DOWN;
-		}
-
-		if (Pad.isDown(Pad.LEFT)) {
-			this.jack.sprite.body.velocity.x -= this.jack.walkSpeed;
-			this.jack.lastDirection = this.jack.possibleDirections.LEFT;
-		} else if (Pad.isDown(Pad.RIGHT)) {
-			this.jack.sprite.body.velocity.x += this.jack.walkSpeed;
-			this.jack.lastDirection = this.jack.possibleDirections.RIGHT;
-		}
-
-		if (this.jack.sprite.body.velocity.x > 0 && this.jack.sprite.scale.x < 0)
-			this.jack.sprite.scale.x *= -1;
-		else if (this.jack.sprite.body.velocity.x < 0 && this.jack.sprite.scale.x > 0)
-			this.jack.sprite.scale.x *= -1;
-
-		if ((this.jack.lastDirection == this.jack.possibleDirections.UP || this.jack.lastDirection == this.jack.possibleDirections.DOWN) && this.jack.sprite.scale.x < 0)
-			this.jack.sprite.scale.x *= -1;
-	}
-
-	if (!this.jack.lockActions) {
-		if (Pad.justDown(Pad.SHOOT) && !this.jack.isHitting) {
-			logInfo("SHOOT");
-
-			this.jack.onHit(this);
-		}
-
-		if (Pad.justDown(Pad.JUMP)) {
-			logInfo("JUMP");
-			this.jack.sprite.animations.play("run-down-idle");
-		}
+	debug: function () {
+		//	this.main.game.debug.body(this.jack);
 	}
 };
 
-JackDanger.AgentJackIEC.prototype.Maze.prototype.debug = function () {
-	//	this.main.game.debug.body(this.jack);
-};
 
-JackDanger.AgentJackIEC.prototype.Maze.prototype.disposeLevel = function () {
-	if (!this.initialized) return;
 
-	logInfo("Dispose Maze");
-};
 
-//////////////
-// JACK [Maze]
-//////////////
 
-JackDanger.AgentJackIEC.prototype.Maze.prototype.Jack = function (x, y, main) {
-	// Set Jack + parent (main)
-	this.sprite = main.add.sprite(x, y, 'jack'); // Setup Sprite
-	this.main = main;
-	this.main.maze.playerLayer.add(this.sprite);
-	this.main.physics.arcade.enable(this.sprite); // Enable physics
-	
-	// Scale + anchor
-	this.sprite.scale.setTo(this.main.globalScale); // Set Scale to global scale
-	this.sprite.anchor.setTo(0.5, 0.5); // Set Anchor to center
-	
-	// Physics settings
-	this.sprite.body.collideWorldBounds = true; // Enable collision with world bounds
-	
-	// Jack States
-	this.shooting = false;
-	this.lockMovement = false;
-	this.lockActions = false;
-	this.isHitting = false;
-	this.lastDirection = 0;
 
-	
-	// Jack stats
-	this.xHittingDistance = {primary: 50, secondary: 50};
-	this.yHittingDistance = {primary: 50, secondary: 50};
-	this.walkSpeed = 150;
-	this.hitSpeed = 50;
-	this.fullSpeed = 150;
-	
-	// Jack's sounds
-	this.sound = {
-		hit: this.main.add.audio("jack-hit"),
-		noHit: this.main.add.audio("jack-nohit")
-	};
 
-	
-	////
-	// Jack Animations
-	////
-	
-	// Jack Animation Run Left-Right
-	this.sprite.animations.add("run-lr-idle", Phaser.Animation.generateFrameNames('run-lr-idle-', 0, 0, '', 4), 1, true, false);
-	this.sprite.animations.add("run-lr", Phaser.Animation.generateFrameNames('run-lr-', 0, 16, '', 4), 40, true, false);
 
-	// Jack Animation Run Up
-	this.sprite.animations.add("run-up-idle", Phaser.Animation.generateFrameNames('run-up-idle-', 0, 0, '', 4), 1, true, false);
-	this.sprite.animations.add("run-up", Phaser.Animation.generateFrameNames('run-up-', 0, 17, '', 4), 40, true, false);
 
-	// Jack Animation Run Down
-	this.sprite.animations.add("run-down-idle", Phaser.Animation.generateFrameNames('run-down-idle-', 0, 0, '', 4), 1, true, false);
-	this.sprite.animations.add("run-down", Phaser.Animation.generateFrameNames('run-down-', 0, 17, '', 4), 40, true, false);
-
-	// Jack Animation Punching
-	this.sprite.animations.add("punch-lr", Phaser.Animation.generateFrameNames('punch-lr-', 0, 6, '', 4), 20, false, false);
-	this.sprite.animations.add("punch-up", Phaser.Animation.generateFrameNames('punch-up-', 0, 5, '', 4), 20, false, false);
-	this.sprite.animations.add("punch-down", Phaser.Animation.generateFrameNames('kick-down-', 0, 10, '', 4), 30, false, false);
-};
-
+//       _         _____ _  __
+//      | |  /\   / ____| |/ /
+//      | | /  \ | |    | ' / 
+//  _   | |/ /\ \| |    |  <  
+// | |__| / ____ \ |____| . \ 
+//  \____/_/    \_\_____|_|\_\
+//                                                                                    
+JackDanger.AgentJackIEC.prototype.Maze.prototype.Jack = function () {return this;}
 JackDanger.AgentJackIEC.prototype.Maze.prototype.Jack.prototype = {
+	init: function (x, y, main) {
+		// Set Jack + parent (main)
+		this.sprite = main.add.sprite(x, y, 'jack'); // Setup Sprite
+		this.main = main;
+		this.main.maze.entityLayer.add(this.sprite);
+		this.main.physics.arcade.enable(this.sprite); // Enable physics
+
+		// Scale + anchor
+		this.sprite.scale.setTo(this.main.globalScale); // Set Scale to global scale
+		this.sprite.anchor.setTo(0.5, 0.5); // Set Anchor to center
+
+		// Physics settings
+		this.sprite.body.collideWorldBounds = true; // Enable collision with world bounds
+		this.sprite.body.sourceWidth = 14;
+		this.sprite.body.sourceHeight = 20;
+
+		// Jack States
+		this.shooting = false;
+		this.lockMovement = false;
+		this.lockActions = false;
+		this.isHitting = false;
+		this.lastDirection = 0;
+
+
+		// Jack stats
+		this.xHittingDistance = {primary: 50, secondary: 50};
+		this.yHittingDistance = {primary: 50, secondary: 50};
+		this.hitSpeed = 50;
+		this.fullSpeed = 150;
+		this.walkSpeed = this.fullSpeed;
+
+
+		// Jack's sounds
+		this.sound = {
+			hit: this.main.add.audio("jack-hit"),
+			noHit: this.main.add.audio("jack-nohit")
+		};
+
+
+		////
+		// Jack Animations
+		////
+		// Jack Animation Run Left-Right
+		this.sprite.animations.add("run-lr-idle", Phaser.Animation.generateFrameNames('run-lr-idle-', 0, 0, '', 4), 1, true, false);
+		this.sprite.animations.add("run-lr", Phaser.Animation.generateFrameNames('run-lr-', 0, 16, '', 4), 40, true, false);
+
+		// Jack Animation Run Up
+		this.sprite.animations.add("run-up-idle", Phaser.Animation.generateFrameNames('run-up-idle-', 0, 0, '', 4), 1, true, false);
+		this.sprite.animations.add("run-up", Phaser.Animation.generateFrameNames('run-up-', 0, 17, '', 4), 40, true, false);
+
+		// Jack Animation Run Down
+		this.sprite.animations.add("run-down-idle", Phaser.Animation.generateFrameNames('run-down-idle-', 0, 0, '', 4), 1, true, false);
+		this.sprite.animations.add("run-down", Phaser.Animation.generateFrameNames('run-down-', 0, 17, '', 4), 40, true, false);
+
+		// Jack Animation Punching
+		this.sprite.animations.add("punch-lr", Phaser.Animation.generateFrameNames('punch-lr-', 0, 6, '', 4), 20, false, false);
+		this.sprite.animations.add("punch-up", Phaser.Animation.generateFrameNames('punch-up-', 0, 5, '', 4), 20, false, false);
+		this.sprite.animations.add("punch-down", Phaser.Animation.generateFrameNames('kick-down-', 0, 10, '', 4), 30, false, false);
+
+		return this;
+	},
+
+
 	// Possible walking directions for jack
 	possibleDirections: {
 		LEFT: 0,
@@ -394,9 +443,18 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.Jack.prototype = {
 		UP: 2,
 		DOWN: 3
 	},
-	
+
+
+	update: function (dt) {
+		this.updateInput(dt);
+		this.updateAnimation(dt);
+		this.updateJackPhysics(dt);
+		this.updateCollision(dt);
+	},
+
+
 	// Update for Jack's animation
-	updateJackAnimation: function (dt) {	
+	updateAnimation: function (dt) {	
 		if (this.walkAnimationBlocked)
 			return;
 
@@ -425,13 +483,68 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.Jack.prototype = {
 			}
 		}
 	},
-	
+
+
 	// Update Physics for Jack
 	updateJackPhysics: function (dt) {
-		this.sprite.body.width = 70;
-		this.sprite.body.height = 80;
+		
 	},
-	
+
+
+	// Update Input Controls
+	updateInput: function (dt) {
+		this.sprite.body.velocity = {x: 0, y: 0};
+
+		if (!this.lockMovement) {
+			if (Pad.isDown(Pad.UP)) {
+				this.sprite.body.velocity.y -= this.walkSpeed;
+				this.lastDirection = this.possibleDirections.UP;
+			} else if (Pad.isDown(Pad.DOWN)) {
+				this.sprite.body.velocity.y += this.walkSpeed;
+				this.lastDirection = this.possibleDirections.DOWN;
+			}
+
+			if (Pad.isDown(Pad.LEFT)) {
+				this.sprite.body.velocity.x -= this.walkSpeed;
+				this.lastDirection = this.possibleDirections.LEFT;
+			} else if (Pad.isDown(Pad.RIGHT)) {
+				this.sprite.body.velocity.x += this.walkSpeed;
+				this.lastDirection = this.possibleDirections.RIGHT;
+			}
+
+			if (this.sprite.body.velocity.x > 0 && this.sprite.scale.x < 0)
+				this.sprite.scale.x *= -1;
+			else if (this.sprite.body.velocity.x < 0 && this.sprite.scale.x > 0)
+				this.sprite.scale.x *= -1;
+
+			if ((this.lastDirection == this.possibleDirections.UP || this.lastDirection == this.possibleDirections.DOWN) && this.sprite.scale.x < 0)
+				this.sprite.scale.x *= -1;
+		}
+
+		if (!this.lockActions) {
+			if (Pad.justDown(Pad.SHOOT) && !this.isHitting) {
+				logInfo("SHOOT");
+
+				this.onHit(this);
+			}
+
+			if (Pad.justDown(Pad.JUMP)) {
+				logInfo("JUMP");
+				this.sprite.animations.play("run-down-idle");
+			}
+		}
+	},
+
+
+	updateCollision: function () {
+//		this.main.game.debug.body(this.sprite);
+		this.main.maze.collidersWithPlayer.forEach(function (body, i, bodies, main) {
+//			main.game.debug.body(body.sprite);
+			main.physics.arcade.collide(main.maze.jack.sprite, body.sprite);
+		}, this.main);
+	},
+
+
 	// On Player press punch
 	onHit: function () {
 		this.walkAnimationBlocked = true; // Lock walk animation, so punch animation can be shown
@@ -497,7 +610,8 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.Jack.prototype = {
 			return false;
 		}, this);
 	},
-	
+
+
 	// On hit animation complete
 	onHitComplete: function () {
 		this.walkAnimationBlocked = false;
@@ -505,28 +619,162 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.Jack.prototype = {
 		this.isHitting = false;
 		this.walkSpeed = this.fullSpeed;
 	}
+}
+
+
+
+
+
+
+
+
+//  ______ _   _ ______ __  ____     __
+// |  ____| \ | |  ____|  \/  \ \   / /
+// | |__  |  \| | |__  | \  / |\ \_/ / 
+// |  __| | . ` |  __| | |\/| | \   /  
+// | |____| |\  | |____| |  | |  | |   
+// |______|_| \_|______|_|  |_|  |_|   
+//                                     
+JackDanger.AgentJackIEC.prototype.Maze.prototype.Enemy = function () {return this;}
+JackDanger.AgentJackIEC.prototype.Maze.prototype.Enemy.prototype = {
+	init: function (x, y, enemySettings, main) {
+		this.sprite = main.add.sprite(x, y, enemySettings.spriteName); // Setup Sprite
+		this.main = main;
+		this.main.maze.entityLayer.add(this.sprite);
+		this.main.physics.arcade.enable(this.sprite); // Enable physics
+
+		// Scale + anchor
+		this.sprite.scale.setTo(this.main.globalScale); // Set Scale to global scale
+		this.sprite.anchor.setTo(0.5, 0.5); // Set Anchor to center
+
+		// Physics settings
+		this.sprite.body.collideWorldBounds = true; // Enable collision with world bounds
+
+		// Enemy States
+		this.walkAnimationBlocked = false;
+
+		// Enemy Stats
+		this.hitSpeed = enemySettings.hitSpeed;
+		this.fullSpeed = enemySettings.fullSpeed;
+		this.walkSpeed = this.fullSpeed;
+		this.maxHealth = enemySettings.maxHealth;
+		this.health = this.maxHealth;
+		this.attackStrength = enemySettings.attackStrength;
+
+		////
+		// Enemy Animations
+		////
+		// Enemy Animation Run Left-Right
+		this.sprite.animations.add("run-lr-idle", Phaser.Animation.generateFrameNames('run-lr-idle-', 0, 0, '', 4), 1, true, false);
+		this.sprite.animations.add("run-lr", Phaser.Animation.generateFrameNames('run-lr-', 0, 16, '', 4), 40, true, false);
+
+		// Enemy Animation Run Up
+		this.sprite.animations.add("run-up-idle", Phaser.Animation.generateFrameNames('run-up-idle-', 0, 0, '', 4), 1, true, false);
+		this.sprite.animations.add("run-up", Phaser.Animation.generateFrameNames('run-up-', 0, 17, '', 4), 40, true, false);
+
+		// Enemy Animation Run Down
+		this.sprite.animations.add("run-down-idle", Phaser.Animation.generateFrameNames('run-down-idle-', 0, 0, '', 4), 1, true, false);
+		this.sprite.animations.add("run-down", Phaser.Animation.generateFrameNames('run-down-', 0, 17, '', 4), 40, true, false);
+
+		// Enemy Animation Punching
+		this.sprite.animations.add("punch-lr", Phaser.Animation.generateFrameNames('punch-lr-', 0, 6, '', 4), 20, false, false);
+		this.sprite.animations.add("punch-up", Phaser.Animation.generateFrameNames('punch-up-', 0, 5, '', 4), 20, false, false);
+		this.sprite.animations.add("punch-down", Phaser.Animation.generateFrameNames('kick-down-', 0, 10, '', 4), 30, false, false);
+
+		return this;
+	},
+
+
+	updateAnimation: function () {
+		if (this.walkAnimationBlocked)
+			return;
+
+		// Play correct animation
+		if (this.sprite.body.velocity.y === 0 && this.sprite.body.velocity.x === 0) {
+			// Idle Animations for last directions
+			if (this.lastDirection == this.possibleDirections.LEFT) {
+				this.sprite.animations.play("run-lr-idle");
+			} else if (this.lastDirection == this.possibleDirections.RIGHT) {
+				this.sprite.animations.play("run-lr-idle");
+			} else if (this.lastDirection == this.possibleDirections.UP) {
+				this.sprite.animations.play("run-up-idle");
+			} else if (this.lastDirection == this.possibleDirections.DOWN) {
+				this.sprite.animations.play("run-down-idle");
+			}
+		} else {
+			// Walking animations for corresponding direcitons
+			if (this.sprite.body.velocity.y == 0 && this.sprite.body.velocity.x < 0) {
+				this.sprite.animations.play("run-lr");
+			} else if (this.sprite.body.velocity.y == 0 && this.sprite.body.velocity.x < 0) {
+				this.sprite.animations.play("run-lr");
+			} else if (this.lastDirection == this.possibleDirections.UP) {
+				this.sprite.animations.play("run-up");
+			} else if (this.lastDirection == this.possibleDirections.DOWN) {
+				this.sprite.animations.play("run-down");
+			}
+		}
+
+		// Correct flip
+		if (this.sprite.body.velocity.x > 0 && this.sprite.scale.x < 0)
+			this.sprite.scale.x *= -1;
+		else if (this.sprite.body.velocity.x < 0 && this.sprite.scale.x > 0)
+			this.sprite.scale.x *= -1;
+
+		if (this.sprite.body.velocity.y == 0 && this.jack.sprite.scale.x < 0)
+			this.jack.sprite.scale.x *= -1;
+	},
+
+
+	updateAI: function () {
+
+	},
+
+
+	onHitByJack: function (attackStrength) {
+		this.health -= attackStrength;
+
+		if (this.health <= 0) {
+			this.die();
+		}
+	},
+
+
+	die: function () {
+		this.dead = true;
+	}
 };
 
 
 
-/////////////////
-// _BOSS Level //
-/////////////////
+
+
+
+
+
+
+
+//  ____   ____   _____ _____ 
+// |  _ \ / __ \ / ____/ ____|
+// | |_) | |  | | (___| (___  
+// |  _ <| |  | |\___ \\___ \ 
+// | |_) | |__| |____) |___) |
+// |____/ \____/|_____/_____/ 
+//
 JackDanger.AgentJackIEC.prototype.Boss = function () {
 	this.initialized = false;
 	this.main = parent;
-};
+}
 
 JackDanger.AgentJackIEC.prototype.Boss.prototype.initLevel = function () {
 	logInfo("Init Boss");
-};
+}
 
 JackDanger.AgentJackIEC.prototype.Boss.prototype.update = function (dt) {
 	//	logInfo("Update Boss");
-};
+}
 
 JackDanger.AgentJackIEC.prototype.Boss.prototype.disposeLevel = function () {
 	if (!this.initialized) return;
 
 	logInfo("Dispose Boss");
-};
+}

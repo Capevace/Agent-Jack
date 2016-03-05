@@ -1,0 +1,28 @@
+{"frames": {
+
+"gate/gate-door":
+{
+	"frame": {"x":0,"y":0,"w":32,"h":32},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
+	"sourceSize": {"w":32,"h":32}
+},
+"gate/gate-fence":
+{
+	"frame": {"x":32,"y":0,"w":256,"h":256},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":256,"h":256},
+	"sourceSize": {"w":256,"h":256}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "scenery.png",
+	"format": "RGBA8888",
+	"size": {"w":288,"h":288},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:ed67f9a45bc4ff290e8434bbb98800cb:4c5cf584bb211a593cac0a9349cce2ef:2f3f4c41cd2f2def220a03862124e542$"
+}
+}
