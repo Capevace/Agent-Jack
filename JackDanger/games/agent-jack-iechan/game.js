@@ -356,10 +356,12 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 			var aY = a.position.y + (a.height / 2);
 			var bY = b.position.y + (b.height / 2);
 			
-			if (a.isPlayer === undefined && p.isPlayer === undefined) {
+			if (a.isPlayer === undefined && b.isPlayer === undefined) {
 				if (aY > bY) {
 					
-				} else if (aY < bY)
+				} else if (aY < bY) {
+					
+				}
 			}
 
 			return 0;
