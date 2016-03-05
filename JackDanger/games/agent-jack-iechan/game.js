@@ -222,9 +222,15 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 		this.scene.gate.gateDoorL.anchor.setTo(0.5, 0);
 		this.scene.gate.gateDoorL.scale.setTo(this.main.globalScale);
 		this.scene.gate.gateDoorL.position.setTo(this.main.world.centerX + 16 - this.scene.gate.gateDoorL.width/2, this.main.world.height-568 - 64);
+		this.scene.gate.gateDoorL.gate = this.scene.gate;
 		this.scene.gate.gateDoorL.body.immovable = true;
 		this.scene.gate.gateDoorL.body.sourceWidth = 25;
 		this.scene.gate.gateDoorL.body.sourceHeight = 15;
+		this.scene.gate.gateDoorL.depthUpdateSettings = {
+			shouldUpdateCollider: true,
+			sizePlayerUnderSprite: {width: 25, height: 15},
+			sizePlayerOverSprite: {width: 25, height: 7}
+		};
 		this.entityLayer.add(this.scene.gate.gateDoorL);
 		this.collidersWithPlayer.push(this.scene.gate.gateDoorL.body);
 
@@ -234,16 +240,22 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 		this.scene.gate.gateDoorR.anchor.setTo(0.5, 0);
 		this.scene.gate.gateDoorR.scale.setTo(-this.main.globalScale, this.main.globalScale);
 		this.scene.gate.gateDoorR.position.setTo(this.main.world.centerX - 16 - this.scene.gate.gateDoorR.width/2, this.main.world.height-568 - 64);
+		this.scene.gate.gateDoorR.gate = this.scene.gate;
 		this.scene.gate.gateDoorR.body.immovable = true;
 		this.scene.gate.gateDoorR.body.sourceWidth = 25;
 		this.scene.gate.gateDoorR.body.sourceHeight = 15;
+		this.scene.gate.gateDoorR.depthUpdateSettings = {
+			shouldUpdateCollider: true,
+			sizePlayerUnderSprite: {width: 25, height: 15},
+			sizePlayerOverSprite: {width: 25, height: 7}
+		};
 		this.entityLayer.add(this.scene.gate.gateDoorR);
 		this.collidersWithPlayer.push(this.scene.gate.gateDoorR.body);
 
 		this.scene.gate.openGate = function () {
 			if (this.opened || this.moving)
 				return;
-			
+
 			this.moving = true;
 			var gate = this;
 			var gateL = this.gateDoorL;
@@ -263,10 +275,11 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 		};
 
 		this.scene.gate.closeGate = function () {
-			if (this.opened || this.moving)
+			if (!this.opened || this.moving)
 				return;
-			
+
 			this.moving = true;
+			var gate = this;
 			var gateL = this.gateDoorL;
 			var gateR = this.gateDoorR;
 
@@ -280,12 +293,21 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 				gate.moving = false;
 			}, 3500);
 		};
-		
-		this.main.input.keyboard.addKey(Phaser.Keyboard.L).onDown.add(this.scene.gate.openGate, this.scene.gate); 
-//		this.scene.gate.openGate();
+
+		this.main.input.keyboard.addKey(Phaser.Keyboard.L).onDown.add(function () {
+			if (this.opened) {
+				logInfo("closefd");
+				this.closeGate();
+			}
+			else {
+				console.log("open")
+				this.openGate();
+			}
+		}, this.scene.gate); 
+		//		this.scene.gate.openGate();
 	},
 
-	
+
 	collidersWithPlayer: {
 		push: function (body) {
 			this.bodies.push(body);
@@ -318,7 +340,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 		bodies: []
 	},
 
-	
+
 	update: function (dt) {
 		// Update Jack
 		this.jack.update(dt);
@@ -331,13 +353,14 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 
 	sortDepth: function () {
 		this.entityLayer.customSort(function (a, b) {
-			var aY = a.position.y + a.height/2;
-			var bY = b.position.y + b.height/2;
-
-			if (aY > bY)
-				return 1;
-			else if (aY < bY)
-				return -1;
+			var aY = a.position.y + (a.height / 2);
+			var bY = b.position.y + (b.height / 2);
+			
+			if (a.isPlayer === undefined && p.isPlayer === undefined) {
+				if (aY > bY) {
+					
+				} else if (aY < bY)
+			}
 
 			return 0;
 		}, this);
@@ -355,9 +378,6 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 		//	this.main.game.debug.body(this.jack);
 	}
 };
-
-
-
 
 
 
@@ -388,6 +408,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.Jack.prototype = {
 		this.sprite.body.collideWorldBounds = true; // Enable collision with world bounds
 		this.sprite.body.sourceWidth = 14;
 		this.sprite.body.sourceHeight = 20;
+		this.sprite.isPlayer = true; // To be able to identify player
 
 		// Jack States
 		this.shooting = false;
@@ -487,7 +508,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.Jack.prototype = {
 
 	// Update Physics for Jack
 	updateJackPhysics: function (dt) {
-		
+
 	},
 
 
@@ -537,9 +558,9 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.Jack.prototype = {
 
 
 	updateCollision: function () {
-//		this.main.game.debug.body(this.sprite);
+		this.main.game.debug.body(this.sprite);
 		this.main.maze.collidersWithPlayer.forEach(function (body, i, bodies, main) {
-//			main.game.debug.body(body.sprite);
+			main.game.debug.body(body.sprite);
 			main.physics.arcade.collide(main.maze.jack.sprite, body.sprite);
 		}, this.main);
 	},
