@@ -67,6 +67,15 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.Jack.prototype = {
 		this.sprite.animations.add("punch-up", Phaser.Animation.generateFrameNames('punch-up-', 0, 5, '', 4), 20, false, false);
 		this.sprite.animations.add("punch-down", Phaser.Animation.generateFrameNames('kick-down-', 0, 10, '', 4), 30, false, false);
 
+		
+		// Player Shadow
+		this.sprite.shadow = main.add.sprite(main.game.world.centerX, main.game.world.centerY, "jack");
+		this.sprite.shadow.anchor.setTo(0.5, 1);
+		this.sprite.shadow.tint = 0x000000;
+		this.sprite.shadow.alpha = 0.2;
+		this.sprite.shadow.offset = {x: 0, y: -9};
+		this.main.maze.entityLayer.add(this.sprite.shadow);
+		
 		return this;
 	},
 
@@ -83,7 +92,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.Jack.prototype = {
 	update: function (dt) {
 		this.updateInput(dt);
 		this.updateAnimation(dt);
-		this.updateJackPhysics(dt);
+		this.updateShadow(dt);
 		this.updateCollision(dt);
 	},
 
@@ -106,7 +115,6 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.Jack.prototype = {
 			}
 		} else {
 			// Walking animations for corresponding direcitons
-
 			if (this.lastDirection == this.possibleDirections.LEFT) {
 				this.sprite.animations.play("run-lr");
 			} else if (this.lastDirection == this.possibleDirections.RIGHT) {
@@ -120,9 +128,12 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.Jack.prototype = {
 	},
 
 
-	// Update Physics for Jack
-	updateJackPhysics: function (dt) {
-
+	// Update Shadow for Jack
+	updateShadow: function (dt) {
+		// Update Shadow
+		this.sprite.shadow.frame = this.sprite.frame;
+		this.sprite.shadow.scale.setTo(this.sprite.scale.x, 2.5);
+		this.sprite.shadow.position.setTo(this.sprite.position.x + this.sprite.shadow.offset.x, this.sprite.position.y + this.sprite.height/2 + this.sprite.shadow.offset.y);
 	},
 
 
@@ -172,11 +183,15 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.Jack.prototype = {
 
 
 	updateCollision: function () {
-		this.main.game.debug.body(this.sprite);
-		this.main.maze.collidersWithPlayer.forEach(function (body, i, bodies, main) {
-			//			main.game.debug.body(body.sprite);
-			main.physics.arcade.collide(main.maze.jack.sprite, body.sprite);
-		}, this.main);
+//		this.main.game.debug.body(this.sprite);
+		for (var i = 0; i < this.main.maze.entityLayer.children.length; i++) {
+			var child = this.main.maze.entityLayer.children[i];
+			
+			if (child.isPlayer)
+				continue;
+			
+			this.main.physics.arcade.collide(this.sprite, child);
+		}
 	},
 
 

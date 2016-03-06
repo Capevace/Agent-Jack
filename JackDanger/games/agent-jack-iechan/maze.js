@@ -38,23 +38,24 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 		//			logInfo("I'm hit! Meeediiiic!!");
 		//			this.body.enable = false;
 		//			this.kill();
-		////			this.enemyList.remove(this);
+		//			this.enemyList.remove(this);
 		//		};
 		//		this.enemy.enemyList = this.enemies;
 		//		this.enemies.push(this.enemy);
 		//		this.entityLayer.add(this.enemy);
 
-		// 
 
 		// Set Camera to follow player
 		this.main.camera.follow(this.jack.sprite, Phaser.Camera.FOLLOW_TOPDOWN_TIGHT);
 	},
 
 
+	// Setup scene (Add all Top Layer Entities)
 	setupScene: function () {
-		// Set World Background
+		// Define Scene Object
 		this.scene = {};
 
+		// Set World Background
 		this.scene.background = this.main.add.sprite(this.main.world.centerX, this.main.world.height, "maze-bg");
 		this.scene.background.anchor.setTo(0.5, 1);
 		this.scene.background.scale.setTo(this.main.globalScale);
@@ -66,7 +67,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 			moving: false
 		};
 
-		// Add Gate L
+		// Add Gate Left
 		this.scene.gate.gateDoorL = this.main.add.sprite(0, 0, "scenery", "gate/gate-door");
 		this.main.physics.arcade.enable(this.scene.gate.gateDoorL);
 		this.scene.gate.gateDoorL.anchor.setTo(0.5, 0);
@@ -81,11 +82,12 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 			sizePlayerUnderSprite: {width: 25, height: 15},
 			sizePlayerOverSprite: {width: 25, height: 7}
 		};
-		this.scene.gate.gateDoorL.na = "L";
+		
 		this.entityLayer.add(this.scene.gate.gateDoorL);
 		this.collidersWithPlayer.push(this.scene.gate.gateDoorL.body);
 
-		// Add Gate L
+		
+		// Add Gate Right
 		this.scene.gate.gateDoorR = this.main.add.sprite(0, 0, "scenery", "gate/gate-door");
 		this.main.physics.arcade.enable(this.scene.gate.gateDoorR);
 		this.scene.gate.gateDoorR.anchor.setTo(0.5, 0);
@@ -100,10 +102,11 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 			sizePlayerUnderSprite: {width: 25, height: 15},
 			sizePlayerOverSprite: {width: 25, height: 7}
 		};
-		this.scene.gate.gateDoorR.na = "R";
+
 		this.entityLayer.add(this.scene.gate.gateDoorR);
 		this.collidersWithPlayer.push(this.scene.gate.gateDoorR.body);
 
+		// Function to Open Gate
 		this.scene.gate.openGate = function () {
 			if (this.opened || this.moving)
 				return;
@@ -126,6 +129,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 			}, 3500);
 		};
 
+		// Function to Close Gate
 		this.scene.gate.closeGate = function () {
 			if (!this.opened || this.moving)
 				return;
@@ -146,13 +150,12 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 			}, 3500);
 		};
 
+		// Debug Listener to open / close door
 		this.main.input.keyboard.addKey(Phaser.Keyboard.L).onDown.add(function () {
 			if (this.opened) {
-				logInfo("closefd");
 				this.closeGate();
 			}
 			else {
-				console.log("open")
 				this.openGate();
 			}
 		}, this.scene.gate); 
@@ -160,6 +163,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 	},
 
 
+	// List Of Enemies that are hittable by player
 	enemies: {
 		push: function (body) {
 			this.bodies.push(body);
@@ -193,6 +197,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 	},
 
 
+	// List of items that collide with player
 	collidersWithPlayer: {
 		push: function (body) {
 			this.bodies.push(body);
