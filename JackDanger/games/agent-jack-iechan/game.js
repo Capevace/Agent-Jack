@@ -41,6 +41,9 @@ JackDanger.AgentJackIEC.prototype.preload = function() {
 
 	// Entities (Scenery)
 	this.load.atlas("scenery", "scenery.png", "scenery.json", Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
+	
+	// Hack Sprites
+	this.load.atlas("hack-circles", "hack/circles.png", "hack/circles.json", Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
 
 	// Jack (Maze) Sounds
 	this.load.audio('jack-hit', 'sounds/punch-hit.wav');
@@ -55,6 +58,7 @@ JackDanger.AgentJackIEC.prototype.create = function() {
 
 	// Init Minigame
 	this.stage.smoothed = false;
+	this.game.renderer.renderSession.roundPixels = true
 
 	this.currentLevel = this.availableLevels.Maze;
 	this.timeToBeat = 0.0;

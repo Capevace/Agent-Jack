@@ -22,6 +22,11 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 		// Setup Sprite Layers
 		this.backgroundLayer = this.main.add.group();
 		this.entityLayer = this.main.add.group();
+		this.foregroundLayer = this.main.add.group();
+		this.uiLayer = this.main.add.group();
+		this.hackLayer = this.main.add.group();
+
+		this.activeHack = null;
 
 		// Setup Scene
 		this.setupScene();
@@ -82,11 +87,10 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 			sizePlayerUnderSprite: {width: 25, height: 15},
 			sizePlayerOverSprite: {width: 25, height: 7}
 		};
-		
-		this.entityLayer.add(this.scene.gate.gateDoorL);
-		this.collidersWithPlayer.push(this.scene.gate.gateDoorL.body);
 
-		
+		this.entityLayer.add(this.scene.gate.gateDoorL);
+
+
 		// Add Gate Right
 		this.scene.gate.gateDoorR = this.main.add.sprite(0, 0, "scenery", "gate/gate-door");
 		this.main.physics.arcade.enable(this.scene.gate.gateDoorR);
@@ -104,7 +108,6 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 		};
 
 		this.entityLayer.add(this.scene.gate.gateDoorR);
-		this.collidersWithPlayer.push(this.scene.gate.gateDoorR.body);
 
 		// Function to Open Gate
 		this.scene.gate.openGate = function () {
@@ -158,8 +161,27 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 			else {
 				this.openGate();
 			}
-		}, this.scene.gate); 
-		//		this.scene.gate.openGate();
+		}, this.scene.gate);
+
+		this.main.input.keyboard.addKey(Phaser.Keyboard.H).onDown.add(function () {
+			if (this.activeHack == null) {
+				this.activeHack = new this.Hack(this.main, function (scope) {
+					logInfo(this);
+					scope.activeHack = null;
+				}, this);
+			}
+		}, this);
+		logInfo(this);
+		
+		this.triggersWithPlayer.createTrigger(240, 550, 84, 76, this.main, function (main) {
+			if (main.maze.activeHack == null) {
+				main.maze.activeHack = new main.maze.Hack(main, function (scope2) {
+					logInfo(scope2);
+					scope2.main.maze.activeHack = null;
+					scope2.main.maze.scene.gate.openGate();
+				}, this);
+			}
+		});
 	},
 
 
@@ -198,46 +220,73 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 
 
 	// List of items that collide with player
-	collidersWithPlayer: {
-		push: function (body) {
-			this.bodies.push(body);
+	triggersWithPlayer: {
+		createTrigger: function (x, y, width, height, scope, callback) {
+			var trigger = {
+				getBounds: function () {
+					return this.bounds;
+				},
+				bounds: new Phaser.Rectangle(x, scope.game.world.height - y, width, height),
+				trigger: function () {
+					if (!this.used) {
+						this.used = true;
+						this.callback(this.main);
+					}
+				},
+				callback: callback,
+				main: scope,
+				update: function () {
+					logInfo("Collide!");
+				},
+				used: false
+			}
+			
+			this.push(trigger);
+			return trigger;
 		},
-		remove: function (body) {
-			var index = this.bodies.indexOf(body);
+		push: function (trigger) {
+			this.triggers.push(trigger);
+		},
+		remove: function (trigger) {
+			var index = this.triggers.indexOf(trigger);
 
 			if (index != -1)
-				this.bodies.splice(index, 1);
+				this.triggers.splice(index, 1);
 		},
 		forEach: function (callback, main) {
-			if (this.bodies.length == 0)
-				callback(null, -1, this.bodies, main);
+			if (this.triggers.length == 0)
+				return;
 
-			for (var i = 0; i < this.bodies.length; i++) {
-				var body = this.bodies[i];
-				if (body.dead) {
+			for (var i = 0; i < this.triggers.length; i++) {
+				var trigger = this.triggers[i];
+				if (trigger.used) {
 					// Remove object out of array
-					this.bodies.splice(i, 1);
+					this.triggers.splice(i, 1);
 
 					// go back one index. for loop would skip next item otherwise
 					i--;
 					continue;
 				} else {
-					if (callback(body, i, this.bodies, main))
-						i = this.bodies.length;
+					if (callback(trigger, i, this.triggers, main))
+						i = this.triggers.length;
 				}
 			}
 		},
-		bodies: []
+		triggers: []
 	},
 
 
 	update: function (dt) {
-		// Update Jack
-		this.jack.update(dt);
+		if (this.activeHack != null) {
+			this.activeHack.update();
+		} else {
+			// Update Jack
+			this.jack.update(dt);
 
-		// Sort depth after all other code was run
-		this.sortDepth();
-		this.debug();
+			// Sort depth after all other code was run
+			this.sortDepth();
+			this.debug();
+		}
 	},
 
 
