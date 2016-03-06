@@ -172,7 +172,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.Jack.prototype = {
 
 
 	updateCollision: function () {
-		//		this.main.game.debug.body(this.sprite);
+		this.main.game.debug.body(this.sprite);
 		this.main.maze.collidersWithPlayer.forEach(function (body, i, bodies, main) {
 			//			main.game.debug.body(body.sprite);
 			main.physics.arcade.collide(main.maze.jack.sprite, body.sprite);

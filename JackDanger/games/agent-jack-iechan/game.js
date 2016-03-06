@@ -62,6 +62,9 @@ JackDanger.AgentJackIEC.prototype.create = function() {
 	this.maze = new this.Maze(this);
 	this.boss = new this.Boss(this);
 	this.globalScale = 4;
+	this.colliderEditor = new this.ColliderEditor(this.game);
+	this.game.input.onDown.add(this.colliderEditor.startColliderDrawing, this.colliderEditor, 0);
+	this.game.input.onUp.add(this.colliderEditor.endColliderDrawing, this.colliderEditor, 0);
 
 	this.loadLevel(this.availableLevels.Maze);
 }
@@ -75,6 +78,8 @@ JackDanger.AgentJackIEC.prototype.update = function() {
 	} else if (this.currentLevel == this.availableLevels.Boss) {
 		this.boss.update(dt);
 	}
+	
+	this.colliderEditor.updateColliderDrawing();
 }
 
 JackDanger.AgentJackIEC.prototype.loadLevel = function (level) {
@@ -98,4 +103,55 @@ JackDanger.AgentJackIEC.prototype.loadLevel = function (level) {
 JackDanger.AgentJackIEC.prototype.availableLevels = {
 	Maze: 0,
 	Boss: 1
+};
+
+
+
+
+JackDanger.AgentJackIEC.prototype.ColliderEditor = function (game) {
+	this.isDrawing = false;
+	this.startingPoint = new Phaser.Point(0, 0);
+	this.endPoint = new Phaser.Point(0, 0);
+	this.game = game;
+};
+
+JackDanger.AgentJackIEC.prototype.ColliderEditor.prototype = {
+	startColliderDrawing: function () {
+		if (this.isDrawing)
+			return;
+		
+		logInfo(this);
+		
+		this.isDrawing = true;
+		this.startingPoint = new Phaser.Point(this.game.input.worldX, this.game.input.worldY);
+	},
+	
+	updateColliderDrawing: function () {
+		if (!this.isDrawing)
+			return;
+		
+		this.endPoint = new Phaser.Point(this.game.input.worldX, this.game.input.worldY);
+		logInfo("DRAW");
+		this.game.debug.geom(new Phaser.Rectangle(this.startingPoint.x, this.startingPoint.y, this.endPoint.x - this.startingPoint.x, this.endPoint.y - this.startingPoint.y));
+	},
+	
+	endColliderDrawing: function () {
+		if (!this.isDrawing)
+			return;
+		
+		this.isDrawing = false;
+		this.endPoint = new Phaser.Point(this.game.input.worldX, this.game.input.worldY);
+		
+		var x = (this.startingPoint.x < this.endPoint.x) ? this.startingPoint.x : this.endPoint.x;
+		var y = (this.startingPoint.y < this.endPoint.y) ? this.startingPoint.y : this.endPoint.y;
+		var width = (this.startingPoint.x < this.endPoint.x) ? this.endPoint.x - this.startingPoint.x : this.startingPoint.x - this.endPoint.x;
+		var height = (this.startingPoint.y < this.endPoint.y) ? this.endPoint.y - this.startingPoint.y : this.startingPoint.y - this.endPoint.y;
+		
+		logInfo(JSON.stringify({
+			x: x,
+			y: this.game.world.height - y,
+			width: width,
+			height: height
+		}));
+	}
 };
