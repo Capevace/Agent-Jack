@@ -1,0 +1,5 @@
+// This is a list of all colliders that might be drawn, not all of these are actually calculated, because some might later be added to a specific object
+[
+	{"x":0,"y":634,"width":300,"height":64}, // Fence Left
+	{"x":500,"y":634,"width":299,"height":64}, // Fence Right
+]
