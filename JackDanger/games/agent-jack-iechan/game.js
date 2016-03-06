@@ -231,6 +231,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 			sizePlayerUnderSprite: {width: 25, height: 15},
 			sizePlayerOverSprite: {width: 25, height: 7}
 		};
+		this.scene.gate.gateDoorL.na = "L";
 		this.entityLayer.add(this.scene.gate.gateDoorL);
 		this.collidersWithPlayer.push(this.scene.gate.gateDoorL.body);
 
@@ -249,6 +250,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 			sizePlayerUnderSprite: {width: 25, height: 15},
 			sizePlayerOverSprite: {width: 25, height: 7}
 		};
+		this.scene.gate.gateDoorR.na = "R";
 		this.entityLayer.add(this.scene.gate.gateDoorR);
 		this.collidersWithPlayer.push(this.scene.gate.gateDoorR.body);
 
@@ -355,17 +357,81 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 		this.entityLayer.customSort(function (a, b) {
 			var aY = a.position.y + (a.height / 2);
 			var bY = b.position.y + (b.height / 2);
-			
-			if (a.isPlayer === undefined && b.isPlayer === undefined) {
-				if (aY > bY) {
-					
-				} else if (aY < bY) {
-					
-				}
-			}
 
+//			if (a.isPlayer === undefined && b.isPlayer === undefined) {
+				if (aY > bY) {
+					return 1;
+				} else if (aY < bY) {
+					return -1;
+				}
+//			} else {
+//				var entity;
+//				var checkUnder = function (entity) {
+//					if (entity.anchor.y != 0 && entity.depthUpdateSettings) {
+//						entity.anchor.setTo(entity.anchor.x, 0);
+//						entity.position.setTo(entity.position.x, entity.position.y - entity.height);
+//
+//						if (entity.body)
+//							entity.body.setSize(entity.depthUpdateSettings.sizePlayerUnderSprite.width, entity.depthUpdateSettings.sizePlayerUnderSprite.height, 0, 0);
+//					}
+//				};
+//				var checkOver = function (entity) {
+//					if (entity.anchor.y != 1 && entity.depthUpdateSettings) {
+//						entity.anchor.setTo(entity.anchor.x, 1);
+//						entity.position.setTo(entity.position.x, entity.position.y + entity.height);
+//
+//						if (entity.body)
+//							entity.body.setSize(entity.depthUpdateSettings.sizePlayerOverSprite.width, entity.depthUpdateSettings.sizePlayerOverSprite.height, 0, 0);
+//					}
+//				};
+//
+//				if (a.isPlayer) {
+//					if (aY > bY) {
+//						console.log("Player + " + b.na + "check Under");
+//						checkUnder(b);
+//						return 1;
+//					} else if (aY < bY) {
+//						console.log("Player + " + b.na + "check over");
+//						checkOver(b);
+//						return -1;
+//					}
+//				} else if (b.isPlayer) {
+//					if (bY > aY) {
+//						console.log("Player + " + a.na + "check Under");
+//						checkUnder(a);
+//						return 1;
+//					} else if (bY < aY) {
+//						console.log("Player + " + a.na + "check over");
+//						checkOver(a);
+//						return -1;
+//					}
+//				}
+//			}
 			return 0;
 		}, this);
+		
+		for (var i = 0; i < this.entityLayer.children.length; i++) {
+			var child = this.entityLayer.children[i];
+			
+			if (child.isPlayer)
+				continue;
+						
+			var jackY = this.jack.sprite.position.y + (this.jack.sprite.height / 2);
+			var childY = child.position.y + (child.height * (1 - child.anchor.y));
+			
+			this.main.game.debug.geom(this.jack.sprite.position.x, jackY, 10, 10);
+			this.main.game.debug.geom(child.position.x, childY, 10, 10);
+			
+			if (jackY > childY) {
+				if (child.body && child.depthUpdateSettings) {
+					child.body.setSize(child.depthUpdateSettings.sizePlayerUnderSprite.width, child.depthUpdateSettings.sizePlayerUnderSprite.height, 0, 0);
+				}
+			} else {
+				if (child.body && child.depthUpdateSettings) {
+					child.body.setSize(child.depthUpdateSettings.sizePlayerOverSprite.width, child.depthUpdateSettings.sizePlayerOverSprite.height, 0, child.height - (child.depthUpdateSettings.sizePlayerOverSprite.height * 4));
+				}
+			}
+		}
 	},
 
 
