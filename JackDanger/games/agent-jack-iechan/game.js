@@ -30,17 +30,20 @@ JackDanger.AgentJackIEC.prototype.preload = function() {
 	// Debug Ball
 	this.load.image('bg','../assetsraw/ball.png');
 
+	// Maze Scenery
+	this.load.json("maze-scene", "scenes/maze-scene.json");
+	
 	// Maze Background
 	this.load.image("maze-bg", "maze-bg.png");
 
 	// Jack (Maze) Atlas
-	this.load.atlas("jack", "jack.png", "jack.json", Phaser.Loader.TEXTURE_ATLAS_JSON_HASH); // Jack Running
+	this.load.atlas("jack", "spritesheets/jack.png", "spritesheets/jack.json", Phaser.Loader.TEXTURE_ATLAS_JSON_HASH); // Jack Running
 
 	// Enemy
-	this.load.atlas("enemy", "enemy.png", "enemy.json", Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
+	this.load.atlas("enemy", "spritesheets/enemy.png", "spritesheets/enemy.json", Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
 
 	// Entities (Scenery)
-	this.load.atlas("scenery", "scenery.png", "scenery.json", Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
+	this.load.atlas("scenery", "spritesheets/scenery.png", "spritesheets/scenery.json", Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
 	
 	// Hack Sprites
 	this.load.atlas("hack-circles", "hack/circles.png", "hack/circles.json", Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);

@@ -75,7 +75,6 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.Hack.prototype = {
 		}
 
 		var circle = this.circles[this.selectedCircle];
-		logInfo(circle.rotation);
 
 		if (Pad.isDown(Pad.LEFT)) {
 			circle.rotation += 0.0349066/2; // 5 Degrees per frame
@@ -126,6 +125,8 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.Hack.prototype = {
 		}
 
 		this.main.camera.follow(this.previousTarget, Phaser.Camera.FOLLOW_TOPDOWN_TIGHT);
+		
+		logInfo(this.callback);
 		this.callback(this.scope);
 	}
 };

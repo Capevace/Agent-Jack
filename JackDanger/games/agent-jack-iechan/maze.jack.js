@@ -186,6 +186,10 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.Jack.prototype = {
 				continue;
 			
 			this.main.physics.arcade.collide(this.sprite, child);
+			
+			if (child.body && child.body.shouldDebug) {
+				this.main.game.debug.body(child);
+			}
 		}
 		
 		var shouldTrigger = Pad.justDown(Pad.JUMP);
@@ -197,8 +201,9 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.Jack.prototype = {
 			if (overlaps)
 				trigger.update();
 						
-			if (shouldTrigger)
+			if (shouldTrigger && !trigger.isUsed) {
 				trigger.trigger();
+			}
 		}, this.jack);
 	},
 

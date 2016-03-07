@@ -43,7 +43,7 @@ JackDanger.AgentJackIEC.prototype.ColliderEditor.prototype = {
 		
 		logInfo(JSON.stringify({
 			x: x,
-			y: this.game.world.height - y,
+			y: y,
 			width: width,
 			height: height
 		}));
