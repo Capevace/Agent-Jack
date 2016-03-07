@@ -72,6 +72,8 @@ JackDanger.AgentJackIEC.prototype.create = function() {
 	this.colliderEditor = new this.ColliderEditor(this.game);
 	this.game.input.onDown.add(this.colliderEditor.startColliderDrawing, this.colliderEditor, 0);
 	this.game.input.onUp.add(this.colliderEditor.endColliderDrawing, this.colliderEditor, 0);
+	
+	main = this;
 
 	this.loadLevel(this.availableLevels.Maze);
 }

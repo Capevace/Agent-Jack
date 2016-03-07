@@ -1,6 +1,71 @@
 {
+	"demo": {
+		"id": "demo",
+		"spritesheet": "scenery",
+		"sprite": "gate/gate-fence-left",
+		"position": {"x": 0, "y": 0},
+		"anchor": {"x": 0, "y": 0},
+		"immovable": true,
+		"sizePlayerUnderSprite": {
+			"width": 0,
+			"height": 0,
+			"offsetX": 0,
+			"offsetY": 0
+		},
+		"sizePlayerOverSprite": {
+			"width": 0,
+			"height": 0,
+			"offsetX": 0,
+			"offsetY": 0
+		},
+		"forcedZ": 0,
+		"shouldDebug": true
+	},
 	"entities": [
-		
+		{
+			"id": "fenceL",
+			"spritesheet": "scenery",
+			"sprite": "gate/gate-fence-left",
+			"position": {"x": -132, "y": 2012},
+			"anchor": {"x": 0, "y": 0},
+			"deltaLowY": 320,
+			"immovable": true,
+			"sizePlayerUnderSprite": {
+				"width": 75,
+				"height": 17,
+				"offsetX": 0,
+				"offsetY": 200
+			},
+			"sizePlayerOverSprite": {
+				"width": 75,
+				"height": 7,
+				"offsetX": 0,
+				"offsetY": 305
+			},
+			"shouldDebug": true
+		},
+		{
+			"id": "fenceR",
+			"spritesheet": "scenery",
+			"sprite": "gate/gate-fence-right",
+			"position": {"x": 412, "y": 2012},
+			"anchor": {"x": 0, "y": 0},
+			"deltaLowY": 320,
+			"immovable": true,
+			"sizePlayerUnderSprite": {
+				"width": 75,
+				"height": 17,
+				"offsetX": 0,
+				"offsetY": 200
+			},
+			"sizePlayerOverSprite": {
+				"width": 75,
+				"height": 7,
+				"offsetX": 0,
+				"offsetY": 305
+			},
+			"shouldDebug": true
+		}
 	],
 	"worldSize": {
 		"x": 800,
