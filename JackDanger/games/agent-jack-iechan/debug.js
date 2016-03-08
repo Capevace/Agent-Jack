@@ -39,11 +39,13 @@ JackDanger.AgentJackIEC.prototype.ColliderEditor.prototype = {
 		var width = (this.startingPoint.x < this.endPoint.x) ? this.endPoint.x - this.startingPoint.x : this.startingPoint.x - this.endPoint.x;
 		var height = (this.startingPoint.y < this.endPoint.y) ? this.endPoint.y - this.startingPoint.y : this.startingPoint.y - this.endPoint.y;
 		
+		logInfo(this.game);
+		
 		logInfo(JSON.stringify({
-			x: x,
-			y: y,
-			width: width,
-			height: height
+			x: x - 113,
+			y: this.game.world.height - y,
+			width: width/this.game.main.globalScale,
+			height: height/this.game.main.globalScale
 		}));
 	}
 };

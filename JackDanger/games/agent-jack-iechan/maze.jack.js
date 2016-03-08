@@ -188,7 +188,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.Jack.prototype = {
 			
 			this.main.physics.arcade.collide(this.sprite, child);
 			
-			if (child.body && child.body.shouldDebug) {
+			if ((child.body && child.body.shouldDebug) || this.main.maze.debugAll) {
 				this.main.game.debug.body(child);
 			}
 		}
