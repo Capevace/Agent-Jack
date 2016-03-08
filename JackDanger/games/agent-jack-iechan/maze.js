@@ -323,6 +323,8 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 
 
 	sortDepth: function () {
+		logInfo("Sort my depths...");
+		
 		// Go through all entities and sort depth
 		this.entityLayer.customSort(function (a, b) {
 			// Get lower Y of a
