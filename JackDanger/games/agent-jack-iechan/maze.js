@@ -157,12 +157,6 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 		};
 		this.entityLayer.add(this.scene.gate.gateDoorR);
 
-		this.scene.gate.gateDoorL.body.shouldDebug = true;
-		this.scene.gate.gateDoorR.body.shouldDebug = true;
-
-
-
-
 		// Debug Listener to open / close door
 		this.main.input.keyboard.addKey(Phaser.Keyboard.L).onDown.add(function () {
 			if (this.opened) {
@@ -182,7 +176,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 					main.maze.scene.gate.openGate();
 				});
 			}
-		});
+		}, false);
 
 
 		// Loop through entities and create every single one
@@ -252,7 +246,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 
 	// List of items that can be triggered by the player
 	triggersWithPlayer: {
-		createTrigger: function (x, y, width, height, scope, callback) {
+		createTrigger: function (x, y, width, height, scope, callback, shouldDebug) {
 			var trigger = {
 				getBounds: function () {
 					return this.bounds;
@@ -269,7 +263,8 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 				update: function () {
 
 				},
-				used: false
+				used: false,
+				shouldDebug: shouldDebug || false
 			}
 
 			this.push(trigger);
