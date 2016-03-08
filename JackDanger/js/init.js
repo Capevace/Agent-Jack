@@ -30,11 +30,12 @@ function startRandomGame() {
 
 var loadingscreen = null;
 function addLoadingScreen(game) {
+	loadingscreen = new JackDanger.LoadingScreen();
+    loadingscreen.add();
     game.load.onFileComplete.add(function( progress ) {
         console.log("progress: " + progress);
+		loadingscreen.update(progress);
     });
-    loadingscreen = new JackDanger.LoadingScreen();
-    loadingscreen.add();
 }
 
 function removeLoadingScreen() {

@@ -157,12 +157,6 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 		};
 		this.entityLayer.add(this.scene.gate.gateDoorR);
 
-		this.scene.gate.gateDoorL.body.shouldDebug = true;
-		this.scene.gate.gateDoorR.body.shouldDebug = true;
-
-
-
-
 		// Debug Listener to open / close door
 		this.main.input.keyboard.addKey(Phaser.Keyboard.L).onDown.add(function () {
 			if (this.opened) {
