@@ -63,18 +63,22 @@ JackDanger.AgentJackIEC.prototype.create = function() {
 	this.stage.smoothed = false;
 	this.game.renderer.renderSession.roundPixels = true
 
-	this.currentLevel = this.availableLevels.Maze;
-	this.timeToBeat = 0.0;
-	this.score = 0.0;
-	this.maze = new this.Maze(this);
-	this.boss = new this.Boss(this);
-	this.globalScale = 4;
-	this.colliderEditor = new this.ColliderEditor(this.game);
+	this.currentLevel = this.availableLevels.Maze; // Set current level to maze
+	this.timeToBeat = 0.0; // Time to beat game
+	this.score = 0.0; // Score of game
+	this.maze = new this.Maze(this); // Init Maze
+	this.boss = new this.Boss(this); // Init Boss
+	this.globalScale = 4; // Define global scale, every sprite gets scaled by that
+	
+	// Init Colider Editor (Deactivate for release)
+	this.colliderEditor = new this.ColliderEditor(this.game); 
 	this.game.input.onDown.add(this.colliderEditor.startColliderDrawing, this.colliderEditor, 0);
 	this.game.input.onUp.add(this.colliderEditor.endColliderDrawing, this.colliderEditor, 0);
 	
+	// Debug
 	main = this;
 
+	// Load Level (Maze)
 	this.loadLevel(this.availableLevels.Maze);
 }
 
@@ -88,6 +92,7 @@ JackDanger.AgentJackIEC.prototype.update = function() {
 		this.boss.update(dt);
 	}
 	
+	// Debug
 	this.colliderEditor.updateColliderDrawing();
 }
 

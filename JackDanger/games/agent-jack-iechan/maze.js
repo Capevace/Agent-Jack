@@ -15,7 +15,7 @@ JackDanger.AgentJackIEC.prototype.Maze = function (parent) {
 JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 	initLevel: function () {
 		logInfo("Init Maze");
-		this.initialized = true;
+		this.initialized = true; // Used to avoid double initializing
 
 		// Setup Sprite Layers
 		this.backgroundLayer = this.main.add.group();
@@ -24,17 +24,18 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 		this.uiLayer = this.main.add.group();
 		this.hackLayer = this.main.add.group();
 
-		this.activeHack = null;
+		this.activeHack = null; // Set active Hack to null
 
-		this.borderOffsetX = 112;
+		this.borderOffsetX = 112; // Offset, which is removed from background because of scale
 
 		// Setup Scene
 		this.setupScene();
 
 		// Setup Jack
-		this.jack = new this.Jack().init(this.main.world.centerX, this.main.world.height - 300, this.main);
+		this.jack = new this.Jack().init(this.main.world.centerX, this.main.world.height - 1000, this.main);
+
 		jackPlayer = this.jack; // Debug!
-		console.warn("Remove global var jackPlayer before release!! Just for debug!!");
+		console.warn("Remove global var jackPlayer + main before release!! Just for debug!!");
 
 		//		this.enemy = this.main.add.sprite(this.main.world.centerX + 2, this.main.world.centerY + 2, 'jack', 'run-lr-idle-0000');
 		//		this.main.physics.arcade.enable(this.enemy);
@@ -73,10 +74,53 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 		this.scene.background.scale.setTo(this.main.globalScale);
 		this.backgroundLayer.add(this.scene.background);
 
+		
+		
+		// Define Gate
 		this.scene.gate = {
 			main: this.main,
 			opened: false,
-			moving: false
+			moving: false,
+			openGate: function () {
+				if (this.opened || this.moving)
+					return;
+
+				this.moving = true;
+				var gate = this;
+				var gateL = this.gateDoorL;
+				var gateR = this.gateDoorR;
+				var closeGate = this.closeGate;
+
+				gateL.body.velocity.x = -25;
+				gateR.body.velocity.x = 25;
+
+
+				setTimeout(function () {
+					gateL.body.velocity.x = 0;
+					gateR.body.velocity.x = 0;
+					gate.opened = true;
+					gate.moving = false;
+				}, 3500);
+			},
+			closeGate: function () {
+				if (!this.opened || this.moving)
+					return;
+
+				this.moving = true;
+				var gate = this;
+				var gateL = this.gateDoorL;
+				var gateR = this.gateDoorR;
+
+				gateL.body.velocity.x = 25;
+				gateR.body.velocity.x = -25;
+
+				setTimeout(function () {
+					gateL.body.velocity.x = 0;
+					gateR.body.velocity.x = 0;
+					gate.opened = false;
+					gate.moving = false;
+				}, 3500);
+			}
 		};
 
 		// Add Gate Left
@@ -94,7 +138,6 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 			sizePlayerUnderSprite: {width: 25, height: 15, offsetX: -100, offsetY: 0},
 			sizePlayerOverSprite: {width: 25, height: 7, offsetX: -100, offsetY: 100}
 		};
-
 		this.entityLayer.add(this.scene.gate.gateDoorL);
 
 
@@ -116,52 +159,10 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 
 		this.scene.gate.gateDoorL.body.shouldDebug = true;
 		this.scene.gate.gateDoorR.body.shouldDebug = true;
-		//		this.scene.gate.fenceL.body.shouldDebug = true;
 
-		// Function to Open Gate
-		this.scene.gate.openGate = function () {
-			if (this.opened || this.moving)
-				return;
-
-			this.moving = true;
-			var gate = this;
-			var gateL = this.gateDoorL;
-			var gateR = this.gateDoorR;
-			var closeGate = this.closeGate;
-
-			gateL.body.velocity.x = -25;
-			gateR.body.velocity.x = 25;
-
-
-			setTimeout(function () {
-				gateL.body.velocity.x = 0;
-				gateR.body.velocity.x = 0;
-				gate.opened = true;
-				gate.moving = false;
-			}, 3500);
-		};
-
-		// Function to Close Gate
-		this.scene.gate.closeGate = function () {
-			if (!this.opened || this.moving)
-				return;
-
-			this.moving = true;
-			var gate = this;
-			var gateL = this.gateDoorL;
-			var gateR = this.gateDoorR;
-
-			gateL.body.velocity.x = 25;
-			gateR.body.velocity.x = -25;
-
-			setTimeout(function () {
-				gateL.body.velocity.x = 0;
-				gateR.body.velocity.x = 0;
-				gate.opened = false;
-				gate.moving = false;
-			}, 3500);
-		};
-
+		
+		
+		
 		// Debug Listener to open / close door
 		this.main.input.keyboard.addKey(Phaser.Keyboard.L).onDown.add(function () {
 			if (this.opened) {
@@ -172,6 +173,8 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 			}
 		}, this.scene.gate);
 
+		
+		// Create first gate trigger
 		this.triggersWithPlayer.createTrigger(240, 550, 84, 76, this.main, function (main) {
 			if (main.maze.activeHack == null) {
 				main.maze.activeHack = new main.maze.Hack(main, function () {
@@ -181,14 +184,15 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 			}
 		});
 
+		
+		// Loop through entities and create every single one
 		for (var i = 0; i < this.sceneData.entities.length; i++) {
 			var entityData = this.sceneData.entities[i];
 
 			if (entityData.position == undefined && entityData.sprite == undefined && entityData.spritesheet == undefined && entityData.sizePlayerUnderSprite == undefined && entityData.sizePlayerOverSprite == undefined && entityData.id == undefined)
 				continue;
 
-			logInfo(entityData);
-			var sprite = this.main.add.sprite(entityData.position.x, entityData.position.y, entityData.spritesheet, entityData.sprite);
+			var sprite = this.main.add.sprite(entityData.position.x, this.main.game.world.height - entityData.position.y, entityData.spritesheet, entityData.sprite);
 			this.main.physics.arcade.enable(sprite);
 			sprite.id = entityData.id;
 			sprite.scale.setTo(this.main.globalScale);
@@ -246,7 +250,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 	},
 
 
-	// List of items that collide with player
+	// List of items that can be triggered by the player
 	triggersWithPlayer: {
 		createTrigger: function (x, y, width, height, scope, callback) {
 			var trigger = {
@@ -303,6 +307,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 	},
 
 
+	// Called every frame
 	update: function (dt) {
 		if (this.activeHack != null) {
 			this.activeHack.update();
@@ -318,40 +323,51 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 
 
 	sortDepth: function () {
+		// Go through all entities and sort depth
 		this.entityLayer.customSort(function (a, b) {
+			// Get lower Y of a
 			var aY = (a.deltaLowY != undefined) ? a.position.y + a.deltaLowY * (1 - a.anchor.y) : a.position.y + (a.height * (1 - a.anchor.y));
+			
+			// Get lower Y of b
 			var bY = (b.deltaLowY != undefined) ? b.position.y + b.deltaLowY * (1 - b.anchor.y) : b.position.y + (b.height * (1 - b.anchor.y));
 
+			// Reset positions if a or b is player
 			if (a.isPlayer) {
 				aY = a.position.y + (a.height / 2) - 32;
 			} else if (b.isPlayer) {
 				bY = b.position.y + (b.height / 2) - 32;
 			}
 
-			if (aY > bY) {
+			if (aY > bY) { // If a 'infront' (under) then put to foreground
 				return 1;
-			} else if (aY < bY) {
+			} else if (aY < bY) { // If a 'behind' (over) then put to background
 				return -1;
 			}
 
 			return 0;
 		}, this);
 
+		// Go through entities again to update depth colliders with player
 		for (var i = 0; i < this.entityLayer.children.length; i++) {
 			var child = this.entityLayer.children[i];
 
+			// Skip if we get the player entity
 			if (child.isPlayer)
 				continue;
 
+			// Get Jack and Child lower Y
 			var jackY = this.jack.sprite.position.y + (this.jack.sprite.height / 2) - 32;
 			var childY = (child.deltaLowY != undefined) ? child.position.y + child.deltaLowY * (1 - child.anchor.y) : child.position.y + (child.height * (1 - child.anchor.y));
 
-
+			// If Jack infront of child => collider = playerUnderSprite
 			if (jackY > childY) {
 				if (child.body && child.depthUpdateSettings) {
 					child.body.setSize(child.depthUpdateSettings.sizePlayerUnderSprite.width, child.depthUpdateSettings.sizePlayerUnderSprite.height, this.main.maze.borderOffsetX + child.depthUpdateSettings.sizePlayerUnderSprite.offsetX, child.depthUpdateSettings.sizePlayerUnderSprite.offsetY);
 				}
-			} else {
+			} 
+			
+			// If Jack infront of child => collider = playerOverSprite
+			else {
 				if (child.body && child.depthUpdateSettings) {
 					child.body.setSize(child.depthUpdateSettings.sizePlayerOverSprite.width, child.depthUpdateSettings.sizePlayerOverSprite.height, this.main.maze.borderOffsetX + child.depthUpdateSettings.sizePlayerOverSprite.offsetX, child.depthUpdateSettings.sizePlayerOverSprite.offsetY);
 				}
@@ -360,14 +376,15 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 	},
 
 
+	// Unload Level (remove all sprites)
 	disposeLevel: function () {
 		if (!this.initialized) return;
 
 		logInfo("Dispose Maze");
 	},
 
-
+	// Put debug in here
 	debug: function () {
-		//	this.main.game.debug.body(this.jack);
+//		this.main.game.debug.body(this.jack.sprite);
 	}
 };

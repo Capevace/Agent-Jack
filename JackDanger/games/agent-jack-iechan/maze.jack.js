@@ -88,7 +88,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.Jack.prototype = {
 		DOWN: 3
 	},
 
-
+	// Gets called every frame
 	update: function (dt) {
 		this.updateInput(dt);
 		this.updateAnimation(dt);
@@ -178,7 +178,6 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.Jack.prototype = {
 
 
 	updateCollision: function () {
-//		this.main.game.debug.body(this.sprite);
 		for (var i = 0; i < this.main.maze.entityLayer.children.length; i++) {
 			var child = this.main.maze.entityLayer.children[i];
 			

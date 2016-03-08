@@ -12,9 +12,7 @@ JackDanger.AgentJackIEC.prototype.ColliderEditor.prototype = {
 	startColliderDrawing: function () {
 		if (this.isDrawing)
 			return;
-		
-		logInfo(this);
-		
+				
 		this.isDrawing = true;
 		this.startingPoint = new Phaser.Point(this.game.input.worldX, this.game.input.worldY);
 	},

@@ -1,5 +1,5 @@
 {
-	"demo": {
+	"demoentity": {
 		"id": "demo",
 		"spritesheet": "scenery",
 		"sprite": "gate/gate-fence-left",
@@ -21,12 +21,15 @@
 		"forcedZ": 0,
 		"shouldDebug": true
 	},
+	"demotrigger": {
+
+	},
 	"entities": [
 		{
 			"id": "fenceL",
 			"spritesheet": "scenery",
 			"sprite": "gate/gate-fence-left",
-			"position": {"x": -132, "y": 2012},
+			"position": {"x": -132, "y": 836},
 			"anchor": {"x": 0, "y": 0},
 			"deltaLowY": 320,
 			"immovable": true,
@@ -48,7 +51,7 @@
 			"id": "fenceR",
 			"spritesheet": "scenery",
 			"sprite": "gate/gate-fence-right",
-			"position": {"x": 412, "y": 2012},
+			"position": {"x": 412, "y": 836},
 			"anchor": {"x": 0, "y": 0},
 			"deltaLowY": 320,
 			"immovable": true,
@@ -65,10 +68,101 @@
 				"offsetY": 305
 			},
 			"shouldDebug": true
+		},
+		{
+			"id": "bush-collider-1",
+			"spritesheet": "",
+			"sprite": "",
+			"position": {"x": 306, "y": 1198},
+			"anchor": {"x": 0, "y": 0},
+			"deltaLowY": 320,
+			"immovable": true,
+			"sizePlayerUnderSprite": {
+				"width": 87,
+				"height": 12,
+				"offsetX": 0,
+				"offsetY": 0
+			},
+			"sizePlayerOverSprite": {
+				"width": 87,
+				"height": 12,
+				"offsetX": 0,
+				"offsetY": 0
+			},
+			"shouldDebug": false
+		},
+		{
+			"id": "garage-collider",
+			"spritesheet": "",
+			"sprite": "",
+			"position": {"x": 624, "y": 1115},
+			"anchor": {"x": 0, "y": 0},
+			"deltaLowY": 320,
+			"immovable": true,
+			"sizePlayerUnderSprite": {
+				"width": 21,
+				"height": 63,
+				"offsetX": 0,
+				"offsetY": 0
+			},
+			"sizePlayerOverSprite": {
+				"width": 21,
+				"height": 63,
+				"offsetX": 0,
+				"offsetY": 0
+			},
+			"shouldDebug": false
+		},
+		{
+			"id": "car-collider",
+			"spritesheet": "",
+			"sprite": "",
+			"position": {"x": 443, "y": 957},
+			"anchor": {"x": 0, "y": 0},
+			"deltaLowY": 320,
+			"immovable": true,
+			"sizePlayerUnderSprite": {
+				"width": 45,
+				"height": 24,
+				"offsetX": 0,
+				"offsetY": 0
+			},
+			"sizePlayerOverSprite": {
+				"width": 45,
+				"height": 24,
+				"offsetX": 0,
+				"offsetY": 0
+			},
+			"shouldDebug": false
+		},
+		{
+			"id": "forest-left",
+			"spritesheet": "",
+			"sprite": "",
+			"position": {"x": -110, "y": 1191},
+			"anchor": {"x": 0, "y": 0},
+			"deltaLowY": 320,
+			"immovable": true,
+			"sizePlayerUnderSprite": {
+				"width": 71,
+				"height": 169.5,
+				"offsetX": 0,
+				"offsetY": 0
+			},
+			"sizePlayerOverSprite": {
+				"width": 71,
+				"height": 169.5,
+				"offsetX": 0,
+				"offsetY": 0
+			},
+			"shouldDebug": false
 		}
 	],
+	"triggers": {
+
+	},
 	"worldSize": {
-		"x": 800,
-		"y": 2848
-	}
+	"x": 800,
+	"y": 2848
+}
 }
