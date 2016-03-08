@@ -167,13 +167,13 @@
 			"immovable": true,
 			"sizePlayerUnderSprite": {
 				"width": 71,
-				"height": 94,
+				"height": 74,
 				"offsetX": 0,
 				"offsetY": 0
 			},
 			"sizePlayerOverSprite": {
 				"width": 71,
-				"height": 94,
+				"height": 74,
 				"offsetX": 0,
 				"offsetY": 0
 			},
@@ -189,13 +189,13 @@
 			"immovable": true,
 			"sizePlayerUnderSprite": {
 				"width": 74,
-				"height": 80,
+				"height": 70,
 				"offsetX": 0,
 				"offsetY": 0
 			},
 			"sizePlayerOverSprite": {
 				"width": 74,
-				"height": 80,
+				"height": 70,
 				"offsetX": 0,
 				"offsetY": 0
 			},

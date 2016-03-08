@@ -199,11 +199,15 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.Jack.prototype = {
 		this.main.maze.triggersWithPlayer.forEach(function (trigger, i, triggers) {
 			var overlaps = trigger.getBounds().contains(jack.sprite.position.x,  jack.sprite.position.y + (jack.sprite.height / 2) - 32);
 			
+			if (trigger.shouldDebug) {
+				jack.main.game.debug.geom(trigger.getBounds());
+			}
+			
 			// If Player overlaps with trigger display action dialog
 			if (overlaps)
 				trigger.update();
 						
-			if (shouldTrigger && !trigger.isUsed) {
+			if (shouldTrigger && !trigger.isUsed && overlaps) {
 				trigger.trigger();
 			}
 		}, this.jack);

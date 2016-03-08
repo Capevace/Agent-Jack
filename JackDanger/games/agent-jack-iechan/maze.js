@@ -176,7 +176,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 					main.maze.scene.gate.openGate();
 				});
 			}
-		});
+		}, false);
 
 
 		// Loop through entities and create every single one
@@ -246,7 +246,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 
 	// List of items that can be triggered by the player
 	triggersWithPlayer: {
-		createTrigger: function (x, y, width, height, scope, callback) {
+		createTrigger: function (x, y, width, height, scope, callback, shouldDebug) {
 			var trigger = {
 				getBounds: function () {
 					return this.bounds;
@@ -263,7 +263,8 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 				update: function () {
 
 				},
-				used: false
+				used: false,
+				shouldDebug: shouldDebug || false
 			}
 
 			this.push(trigger);
