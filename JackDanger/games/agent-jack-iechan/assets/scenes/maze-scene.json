@@ -45,7 +45,7 @@
 				"offsetX": 0,
 				"offsetY": 305
 			},
-			"shouldDebug": true
+			"shouldDebug": false
 		},
 		{
 			"id": "fenceR",
@@ -67,7 +67,7 @@
 				"offsetX": 0,
 				"offsetY": 305
 			},
-			"shouldDebug": true
+			"shouldDebug": false
 		},
 		{
 			"id": "bush-collider-1",
@@ -79,13 +79,13 @@
 			"immovable": true,
 			"sizePlayerUnderSprite": {
 				"width": 87,
-				"height": 12,
+				"height": 10,
 				"offsetX": 0,
 				"offsetY": 0
 			},
 			"sizePlayerOverSprite": {
 				"width": 87,
-				"height": 12,
+				"height": 10,
 				"offsetX": 0,
 				"offsetY": 0
 			},
@@ -136,22 +136,88 @@
 			"shouldDebug": false
 		},
 		{
-			"id": "forest-left",
+			"id": "forest-left-top",
 			"spritesheet": "",
 			"sprite": "",
-			"position": {"x": -110, "y": 1191},
+			"position": {"x": -113, "y": 1201},
+			"anchor": {"x": 0, "y": 0},
+			"deltaLowY": 320,
+			"immovable": true,
+			"sizePlayerUnderSprite": {
+				"width": 63.5,
+				"height": 75,
+				"offsetX": 0,
+				"offsetY": 0
+			},
+			"sizePlayerOverSprite": {
+				"width": 63.5,
+				"height": 75,
+				"offsetX": 0,
+				"offsetY": 0
+			},
+			"shouldDebug": false
+		},
+		{
+			"id": "forest-left-bottom",
+			"spritesheet": "",
+			"sprite": "",
+			"position": {"x": -110, "y": 900},
 			"anchor": {"x": 0, "y": 0},
 			"deltaLowY": 320,
 			"immovable": true,
 			"sizePlayerUnderSprite": {
 				"width": 71,
-				"height": 169.5,
+				"height": 94,
 				"offsetX": 0,
 				"offsetY": 0
 			},
 			"sizePlayerOverSprite": {
 				"width": 71,
-				"height": 169.5,
+				"height": 94,
+				"offsetX": 0,
+				"offsetY": 0
+			},
+			"shouldDebug": false
+		},
+		{
+			"id": "forest-right",
+			"spritesheet": "",
+			"sprite": "",
+			"position": {"x": 400, "y": 864},
+			"anchor": {"x": 0, "y": 0},
+			"deltaLowY": 320,
+			"immovable": true,
+			"sizePlayerUnderSprite": {
+				"width": 74,
+				"height": 80,
+				"offsetX": 0,
+				"offsetY": 0
+			},
+			"sizePlayerOverSprite": {
+				"width": 74,
+				"height": 80,
+				"offsetX": 0,
+				"offsetY": 0
+			},
+			"shouldDebug": false
+		},
+		{
+			"id": "debug-second-door",
+			"spritesheet": "",
+			"sprite": "",
+			"position": {"x": -113, "y": 1272},
+			"anchor": {"x": 0, "y": 0},
+			"deltaLowY": 320,
+			"immovable": true,
+			"sizePlayerUnderSprite": {
+				"width": 199.75,
+				"height": 12.25,
+				"offsetX": 0,
+				"offsetY": 0
+			},
+			"sizePlayerOverSprite": {
+				"width": 199.75,
+				"height": 12.25,
 				"offsetX": 0,
 				"offsetY": 0
 			},
@@ -162,7 +228,8 @@
 
 	},
 	"worldSize": {
-	"x": 800,
-	"y": 2848
-}
+		"x": 800,
+		"y": 2848
+	},
+	"debugAll": false
 }

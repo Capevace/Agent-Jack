@@ -74,8 +74,8 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 		this.scene.background.scale.setTo(this.main.globalScale);
 		this.backgroundLayer.add(this.scene.background);
 
-		
-		
+		this.debugAll = this.sceneData.debugAll;
+
 		// Define Gate
 		this.scene.gate = {
 			main: this.main,
@@ -160,9 +160,9 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 		this.scene.gate.gateDoorL.body.shouldDebug = true;
 		this.scene.gate.gateDoorR.body.shouldDebug = true;
 
-		
-		
-		
+
+
+
 		// Debug Listener to open / close door
 		this.main.input.keyboard.addKey(Phaser.Keyboard.L).onDown.add(function () {
 			if (this.opened) {
@@ -173,7 +173,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 			}
 		}, this.scene.gate);
 
-		
+
 		// Create first gate trigger
 		this.triggersWithPlayer.createTrigger(240, 550, 84, 76, this.main, function (main) {
 			if (main.maze.activeHack == null) {
@@ -184,7 +184,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 			}
 		});
 
-		
+
 		// Loop through entities and create every single one
 		for (var i = 0; i < this.sceneData.entities.length; i++) {
 			var entityData = this.sceneData.entities[i];
@@ -327,7 +327,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 		this.entityLayer.customSort(function (a, b) {
 			// Get lower Y of a
 			var aY = (a.deltaLowY != undefined) ? a.position.y + a.deltaLowY * (1 - a.anchor.y) : a.position.y + (a.height * (1 - a.anchor.y));
-			
+
 			// Get lower Y of b
 			var bY = (b.deltaLowY != undefined) ? b.position.y + b.deltaLowY * (1 - b.anchor.y) : b.position.y + (b.height * (1 - b.anchor.y));
 
@@ -365,7 +365,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 					child.body.setSize(child.depthUpdateSettings.sizePlayerUnderSprite.width, child.depthUpdateSettings.sizePlayerUnderSprite.height, this.main.maze.borderOffsetX + child.depthUpdateSettings.sizePlayerUnderSprite.offsetX, child.depthUpdateSettings.sizePlayerUnderSprite.offsetY);
 				}
 			} 
-			
+
 			// If Jack infront of child => collider = playerOverSprite
 			else {
 				if (child.body && child.depthUpdateSettings) {
@@ -385,6 +385,6 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 
 	// Put debug in here
 	debug: function () {
-//		this.main.game.debug.body(this.jack.sprite);
+		//		this.main.game.debug.body(this.jack.sprite);
 	}
 };

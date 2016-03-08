@@ -61,7 +61,7 @@ JackDanger.AgentJackIEC.prototype.create = function() {
 
 	// Init Minigame
 	this.stage.smoothed = false;
-	this.game.renderer.renderSession.roundPixels = true
+	this.game.renderer.renderSession.roundPixels = true;
 
 	this.currentLevel = this.availableLevels.Maze; // Set current level to maze
 	this.timeToBeat = 0.0; // Time to beat game
@@ -69,6 +69,7 @@ JackDanger.AgentJackIEC.prototype.create = function() {
 	this.maze = new this.Maze(this); // Init Maze
 	this.boss = new this.Boss(this); // Init Boss
 	this.globalScale = 4; // Define global scale, every sprite gets scaled by that
+	this.game.main = this;
 	
 	// Init Colider Editor (Deactivate for release)
 	this.colliderEditor = new this.ColliderEditor(this.game); 
