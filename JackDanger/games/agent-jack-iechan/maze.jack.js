@@ -177,7 +177,9 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.Jack.prototype = {
 	},
 
 
+	// Gets called to update all player collisions
 	updateCollision: function () {
+		// collide with colliders
 		for (var i = 0; i < this.main.maze.entityLayer.children.length; i++) {
 			var child = this.main.maze.entityLayer.children[i];
 			
@@ -191,6 +193,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.Jack.prototype = {
 			}
 		}
 		
+		// Look for triggers and activate them if jump pressed
 		var shouldTrigger = Pad.justDown(Pad.JUMP);
 		var jack = this;
 		this.main.maze.triggersWithPlayer.forEach(function (trigger, i, triggers) {
