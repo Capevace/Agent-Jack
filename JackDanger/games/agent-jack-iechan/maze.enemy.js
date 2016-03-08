@@ -55,6 +55,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.Enemy.prototype = {
 	},
 
 
+	// Gets called each frame to update animations
 	updateAnimation: function () {
 		if (this.walkAnimationBlocked)
 			return;
@@ -95,11 +96,13 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.Enemy.prototype = {
 	},
 
 
+	// Update AI every frame
 	updateAI: function () {
 
 	},
 
 
+	// Gets called when jack hits this
 	onHitByJack: function (attackStrength) {
 		this.health -= attackStrength;
 
@@ -109,6 +112,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.Enemy.prototype = {
 	},
 
 
+	// enemy die
 	die: function () {
 		this.dead = true;
 	}
