@@ -94,7 +94,6 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 				gateL.body.velocity.x = -25;
 				gateR.body.velocity.x = 25;
 
-
 				setTimeout(function () {
 					gateL.body.velocity.x = 0;
 					gateR.body.velocity.x = 0;
