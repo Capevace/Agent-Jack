@@ -50,7 +50,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.Enemy.prototype = {
 		this.sprite.animations.add("punch-lr", Phaser.Animation.generateFrameNames('punch-lr-', 0, 6, '', 4), 20, false, false);
 		this.sprite.animations.add("punch-up", Phaser.Animation.generateFrameNames('punch-up-', 0, 5, '', 4), 20, false, false);
 		this.sprite.animations.add("punch-down", Phaser.Animation.generateFrameNames('kick-down-', 0, 10, '', 4), 30, false, false);
-
+		
 		return this;
 	},
 
@@ -98,7 +98,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.Enemy.prototype = {
 
 	// Update AI every frame
 	updateAI: function () {
-
+		
 	},
 
 
