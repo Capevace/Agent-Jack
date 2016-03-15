@@ -58692,6 +58692,7 @@ Phaser.BitmapText.prototype.updateText = function () {
 
         y += (data.lineHeight * scale);
 
+        console.log(text);
         text = text.substr(line.text.length + 1);
         
     } while (line.end === false);

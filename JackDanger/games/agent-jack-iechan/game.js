@@ -15,12 +15,21 @@ Game type: Fighting Game
 JackDanger.AgentJackIEC = function() {};
 
 // Add Game to game register
-addMyGame("agent-jack-iechan", "Agent Jack \"I. Chan\" Danger", "TriDev", "Packe dicke moves aus und infiltriere die Basis.", JackDanger.AgentJackIEC);
+// addMyGame("agent-jack-iechan", "Agent Jack \"I. Chan\" Danger", "TriDev", "Packe dicke moves aus und infiltriere die Basis.", JackDanger.AgentJackIEC);
+//hier musst du deine Eintragungen vornhemen.
+addMyGame("agent-jack-iechan", 
+    "Agent Jack \"I. Chan\"", 
+    "TriDev", 
+    "Packe dicke moves aus und infiltriere die Basis.", 
+    "Bewegen", //Steuerkreuz
+    "Interagieren", //Jump button belegung
+    "Kaempfen", //Shoot button belegung
+    JackDanger.AgentJackIEC);
 
 // Initialize Minigame Launching
 JackDanger.AgentJackIEC.prototype.init = function() {
 	// Show loading screen
-	addLoadingScreen(this);
+	addLoadingScreen(this, false);
 }
 
 // Load assets for preload
@@ -57,8 +66,9 @@ JackDanger.AgentJackIEC.prototype.preload = function() {
 JackDanger.AgentJackIEC.prototype.create = function() {
 	// Init controls & remove loading screen
 	Pad.init();
-	removeLoadingScreen();
+}
 
+JackDanger.AgentJackIEC.prototype.mycreate = function() {
 	// Init Minigame
 	this.stage.smoothed = false;
 	this.game.renderer.renderSession.roundPixels = true;
