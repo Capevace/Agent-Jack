@@ -15,7 +15,6 @@ Game type: Fighting Game
 JackDanger.AgentJackIEC = function() {};
 
 // Add Game to game register
-// addMyGame("agent-jack-iechan", "Agent Jack \"I. Chan\" Danger", "TriDev", "Packe dicke moves aus und infiltriere die Basis.", JackDanger.AgentJackIEC);
 //hier musst du deine Eintragungen vornhemen.
 addMyGame("agent-jack-iechan", 
     "Agent Jack \"I. Chan\"", 
@@ -25,6 +24,7 @@ addMyGame("agent-jack-iechan",
     "Interagieren", //Jump button belegung
     "Kaempfen", //Shoot button belegung
     JackDanger.AgentJackIEC);
+
 
 // Initialize Minigame Launching
 JackDanger.AgentJackIEC.prototype.init = function() {
