@@ -62,7 +62,7 @@ var JackDanger = {};
 function init() {
     logInfo("init game");
 
-    game = new Phaser.Game(800, 450, Phaser.AUTO, 'gamediv', null, false, false);
+    game = new Phaser.Game(800, 450, Phaser.AUTO, 'gamediv', null, false, true);
     for (var i = 0; i < games.length; i++) {
 
         game.state.add(games[i].id, games[i].className);

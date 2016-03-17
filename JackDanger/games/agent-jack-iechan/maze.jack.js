@@ -46,6 +46,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.Jack.prototype = {
 		this.hitSpeed = 50;
 		this.fullSpeed = 150;
 		this.walkSpeed = this.fullSpeed;
+		this.healthPoints = 3;
 
 
 		// Jack's sounds
@@ -83,6 +84,8 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.Jack.prototype = {
 		//		this.sprite.shadow.alpha = 0.2;
 		//		this.sprite.shadow.offset = {x: 0, y: -29};
 		//		this.main.maze.entityLayer.add(this.sprite.shadow);
+
+		this.main.maze.ui.setHP(this.healthPoints);
 
 		return this;
 	},
@@ -256,7 +259,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.Jack.prototype = {
 		hitbox.x += this.sprite.position.x;
 		hitbox.y += this.sprite.position.y - hitbox.height/2;
 
-		this.main.game.debug.geom(new Phaser.Rectangle(hitbox.x, hitbox.y, hitbox.width, hitbox.height), "blue");
+		// this.main.game.debug.geom(new Phaser.Rectangle(hitbox.x, hitbox.y, hitbox.width, hitbox.height), "blue");
 
 		for (var i = 0; i < this.main.maze.enemies.length; i++) {
 			var enemy = this.main.maze.enemies[i];
@@ -264,11 +267,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.Jack.prototype = {
 			enemyHitbox.x -= enemyHitbox.width/2;
 			enemyHitbox.y -= enemyHitbox.height/2;
 
-			this.main.game.debug.geom(new Phaser.Rectangle(enemyHitbox.x, enemyHitbox.y, enemyHitbox.width, enemyHitbox.height));
-
-
-			if (new Phaser.Rectangle(hitbox.x, hitbox.y, hitbox.width, hitbox.height).contains(new Phaser.Rectangle(enemyHitbox.x, enemyHitbox.y, enemyHitbox.width, enemyHitbox.height)))
-				logInfo("ACTUAL COLLIDE");
+			// this.main.game.debug.geom(new Phaser.Rectangle(enemyHitbox.x, enemyHitbox.y, enemyHitbox.width, enemyHitbox.height));
 
 			if (hitbox.x < enemyHitbox.x + enemyHitbox.width 
 				&& hitbox.x + hitbox.width > enemyHitbox.x 
@@ -291,5 +290,27 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.Jack.prototype = {
 		this.lockActions = false;
 		this.isHitting = false;
 		this.walkSpeed = this.fullSpeed;
+	},
+
+
+	damage: function () {
+		this.healthPoints--;
+		this.main.maze.ui.setHP(this.healthPoints);
+
+		if (this.healthPoints <= 0) {
+			this.die();
+			return;
+		}
+
+		var sprite = this.sprite;
+		sprite.tint = 0xFF0000;
+
+		setTimeout(function () {
+			sprite.tint = 0xFFFFFF;
+		}, 500);
+	},
+
+	die: function () {
+		onLose();
 	}
 }

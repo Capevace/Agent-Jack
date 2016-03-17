@@ -4,7 +4,17 @@
 // | |\/| | / /\ \    / / |  __|  
 // | |  | |/ ____ \  / /__| |____ 
 // |_|  |_/_/    \_\/_____|______|
-//                 
+//     
+
+
+function setX (y) {
+	jackPlayer.sprite.position.x = x;
+}    
+
+function setY (y) {
+	jackPlayer.sprite.position.y = y;
+}        
+
 var jackPlayer;
 var main;
 JackDanger.AgentJackIEC.prototype.Maze = function(parent) {
@@ -31,6 +41,10 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 
 		// Setup Scene
 		this.setupScene();
+
+		// UI
+		this.ui = new this.UserInterface(this.main);
+
 
 		// Setup Jack
 		this.jack = new this.Jack().init(this.main.world.centerX, this.main.world.height - 1000, this.main);
@@ -241,6 +255,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 
 		for (var i = 0; i < this.sceneData.enemies.length; i++) {
 			var enemyData = this.sceneData.enemies[i];
+			enemyData.y = this.main.world.height - enemyData.y;
 
 			var enemy = new this.Enemy().init(enemyData, this.main);
 			this.enemies.push(enemy);
@@ -348,7 +363,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 		} else {
 			// Update Jack
 			this.jack.update(dt);
-			this.updateEnemies(dt, this.jack.sprite.position, this.currentSector);
+			this.updateEnemies(dt, this.jack, this.currentSector);
 
 			// Sort depth after all other code was run
 			this.sortDepth();
@@ -412,7 +427,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 
 
 	// Updates All Enemies
-	updateEnemies: function (dt, jackPosition, currentSector) {
+	updateEnemies: function (dt, jack, currentSector) {
 		for (var i = 0; i < this.enemies.length; i++) {
 			var enemy = this.enemies[i];
 
@@ -421,7 +436,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 				i--; // Go back one index so we dont skip the next item
 
 			} else {
-				this.enemies[i].update(dt, jackPosition, currentSector);
+				this.enemies[i].update(dt, jack, currentSector);
 			}
 		}
 	},
@@ -440,20 +455,21 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 	}
 };
 
-JackDanger.AgentJackIEC.EmptyCollider = function (x, y, width, height, main, debug) {
-	this.position = new Phaser.Point(x, y);
-	this.debug = debug || false;
+JackDanger.AgentJackIEC.prototype.Maze.prototype.UserInterface = function (main) {
+	this.enabled = true;
+	this.main = main;
 
-	var hiddenSprite = main.add.sprite(x, y, "");
-	main.physics.arcade.enable(hiddenSprite);
-	hiddenSprite.anchor.setTo(0.5);
-	hiddenSprite.body.setSize(width, height, 0, 0);
+	this.health = this.main.add.text(0, 0, "HP: 99", {color: 0xFFFFFF});
+    this.health.fixedToCamera = true;
 
-	this.hiddenSprite = hiddenSprite;
+    this.main.maze.uiLayer.add(this.health);
 
-	game.debug.geom(new Phaser.Rectangle(x - width/2, y - height/2, width, height));
+	return this;
 };
 
-JackDanger.AgentJackIEC.EmptyCollider.prototype.remove = function () {
+JackDanger.AgentJackIEC.prototype.Maze.prototype.UserInterface.prototype = {
 
+	setHP: function (hp) {
+		this.health.text = "HP: " + hp;
+	}
 };

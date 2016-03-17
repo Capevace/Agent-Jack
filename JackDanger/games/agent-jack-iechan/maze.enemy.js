@@ -34,6 +34,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.Enemy.prototype = {
 		this.health = this.maxHealth;
 		this.attackStrength = enemySettings.attackStrength;
 		this.sector = enemySettings.sector;
+		this.hitting = false;
 
 		this.targetPosition = new Phaser.Point();
 
@@ -72,8 +73,8 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.Enemy.prototype = {
 
 
 	// Update AI every frame
-	updateAI: function (dt, jackPosition) {
-		this.targetPosition = jackPosition;
+	updateAI: function (dt, jack) {
+		this.targetPosition = jack.sprite.position;
 		var distanceToTarget = Phaser.Point.distance(this.targetPosition, this.sprite.position);
 
 		if (distanceToTarget > 20.0) {
@@ -82,6 +83,27 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.Enemy.prototype = {
 			this.sprite.body.velocity = direction.multiply(this.walkSpeed * dt * 1000, this.walkSpeed * dt * 1000);
 		} else {
 			this.sprite.body.velocity = new Phaser.Point();
+
+			if (!this.hitting) {
+				this.hitting = true;
+				var sprite = this.sprite;
+				sprite.tint = 0x0000FF;
+				
+				var cacheJack = jack;
+				var cacheThis = this;
+
+
+				// TODO REPLACE THIS WITH HIT ANIMATION + onComplete CALLBACK
+				setTimeout(function () {
+					sprite.tint = 0xFFFFFF;
+					cacheThis.hitting = false;
+
+					logInfo(Phaser.Point.distance(jack.sprite.position, sprite.position));
+					if (Phaser.Point.distance(jack.sprite.position, sprite.position) <= 20 && cacheThis.health > 0) {
+						jack.damage();
+					}
+				}, 1000);
+			}
 		}
 	},
 

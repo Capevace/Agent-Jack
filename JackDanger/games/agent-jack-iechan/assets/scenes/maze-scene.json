@@ -26,16 +26,6 @@
 	},
 	"enemies": [
 		{
-			"x": 350,
-			"y": 2000,
-			"spriteName": "enemy",
-			"hitSpeed": 10,
-			"fullSpeed": 3,
-			"maxHealth": 10,
-			"attackStrenght": 0,
-			"sector": 0
-		},
-		{
 			"x": 300,
 			"y": 2000,
 			"spriteName": "enemy",
@@ -253,5 +243,5 @@
 		"x": 800,
 		"y": 2848
 	},
-	"debugAll": true
+	"debugAll": false
 }
