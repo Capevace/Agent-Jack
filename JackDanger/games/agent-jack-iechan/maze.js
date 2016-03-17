@@ -25,7 +25,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 		this.hackLayer = this.main.add.group();
 
 		this.activeHack = null; // Set active Hack to null
-		this.currentDistrict = 0;
+		this.currentSector = 0;
 
 		this.borderOffsetX = 112; // Offset, which is removed from background because of scale
 
@@ -50,16 +50,18 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 		// 	this.enemyList.remove(this);
 		// };
 
-		var enemy = this.main.add.sprite(this.jack.sprite.position.x, this.jack.sprite.position.y, "jack");
-		this.main.physics.arcade.enable(enemy);
-		enemy.scale.setTo(this.main.globalScale, this.main.globalScale + 1);
-		enemy.anchor.setTo(0.5);
-		enemy.body.collideWorldBounds = true;
-		enemy.onJackHit = function() {
-			logInfo("I'm hit! Meeediiiic!!");
-		};
-		this.enemies.push(enemy);
-		this.entityLayer.add(enemy);
+		// var enemy = this.main.add.sprite(this.jack.sprite.position.x, this.jack.sprite.position.y, "jack");
+		// this.main.physics.arcade.enable(enemy);
+		// enemy.scale.setTo(this.main.globalScale, this.main.globalScale + 1);
+		// enemy.anchor.setTo(0.5);
+		// enemy.body.collideWorldBounds = true;
+		// enemy.body.setSize(15, 25, 0, 0);
+		// enemy.isEnemy = true;
+		// enemy.onJackHit = function() {
+		// 	logInfo("I'm hit! Meeediiiic!!");
+		// };
+		// this.enemies.push(enemy);
+		// this.entityLayer.add(enemy);
 
 
 		// Set Camera to follow player
@@ -84,6 +86,8 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 		this.backgroundLayer.add(this.scene.background);
 
 		this.debugAll = this.sceneData.debugAll;
+
+		this.enemies = [];
 
 		// Define Gate
 		this.scene.gate = {
@@ -234,41 +238,49 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 
 			this.entityLayer.add(sprite);
 		}
+
+		for (var i = 0; i < this.sceneData.enemies.length; i++) {
+			var enemyData = this.sceneData.enemies[i];
+
+			var enemy = new this.Enemy().init(enemyData, this.main);
+			this.enemies.push(enemy);
+			this.entityLayer.add(enemy.sprite);
+		}
 	},
 
 
-	// List Of Enemies that are hittable by player
-	enemies: {
-		push: function(body) {
-			this.bodies.push(body);
-		},
-		remove: function(body) {
-			var index = this.bodies.indexOf(body);
+	// // List Of Enemies that are hittable by player
+	// enemies: {
+	// 	push: function(body) {
+	// 		this.bodies.push(body);
+	// 	},
+	// 	remove: function(body) {
+	// 		var index = this.bodies.indexOf(body);
 
-			if (index != -1)
-				this.bodies.splice(index, 1);
-		},
-		forEach: function(callback, jack) {
-			if (this.bodies.length == 0)
-				callback(null, -1, this.bodies, jack);
+	// 		if (index != -1)
+	// 			this.bodies.splice(index, 1);
+	// 	},
+	// 	forEach: function(callback, jack) {
+	// 		if (this.bodies.length == 0)
+	// 			callback(null, -1, this.bodies, jack);
 
-			for (var i = 0; i < this.bodies.length; i++) {
-				var body = this.bodies[i];
-				if (body.dead) {
-					// Remove object out of array
-					this.bodies.splice(i, 1);
+	// 		for (var i = 0; i < this.bodies.length; i++) {
+	// 			var body = this.bodies[i];
+	// 			if (body.dead) {
+	// 				// Remove object out of array
+	// 				this.bodies.splice(i, 1);
 
-					// go back one index. for loop would skip next item otherwise
-					i--;
-					continue;
-				} else {
-					if (callback(body, i, this.bodies, jack))
-						i = this.bodies.length;
-				}
-			}
-		},
-		bodies: []
-	},
+	// 				// go back one index. for loop would skip next item otherwise
+	// 				i--;
+	// 				continue;
+	// 			} else {
+	// 				if (callback(body, i, this.bodies, jack))
+	// 					i = this.bodies.length;
+	// 			}
+	// 		}
+	// 	},
+	// 	bodies: []
+	// },
 
 
 	// List of items that can be triggered by the player
@@ -336,6 +348,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 		} else {
 			// Update Jack
 			this.jack.update(dt);
+			this.updateEnemies(dt, this.jack.sprite.position, this.currentSector);
 
 			// Sort depth after all other code was run
 			this.sortDepth();
@@ -363,11 +376,11 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 			if (aY > bY) { // If a 'infront' (under) then put to foreground
 				return 1;
 			} else if (aY < bY) { // If a 'behind' (over) then put to background
-				return -1;
-			}
+			return -1;
+		}
 
-			return 0;
-		}, this);
+		return 0;
+	}, this);
 
 		// Go through entities again to update depth colliders with player
 		for (var i = 0; i < this.entityLayer.children.length; i++) {
@@ -393,6 +406,22 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 				if (child.body && child.depthUpdateSettings) {
 					child.body.setSize(child.depthUpdateSettings.sizePlayerOverSprite.width, child.depthUpdateSettings.sizePlayerOverSprite.height, this.main.maze.borderOffsetX + child.depthUpdateSettings.sizePlayerOverSprite.offsetX, child.depthUpdateSettings.sizePlayerOverSprite.offsetY);
 				}
+			}
+		}
+	},
+
+
+	// Updates All Enemies
+	updateEnemies: function (dt, jackPosition, currentSector) {
+		for (var i = 0; i < this.enemies.length; i++) {
+			var enemy = this.enemies[i];
+
+			if (enemy.dead) {
+				this.enemies.splice(i, 1);
+				i--; // Go back one index so we dont skip the next item
+
+			} else {
+				this.enemies[i].update(dt, jackPosition, currentSector);
 			}
 		}
 	},

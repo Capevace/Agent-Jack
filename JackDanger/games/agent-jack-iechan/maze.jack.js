@@ -194,7 +194,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.Jack.prototype = {
 		for (var i = 0; i < this.main.maze.entityLayer.children.length; i++) {
 			var child = this.main.maze.entityLayer.children[i];
 
-			if (child.isPlayer)
+			if (child.isPlayer || child.isEnemy)
 				continue;
 
 			this.main.physics.arcade.collide(this.sprite, child);
@@ -244,76 +244,44 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.Jack.prototype = {
 		// Add animation complete handler => hit complete
 		this.sprite.animations.currentAnim.onComplete.add(this.onHitComplete, this);
 
-		var colliderPosition = new Phaser.Point(0, 0);
+		var hitbox;
 		switch (this.lastDirection) {
-			case this.possibleDirections.UP:
-				colliderPosition.setTo(0, -5);
-				break;
-			case this.possibleDirections.DOWN:
-				colliderPosition.setTo(0, 5);
-				break;
-			case this.possibleDirections.LEFT:
-				colliderPosition.setTo(-5, 0);
-				break;
-			case this.possibleDirections.RIGHT:
-				colliderPosition.setTo(5, 0);
-				break;
-			default: 
-				this.sound.noHit.play();
-				break;
+			case this.possibleDirections.UP:    hitbox = {x: -15, y: 0, width: 30, height: 25}; break;
+			case this.possibleDirections.DOWN:  hitbox = {x: -15, y: 0, width: 30, height: 25}; break;
+			case this.possibleDirections.LEFT:  hitbox = {x: -25, y: 0, width: 25, height: 30}; break;
+			case this.possibleDirections.RIGHT: hitbox = {x: 0, y: 0, width: 25, height: 30}; break;
+			default: this.sound.noHit.play(); break;
 		}
 
-		var collider = new JackDanger.AgentJackIEC.EmptyCollider(this.sprite.position.x + colliderPosition.x, this.sprite.position.y + colliderPosition.y, 100, 100, game.main, true);
+		hitbox.x += this.sprite.position.x;
+		hitbox.y += this.sprite.position.y - hitbox.height/2;
 
-		// Look through enemies if any are punchable
-		this.main.maze.enemies.forEach(function(enemy, index, enemies, jack) {
-			// Bodies are actually empty, play nohit
-			if (index == -1) {
-				jack.sound.noHit.play();
-				return;
+		this.main.game.debug.geom(new Phaser.Rectangle(hitbox.x, hitbox.y, hitbox.width, hitbox.height), "blue");
+
+		for (var i = 0; i < this.main.maze.enemies.length; i++) {
+			var enemy = this.main.maze.enemies[i];
+			var enemyHitbox = {x: enemy.sprite.position.x, y: enemy.sprite.position.y, width: enemy.sprite.body.width, height: enemy.sprite.body.height};
+			enemyHitbox.x -= enemyHitbox.width/2;
+			enemyHitbox.y -= enemyHitbox.height/2;
+
+			this.main.game.debug.geom(new Phaser.Rectangle(enemyHitbox.x, enemyHitbox.y, enemyHitbox.width, enemyHitbox.height));
+
+
+			if (new Phaser.Rectangle(hitbox.x, hitbox.y, hitbox.width, hitbox.height).contains(new Phaser.Rectangle(enemyHitbox.x, enemyHitbox.y, enemyHitbox.width, enemyHitbox.height)))
+				logInfo("ACTUAL COLLIDE");
+
+			if (hitbox.x < enemyHitbox.x + enemyHitbox.width 
+				&& hitbox.x + hitbox.width > enemyHitbox.x 
+				&& hitbox.y < enemyHitbox.y + enemyHitbox.height 
+				&& hitbox.height + hitbox.y > enemyHitbox.y) {
+		    	this.sound.hit.play();
+
+				if (enemy.onHitByJack != undefined)
+					enemy.onHitByJack(5);
+			} else {
+				this.sound.noHit.play();
 			}
-
-			// if (game.main.physics.arcade.collide(enemy, collider.hiddenSprite, function () {
-			// 	logInfo("WE COLLIDED");
-			// }));
-
-			var distanceX = Math.abs(enemy.body.center.x - jack.sprite.body.center.x);
-			var distanceY = Math.abs(enemy.body.center.y - jack.sprite.body.center.y);
-			var totalDistance = Math.sqrt(distanceX*distanceX + distanceY*distanceY);
-
-			if (totalDistance > jack.xHittingDistance.primary && totalDistance > jack.yHittingDistance.primary) {
-				jack.sound.noHit.play();
-				return;
-			}
-
-			if (jack.lastDirection == jack.possibleDirections.LEFT || jack.lastDirection == jack.possibleDirections.RIGHT) {
-				if (distanceX <= jack.xHittingDistance.primary && distanceY <= jack.xHittingDistance.secondary) {
-					// Can be hit
-					jack.sound.hit.play();
-
-					if (enemy.onJackHit != undefined)
-						enemy.onJackHit();
-
-					return true;
-				} else {
-					jack.sound.noHit.play();
-				}
-			} else { 
-				if (distanceY <= jack.yHittingDistance.primary && distanceX <= jack.yHittingDistance.secondary) {
-					// Can be hit
-					jack.sound.hit.play();
-
-					if (enemy.onJackHit != undefined)
-						enemy.onJackHit();
-
-					return true;
-				} else {
-					jack.sound.noHit.play();
-				}
-			}
-
-			return false;
-		}, this);
+		}
 	},
 
 
