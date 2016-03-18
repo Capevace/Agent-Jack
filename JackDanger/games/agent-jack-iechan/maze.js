@@ -47,7 +47,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 
 
 		// Setup Jack
-		this.jack = new this.Jack().init(this.main.world.centerX, this.main.world.height - 1000, this.main);
+		this.jack = new this.Jack().init(this.main.world.centerX, this.main.world.height - 500, this.main);
 
 		jackPlayer = this.jack; // Debug!
 		console.warn("Remove global var jackPlayer + main before release!! Just for debug!!");
@@ -100,6 +100,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 		this.backgroundLayer.add(this.scene.background);
 
 		this.debugAll = this.sceneData.debugAll;
+		this.debugLowerY = this.sceneData.debugLowerY;
 
 		this.enemies = [];
 
@@ -159,6 +160,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 		this.scene.gate.gateDoorL.body.immovable = true;
 		this.scene.gate.gateDoorL.body.sourceWidth = 25;
 		this.scene.gate.gateDoorL.body.sourceHeight = 15;
+		this.scene.gate.gateDoorL.deltaLowY = 105;
 		this.scene.gate.gateDoorL.depthUpdateSettings = {
 			shouldUpdateCollider: true,
 			sizePlayerUnderSprite: {
@@ -187,6 +189,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 		this.scene.gate.gateDoorR.body.immovable = true;
 		this.scene.gate.gateDoorR.body.sourceWidth = 25;
 		this.scene.gate.gateDoorR.body.sourceHeight = 15;
+		this.scene.gate.gateDoorR.deltaLowY = 105;
 		this.scene.gate.gateDoorR.depthUpdateSettings = {
 			sizePlayerUnderSprite: {
 				width: 25,
@@ -228,7 +231,12 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 		for (var i = 0; i < this.sceneData.entities.length; i++) {
 			var entityData = this.sceneData.entities[i];
 
-			if (entityData.position == undefined && entityData.sprite == undefined && entityData.spritesheet == undefined && entityData.sizePlayerUnderSprite == undefined && entityData.sizePlayerOverSprite == undefined && entityData.id == undefined)
+			if (entityData.position == undefined 
+				&& entityData.sprite == undefined 
+				&& entityData.spritesheet == undefined 
+				&& entityData.sizePlayerUnderSprite == undefined 
+				&& entityData.sizePlayerOverSprite == undefined 
+				&& entityData.id == undefined)
 				continue;
 
 			var sprite = this.main.add.sprite(entityData.position.x, this.main.game.world.height - entityData.position.y, entityData.spritesheet, entityData.sprite);
@@ -381,6 +389,11 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 			// Get lower Y of b
 			var bY = (b.deltaLowY != undefined) ? b.position.y + b.deltaLowY * (1 - b.anchor.y) : b.position.y + (b.height * (1 - b.anchor.y));
 
+			if (this.debugLowerY) {
+				this.main.game.debug.geom(new Phaser.Rectangle(a.position.x, a.position.y + a.deltaLowY, 10, 10), "blue");
+				this.main.game.debug.geom(new Phaser.Rectangle(b.position.x, b.position.y + b.deltaLowY, 10, 10), "blue");
+			}
+
 			// Reset positions if a or b is player
 			if (a.isPlayer) {
 				aY = a.position.y + (a.height / 2) - 32;
@@ -412,14 +425,22 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 			// If Jack infront of child => collider = playerUnderSprite
 			if (jackY > childY) {
 				if (child.body && child.depthUpdateSettings) {
-					child.body.setSize(child.depthUpdateSettings.sizePlayerUnderSprite.width, child.depthUpdateSettings.sizePlayerUnderSprite.height, this.main.maze.borderOffsetX + child.depthUpdateSettings.sizePlayerUnderSprite.offsetX, child.depthUpdateSettings.sizePlayerUnderSprite.offsetY);
+					child.body.setSize(child.depthUpdateSettings.sizePlayerUnderSprite.width, 
+						child.depthUpdateSettings.sizePlayerUnderSprite.height, 
+						this.main.maze.borderOffsetX + child.depthUpdateSettings.sizePlayerUnderSprite.offsetX, 
+						child.depthUpdateSettings.sizePlayerUnderSprite.offsetY
+						);
 				}
 			}
 
 			// If Jack infront of child => collider = playerOverSprite
 			else {
 				if (child.body && child.depthUpdateSettings) {
-					child.body.setSize(child.depthUpdateSettings.sizePlayerOverSprite.width, child.depthUpdateSettings.sizePlayerOverSprite.height, this.main.maze.borderOffsetX + child.depthUpdateSettings.sizePlayerOverSprite.offsetX, child.depthUpdateSettings.sizePlayerOverSprite.offsetY);
+					child.body.setSize(child.depthUpdateSettings.sizePlayerOverSprite.width, 
+						child.depthUpdateSettings.sizePlayerOverSprite.height, 
+						this.main.maze.borderOffsetX + child.depthUpdateSettings.sizePlayerOverSprite.offsetX, 
+						child.depthUpdateSettings.sizePlayerOverSprite.offsetY
+						);
 				}
 			}
 		}
@@ -460,9 +481,9 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.UserInterface = function (main)
 	this.main = main;
 
 	this.health = this.main.add.text(0, 0, "HP: 99", {color: 0xFFFFFF});
-    this.health.fixedToCamera = true;
+	this.health.fixedToCamera = true;
 
-    this.main.maze.uiLayer.add(this.health);
+	this.main.maze.uiLayer.add(this.health);
 
 	return this;
 };

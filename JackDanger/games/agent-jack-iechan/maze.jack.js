@@ -144,7 +144,8 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.Jack.prototype = {
 		// Update Shadow
 		//		this.sprite.shadow.frame = this.sprite.frame;
 		//		this.sprite.shadow.scale.setTo(this.sprite.scale.x , -0.25);
-		//		this.sprite.shadow.position.setTo(this.sprite.position.x + this.sprite.shadow.offset.x, this.sprite.position.y + this.sprite.height/2 + this.sprite.shadow.offset.y);
+		//		this.sprite.shadow.position.setTo(this.sprite.position.x + this.sprite.shadow.offset.x, 
+		// this.sprite.position.y + this.sprite.height/2 + this.sprite.shadow.offset.y);
 	},
 
 
