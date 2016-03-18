@@ -35,7 +35,6 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 		this.hackLayer = this.main.add.group();
 
 		this.activeHack = null; // Set active Hack to null
-		this.currentSector = 0;
 
 		this.borderOffsetX = 112; // Offset, which is removed from background because of scale
 
@@ -103,6 +102,9 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 		this.debugLowerY = this.sceneData.debugLowerY;
 
 		this.enemies = [];
+
+		this.currentSector = 0;
+		this.sectors = [0, 525, 1229];
 
 		// Define Gate
 		this.scene.gate = {
@@ -224,7 +226,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 					main.maze.scene.gate.openGate();
 				});
 			}
-		}, false);
+		}, function () {}, false);
 
 
 		// Loop through entities and create every single one
@@ -272,43 +274,9 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 	},
 
 
-	// // List Of Enemies that are hittable by player
-	// enemies: {
-	// 	push: function(body) {
-	// 		this.bodies.push(body);
-	// 	},
-	// 	remove: function(body) {
-	// 		var index = this.bodies.indexOf(body);
-
-	// 		if (index != -1)
-	// 			this.bodies.splice(index, 1);
-	// 	},
-	// 	forEach: function(callback, jack) {
-	// 		if (this.bodies.length == 0)
-	// 			callback(null, -1, this.bodies, jack);
-
-	// 		for (var i = 0; i < this.bodies.length; i++) {
-	// 			var body = this.bodies[i];
-	// 			if (body.dead) {
-	// 				// Remove object out of array
-	// 				this.bodies.splice(i, 1);
-
-	// 				// go back one index. for loop would skip next item otherwise
-	// 				i--;
-	// 				continue;
-	// 			} else {
-	// 				if (callback(body, i, this.bodies, jack))
-	// 					i = this.bodies.length;
-	// 			}
-	// 		}
-	// 	},
-	// 	bodies: []
-	// },
-
-
 	// List of items that can be triggered by the player
 	triggersWithPlayer: {
-		createTrigger: function(x, y, width, height, scope, callback, shouldDebug) {
+		createTrigger: function(x, y, width, height, scope, callback, update, shouldDebug) {
 			var trigger = {
 				getBounds: function() {
 					return this.bounds;
@@ -322,9 +290,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 				},
 				callback: callback,
 				main: scope,
-				update: function() {
-
-				},
+				update: update,
 				used: false,
 				shouldDebug: shouldDebug ||  false
 			}
@@ -372,10 +338,37 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 			// Update Jack
 			this.jack.update(dt);
 			this.updateEnemies(dt, this.jack, this.currentSector);
+			this.updateSector();
 
 			// Sort depth after all other code was run
 			this.sortDepth();
 			this.debug();
+		}
+	},
+
+
+	// Updates All Enemies
+	updateEnemies: function (dt, jack, currentSector) {
+		for (var i = 0; i < this.enemies.length; i++) {
+			var enemy = this.enemies[i];
+
+			if (enemy.dead) {
+				this.enemies.splice(i, 1);
+				i--; // Go back one index so we dont skip the next item
+
+			} else {
+				this.enemies[i].update(dt, jack, currentSector);
+			}
+		}
+	},
+
+
+	updateSector: function () {
+		var currentSectorY = this.sectors[this.currentSector];
+		var nextSectorY = (this.currentSector + 1 < this.sectors.length) ? this.sectors[this.currentSector+1] : -1;
+
+		if (this.main.world.height - this.jack.sprite.position.y >= nextSectorY && nextSectorY != -1) {
+			this.currentSector++;
 		}
 	},
 
@@ -447,27 +440,23 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 	},
 
 
-	// Updates All Enemies
-	updateEnemies: function (dt, jack, currentSector) {
-		for (var i = 0; i < this.enemies.length; i++) {
-			var enemy = this.enemies[i];
-
-			if (enemy.dead) {
-				this.enemies.splice(i, 1);
-				i--; // Go back one index so we dont skip the next item
-
-			} else {
-				this.enemies[i].update(dt, jack, currentSector);
-			}
-		}
-	},
-
-
 	// Unload Level (remove all sprites)
 	disposeLevel: function() {
 		if (!this.initialized) return;
 
 		logInfo("Dispose Maze");
+
+		this.jack.sprite.destroy();
+		delete this.jack;
+
+		for (var i = 0; i < this.enemies.length; i++) {
+			this.enemies[i].sprite.destroy();
+		}
+		delete this.enemies;
+
+		this.backgroundLayer.destroy();
+		this.entityLayer.destroy();
+		this.hackLayer.destroy();
 	},
 
 	// Put debug in here

@@ -40,6 +40,7 @@ JackDanger.LoadingScreen.prototype = {
 				this.updateId.push( setInterval(this.onUpdate.bind(this), 50) );
 				this.loadingText.setText("Drücke C zum Starten");
 				this.updateId.push(setInterval(function(){this.visible = !this.visible}.bind(this.loadingText), 1000));
+				this.world.setBounds(0, 0, 800, 450);
 			}
 			
 		}

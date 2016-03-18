@@ -69,6 +69,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.Enemy.prototype = {
 
 		this.updateAI(dt, jackPosition);
 		this.updateAnimation();
+		this.updateCollision();
 	},
 
 
@@ -139,6 +140,23 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.Enemy.prototype = {
 
 		// if (this.sprite.body.velocity.y == 0 && this.jack.sprite.scale.x < 0)
 		// 	this.jack.sprite.scale.x *= -1;
+	},
+
+
+	updateCollision: function () {
+		for (var i = 0; i < this.main.maze.entityLayer.children.length; i++) {
+			var child = this.main.maze.entityLayer.children[i];
+
+			// Skip Player Collision
+			if (child.isPlayer)
+				continue;
+
+			this.main.physics.arcade.collide(this.sprite, child);
+		}
+
+		if ((this.sprite.body && this.sprite.body.shouldDebug)) {
+			this.main.game.debug.body(this.sprite);
+		}
 	},
 
 

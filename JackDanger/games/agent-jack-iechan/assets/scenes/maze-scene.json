@@ -27,13 +27,13 @@
 	"enemies": [
 		{
 			"x": 300,
-			"y": 2000,
+			"y": 750,
 			"spriteName": "enemy",
 			"hitSpeed": 10,
 			"fullSpeed": 3,
 			"maxHealth": 10,
 			"attackStrenght": 0,
-			"sector": 0
+			"sector": 1
 		}
 	],
 	"entities": [
