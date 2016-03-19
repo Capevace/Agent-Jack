@@ -80,6 +80,7 @@ JackDanger.AgentJackIEC.prototype.mycreate = function() {
 	this.boss = new this.Boss(this); // Init Boss
 	this.globalScale = 4; // Define global scale, every sprite gets scaled by that
 	this.game.main = this;
+	this.stopped = false;
 	
 	// Init Colider Editor (Deactivate for release)
 	this.colliderEditor = new this.ColliderEditor(this.game); 
@@ -96,6 +97,9 @@ JackDanger.AgentJackIEC.prototype.mycreate = function() {
 // Gets executed every frame
 JackDanger.AgentJackIEC.prototype.update = function() {
 	var dt = this.time.physicsElapsedMS * 0.001;
+
+	if (this.stopped)
+		return;
 
 	if (this.currentLevel == this.availableLevels.Maze) {
 		this.maze.update(dt);
@@ -123,6 +127,10 @@ JackDanger.AgentJackIEC.prototype.loadLevel = function (level) {
 	} else {
 		logInfo("Dafuq m8. Pass a valid level bitsch");
 	}
+}
+
+JackDanger.AgentJackIEC.prototype.stop = function () {
+	this.stopped = true;
 }
 
 JackDanger.AgentJackIEC.prototype.availableLevels = {

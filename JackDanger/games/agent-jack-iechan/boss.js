@@ -114,6 +114,8 @@ JackDanger.AgentJackIEC.prototype.Boss.prototype = {
 	spawnMachine: function () {
 
 		if (this.enemiesCount-- <= 0) {
+			this.disposeLevel();
+			this.game.stop();
 			onLose();
 			return;
 		}
