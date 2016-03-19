@@ -36,23 +36,29 @@ JackDanger.AgentJackIEC.prototype.Boss.prototype = {
 				this.scale.x *= -1;
 		};
 		this.jack.hit = function (left, $enemies) {
+			var hitNothing = true;
 			for (var i = 0; i < $enemies.length; i++) {
 				var enemy = $enemies[i];
 				var inRange = (enemy.isLeft) ? enemy.position.x >= 300 : enemy.position.x <= 500;
 
 				if (enemy.isLeft === left && inRange) {
+					hitNothing = false;
+
 					this.sound.hit.play(false);
 					enemy.tint = 0xFF0000;
+
 					setTimeout(function () {
 						enemy.destroy();
 					}, 50);
+
 					$enemies.splice(i, 1);
 					
 					i = $enemies.length;
-				} else {
-					this.sound.noHit.play(false);
 				}
 			}
+
+			if (hitNothing)
+				this.sound.noHit.play(false);
 		};
 
 		this.enemies = [];
@@ -107,8 +113,10 @@ JackDanger.AgentJackIEC.prototype.Boss.prototype = {
 
 	spawnMachine: function () {
 
-		if (this.enemiesCount-- <= 0)
-			return false;
+		if (this.enemiesCount-- <= 0) {
+			onLose();
+			return;
+		}
 
 		var side = Math.round(Math.random());
 
