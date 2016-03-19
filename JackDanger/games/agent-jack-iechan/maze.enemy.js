@@ -45,6 +45,8 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.Enemy.prototype = {
 		this.sprite.animations.add("run-lr-idle", ["run-lr-idle"], 1, true, false);
 		this.sprite.animations.add("run-lr", Phaser.Animation.generateFrameNames('run-lr-', 1, 6, '', 4), 8, true, false);
 
+		this.sprite.animations.add("punch-lr", Phaser.Animation.generateFrameNames('punch-lr-', 0, 7, '', 4), 16, false, false);
+
 		// Enemy Animation Run Up
 		// this.sprite.animations.add("run-up-idle", Phaser.Animation.generateFrameNames('run-up-idle-', 0, 0, '', 4), 1, true, false);
 		// this.sprite.animations.add("run-up", Phaser.Animation.generateFrameNames('run-up-', 0, 17, '', 4), 40, true, false);
@@ -78,7 +80,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.Enemy.prototype = {
 		this.targetPosition = jack.sprite.position;
 		var distanceToTarget = Phaser.Point.distance(this.targetPosition, this.sprite.position);
 
-		if (distanceToTarget > 20.0) {
+		if (distanceToTarget > 30.0) {
 			var direction = Phaser.Point.subtract(this.targetPosition, this.sprite.position).normalize();
 
 			this.sprite.body.velocity = direction.multiply(this.walkSpeed * dt * 1000, this.walkSpeed * dt * 1000);
@@ -87,23 +89,18 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.Enemy.prototype = {
 
 			if (!this.hitting) {
 				this.hitting = true;
-				var sprite = this.sprite;
-				sprite.tint = 0x0000FF;
-				
+				this.walkAnimationBlocked = true;
+				this.sprite.animations.play("punch-lr");
+
 				var cacheJack = jack;
-				var cacheThis = this;
+				this.sprite.animations.currentAnim.onComplete.add(function () {
+					this.hitting = false;
+					this.walkAnimationBlocked = false;
 
-
-				// TODO REPLACE THIS WITH HIT ANIMATION + onComplete CALLBACK
-				setTimeout(function () {
-					sprite.tint = 0xFFFFFF;
-					cacheThis.hitting = false;
-
-					logInfo(Phaser.Point.distance(jack.sprite.position, sprite.position));
-					if (Phaser.Point.distance(jack.sprite.position, sprite.position) <= 20 && cacheThis.health > 0) {
-						jack.damage();
+					if (Phaser.Point.distance(cacheJack.sprite.position, this.sprite.position) <= 30 && this.health > 0) {
+						cacheJack.damage();
 					}
-				}, 1000);
+				}, this);
 			}
 		}
 	},
