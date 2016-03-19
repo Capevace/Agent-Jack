@@ -15,6 +15,7 @@ JackDanger.AgentJackIEC.prototype.Boss.prototype = {
 		logInfo("Init Boss");
 
 		this.game.world.setBounds(0, 0, 800, 450);
+		this.running = true;
 
 		this.jack = this.game.add.sprite(this.game.world.width/2, this.game.world.height - 100, "jack", "run-lr-idle-0000");
 		this.jack.scale.setTo(this.game.globalScale);
@@ -67,14 +68,17 @@ JackDanger.AgentJackIEC.prototype.Boss.prototype = {
 		this.canPunch = true;
 		this.punchCooldown = 0;
 
-		var self = this;
-		setInterval(function () {
-			self.spawnMachine();
-		}, 500);
+		// var self = this;
+		// var spawnMachineLoop = setInterval(function () {
+		// 	self.spawnMachine();
+		// }, 500);
+
+		this.spawnMachineTime = 0.5;
 	},
 
 	update: function (dt) {
 		this.updateInput(dt);
+		this.spawnMachine(dt);
 	},
 
 	updateInput: function (dt) {
@@ -111,12 +115,22 @@ JackDanger.AgentJackIEC.prototype.Boss.prototype = {
 		}
 	},
 
-	spawnMachine: function () {
+	spawnMachine: function (dt) {
+		this.spawnMachineTime -= dt;
 
-		if (this.enemiesCount-- <= 0) {
-			this.disposeLevel();
-			this.game.stop();
-			onLose();
+		if (this.spawnMachineTime <= 0) {
+			this.spawnMachineTime = 0.5;
+		} else {
+			return;
+		}
+
+		if (this.enemiesCount-- <= 0 && this.running) {
+			if (this.enemies.length <= 0) {
+				this.disposeLevel();
+				this.game.stop();
+				onVictory();
+			}
+			
 			return;
 		}
 
@@ -127,7 +141,6 @@ JackDanger.AgentJackIEC.prototype.Boss.prototype = {
 		} else {
 			this.spawnEnemy(false);
 		}
-		
 	},
 
 	spawnEnemy: function (isLeft) {
@@ -176,6 +189,9 @@ JackDanger.AgentJackIEC.prototype.Boss.prototype = {
 
 	disposeLevel: function () {
 		if (!this.initialized) return;
+		this.running = false;
+
+		clearInterval(this.sMLoop);
 
 		logInfo("Dispose Boss");
 	}
