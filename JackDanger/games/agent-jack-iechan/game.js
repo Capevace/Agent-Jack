@@ -29,7 +29,7 @@ addMyGame("agent-jack-iechan",
 // Initialize Minigame Launching
 JackDanger.AgentJackIEC.prototype.init = function() {
 	// Show loading screen
-	addLoadingScreen(this, false);
+	addLoadingScreen(this, true);
 }
 
 // Load assets for preload

@@ -15,6 +15,10 @@ function setY (y) {
 	jackPlayer.sprite.position.y = y;
 }        
 
+function playBoss () {
+	main.loadLevel(main.availableLevels.Boss);
+}
+
 var jackPlayer;
 var main;
 JackDanger.AgentJackIEC.prototype.Maze = function(parent) {
@@ -43,7 +47,6 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 
 		// UI
 		this.ui = new this.UserInterface(this.main);
-
 
 		// Setup Jack
 		this.jack = new this.Jack().init(this.main.world.centerX, this.main.world.height - 500, this.main);
@@ -456,6 +459,8 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 
 		this.backgroundLayer.destroy();
 		this.entityLayer.destroy();
+		this.foregroundLayer.destroy();
+		this.uiLayer.destroy();
 		this.hackLayer.destroy();
 	},
 

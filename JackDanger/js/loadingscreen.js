@@ -4,7 +4,8 @@ JackDanger.LoadingScreen = function(gameState, skip){
 
 	this.back = gameState.add.sprite(0,0, "loadingback");
 	
-	
+	gameState.world.setBounds(0, 0, 800, 450);
+
 	this.loadingText = gameState.add.bitmapText(gameState.world.width / 2 + 50, gameState.world.height - 40, "bigYellow", "0%", 30);
 	this.loadingText.anchor.set(0.5);
 
