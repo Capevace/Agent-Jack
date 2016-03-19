@@ -107,7 +107,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 		this.enemies = [];
 
 		this.currentSector = 0;
-		this.sectors = [0, 525, 1229];
+		this.sectors = [0, 550, 1229];
 
 		// Define Gate
 		this.scene.gate = {
