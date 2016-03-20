@@ -60,6 +60,9 @@ JackDanger.AgentJackIEC.prototype.preload = function() {
 	// Hack Sprites
 	this.load.atlas("hack-circles", "hack/circles.png", "hack/circles.json", Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
 
+	// Blood Splatter
+	this.load.atlas("blood", "spritesheets/blood.png", "spritesheets/blood.json", Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
+
 	// Jack (Maze) Sounds
 	this.load.audio('jack-hit', 'sounds/punch-hit.wav');
 	this.load.audio('jack-nohit', 'sounds/punch-nohit.wav');

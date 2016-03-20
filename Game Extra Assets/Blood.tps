@@ -6,7 +6,7 @@
         <key>texturePackerVersion</key>
         <string>4.1.0</string>
         <key>fileName</key>
-        <string>/Users/Lukas/Documents/Games/Agent-Jack/Game Extra Assets/Enemy.tps</string>
+        <string>/Users/Lukas/Documents/Games/Agent-Jack/Game Extra Assets/Blood.tps</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -147,7 +147,7 @@
             <key>data</key>
             <struct type="DataFile">
                 <key>name</key>
-                <filename>../JackDanger/games/agent-jack-iechan/assets/spritesheets/enemy.json</filename>
+                <filename>../JackDanger/games/agent-jack-iechan/assets/spritesheets/blood.json</filename>
             </struct>
         </map>
         <key>multiPack</key>
@@ -194,45 +194,12 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
-            <key type="filename">Enemy/punch-down-0000.png</key>
-            <key type="filename">Enemy/punch-down-0001.png</key>
-            <key type="filename">Enemy/punch-down-0002.png</key>
-            <key type="filename">Enemy/punch-down-0003.png</key>
-            <key type="filename">Enemy/punch-down-0004.png</key>
-            <key type="filename">Enemy/punch-lr-0000.png</key>
-            <key type="filename">Enemy/punch-lr-0001.png</key>
-            <key type="filename">Enemy/punch-lr-0002.png</key>
-            <key type="filename">Enemy/punch-lr-0003.png</key>
-            <key type="filename">Enemy/punch-lr-0004.png</key>
-            <key type="filename">Enemy/punch-lr-0005.png</key>
-            <key type="filename">Enemy/punch-lr-0006.png</key>
-            <key type="filename">Enemy/punch-up-0000.png</key>
-            <key type="filename">Enemy/punch-up-0001.png</key>
-            <key type="filename">Enemy/punch-up-0002.png</key>
-            <key type="filename">Enemy/punch-up-0003.png</key>
-            <key type="filename">Enemy/punch-up-0004.png</key>
-            <key type="filename">Enemy/run-down-0000.png</key>
-            <key type="filename">Enemy/run-down-0001.png</key>
-            <key type="filename">Enemy/run-down-0002.png</key>
-            <key type="filename">Enemy/run-down-0003.png</key>
-            <key type="filename">Enemy/run-down-0004.png</key>
-            <key type="filename">Enemy/run-down-0005.png</key>
-            <key type="filename">Enemy/run-down-0006.png</key>
-            <key type="filename">Enemy/run-lr-0001.png</key>
-            <key type="filename">Enemy/run-lr-0002.png</key>
-            <key type="filename">Enemy/run-lr-0003.png</key>
-            <key type="filename">Enemy/run-lr-0004.png</key>
-            <key type="filename">Enemy/run-lr-0005.png</key>
-            <key type="filename">Enemy/run-lr-0006.png</key>
-            <key type="filename">Enemy/run-lr-0007.png</key>
-            <key type="filename">Enemy/run-lr-idle.png</key>
-            <key type="filename">Enemy/run-up-0000.png</key>
-            <key type="filename">Enemy/run-up-0001.png</key>
-            <key type="filename">Enemy/run-up-0002.png</key>
-            <key type="filename">Enemy/run-up-0003.png</key>
-            <key type="filename">Enemy/run-up-0004.png</key>
-            <key type="filename">Enemy/run-up-0005.png</key>
-            <key type="filename">Enemy/run-up-idle.png</key>
+            <key type="filename">Blood/blood-0000.png</key>
+            <key type="filename">Blood/blood-0001.png</key>
+            <key type="filename">Blood/blood-0002.png</key>
+            <key type="filename">Blood/blood-0003.png</key>
+            <key type="filename">Blood/blood-0004.png</key>
+            <key type="filename">Blood/blood-0005.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -240,45 +207,12 @@
         </map>
         <key>fileList</key>
         <array>
-            <filename>Enemy/punch-down-0000.png</filename>
-            <filename>Enemy/punch-down-0001.png</filename>
-            <filename>Enemy/punch-down-0002.png</filename>
-            <filename>Enemy/punch-down-0003.png</filename>
-            <filename>Enemy/punch-down-0004.png</filename>
-            <filename>Enemy/punch-lr-0000.png</filename>
-            <filename>Enemy/punch-lr-0001.png</filename>
-            <filename>Enemy/punch-lr-0002.png</filename>
-            <filename>Enemy/punch-lr-0003.png</filename>
-            <filename>Enemy/punch-lr-0004.png</filename>
-            <filename>Enemy/punch-lr-0005.png</filename>
-            <filename>Enemy/punch-lr-0006.png</filename>
-            <filename>Enemy/punch-up-0000.png</filename>
-            <filename>Enemy/punch-up-0001.png</filename>
-            <filename>Enemy/punch-up-0002.png</filename>
-            <filename>Enemy/punch-up-0003.png</filename>
-            <filename>Enemy/punch-up-0004.png</filename>
-            <filename>Enemy/run-down-0000.png</filename>
-            <filename>Enemy/run-down-0001.png</filename>
-            <filename>Enemy/run-down-0002.png</filename>
-            <filename>Enemy/run-down-0003.png</filename>
-            <filename>Enemy/run-down-0004.png</filename>
-            <filename>Enemy/run-down-0005.png</filename>
-            <filename>Enemy/run-down-0006.png</filename>
-            <filename>Enemy/run-lr-0001.png</filename>
-            <filename>Enemy/run-lr-0002.png</filename>
-            <filename>Enemy/run-lr-0003.png</filename>
-            <filename>Enemy/run-lr-0004.png</filename>
-            <filename>Enemy/run-lr-0005.png</filename>
-            <filename>Enemy/run-lr-0006.png</filename>
-            <filename>Enemy/run-lr-0007.png</filename>
-            <filename>Enemy/run-lr-idle.png</filename>
-            <filename>Enemy/run-up-0000.png</filename>
-            <filename>Enemy/run-up-0001.png</filename>
-            <filename>Enemy/run-up-0002.png</filename>
-            <filename>Enemy/run-up-0003.png</filename>
-            <filename>Enemy/run-up-0004.png</filename>
-            <filename>Enemy/run-up-0005.png</filename>
-            <filename>Enemy/run-up-idle.png</filename>
+            <filename>Blood/blood-0000.png</filename>
+            <filename>Blood/blood-0001.png</filename>
+            <filename>Blood/blood-0002.png</filename>
+            <filename>Blood/blood-0003.png</filename>
+            <filename>Blood/blood-0004.png</filename>
+            <filename>Blood/blood-0005.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

@@ -274,6 +274,8 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.Jack.prototype = {
 				&& hitbox.x + hitbox.width > enemyHitbox.x 
 				&& hitbox.y < enemyHitbox.y + enemyHitbox.height 
 				&& hitbox.height + hitbox.y > enemyHitbox.y) {
+
+
 		    	this.sound.hit.play();
 
 				if (enemy.onHitByJack != undefined)
@@ -303,11 +305,21 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.Jack.prototype = {
 			return;
 		}
 
-		var sprite = this.sprite;
-		sprite.tint = 0xFF0000;
+		var blood = this.main.add.sprite(this.sprite.position.x, this.sprite.position.y, "blood");
+		blood.anchor.setTo(0.5);
+		blood.scale.setTo(this.main.globalScale);
+		blood.animations.add("splat", Phaser.Animation.generateFrameNames('blood-', 0, 5, '', 4), 7, false, false);
+		blood.animations.play("splat");
+		blood.animations.currentAnim.onComplete.add(function () {
+			this.kill();
+		}, blood);
+		this.main.maze.entityLayer.add(blood);
+
+		// var sprite = this.sprite;
+		// sprite.tint = 0xFF0000;
 
 		setTimeout(function () {
-			sprite.tint = 0xFFFFFF;
+			// sprite.tint = 0xFFFFFF;
 		}, 500);
 	},
 

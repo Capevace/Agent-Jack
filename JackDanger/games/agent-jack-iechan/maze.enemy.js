@@ -45,22 +45,14 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.Enemy.prototype = {
 		this.sprite.animations.add("run-lr-idle", ["run-lr-idle"], 1, true, false);
 		this.sprite.animations.add("run-lr", Phaser.Animation.generateFrameNames('run-lr-', 1, 7, '', 4), 8, true, false);
 		this.sprite.animations.add("run-down", Phaser.Animation.generateFrameNames('run-down-', 0, 6, '', 4), 8, true, false);
+		this.sprite.animations.add("run-up", Phaser.Animation.generateFrameNames('run-up-', 0, 5, '', 4), 8, true, false);
 
 		this.sprite.animations.add("punch-lr", Phaser.Animation.generateFrameNames('punch-lr-', 0, 7, '', 4), 16, false, false);
-
-		// Enemy Animation Run Up
-		// this.sprite.animations.add("run-up-idle", Phaser.Animation.generateFrameNames('run-up-idle-', 0, 0, '', 4), 1, true, false);
-		// this.sprite.animations.add("run-up", Phaser.Animation.generateFrameNames('run-up-', 0, 17, '', 4), 40, true, false);
-
-		// // Enemy Animation Run Down
-		// this.sprite.animations.add("run-down-idle", Phaser.Animation.generateFrameNames('run-down-idle-', 0, 0, '', 4), 1, true, false);
-		// this.sprite.animations.add("run-down", Phaser.Animation.generateFrameNames('run-down-', 0, 17, '', 4), 40, true, false);
-
-		// // Enemy Animation Punching
-		// this.sprite.animations.add("punch-lr", Phaser.Animation.generateFrameNames('punch-lr-', 0, 6, '', 4), 20, false, false);
-		// this.sprite.animations.add("punch-up", Phaser.Animation.generateFrameNames('punch-up-', 0, 5, '', 4), 20, false, false);
-		// this.sprite.animations.add("punch-down", Phaser.Animation.generateFrameNames('kick-down-', 0, 10, '', 4), 30, false, false);
+		this.sprite.animations.add("punch-down", Phaser.Animation.generateFrameNames('punch-down-', 0, 4, '', 4), 10, false, false);
+		this.sprite.animations.add("punch-up", Phaser.Animation.generateFrameNames('punch-up-', 0, 4, '', 4), 16, false, false);
 		
+		this.sprite.animations.play("run-lr-idle");
+
 		return this;
 	},
 
@@ -91,7 +83,17 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.Enemy.prototype = {
 			if (!this.hitting) {
 				this.hitting = true;
 				this.walkAnimationBlocked = true;
-				this.sprite.animations.play("punch-lr");
+
+				var direction = Phaser.Point.subtract(this.targetPosition, this.sprite.position).normalize();
+				logInfo(direction);
+				if (Math.abs(direction.y) < Math.abs(direction.x)) {
+					this.sprite.animations.play("punch-lr");
+				} else {
+					if (direction.y < 0)
+						this.sprite.animations.play("punch-up");
+					else
+						this.sprite.animations.play("punch-down");
+				}
 
 				var cacheJack = jack;
 				this.sprite.animations.currentAnim.onComplete.add(function () {
@@ -120,8 +122,11 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.Enemy.prototype = {
 			// Walking animations for corresponding direcitons
 			if (Math.abs(this.sprite.body.velocity.y) < Math.abs(this.sprite.body.velocity.x)) {
 				this.sprite.animations.play("run-lr");
-			} else if (Math.abs(this.sprite.body.velocity.y) > Math.abs(this.sprite.body.velocity.x)) {
-				this.sprite.animations.play("run-down");
+			} else {
+				if (this.sprite.body.velocity.y < 0)
+					this.sprite.animations.play("run-up");
+				else
+					this.sprite.animations.play("run-down");
 			}
 			//  else if (this.lastDirection == this.possibleDirections.UP) {
 			// 	this.sprite.animations.play("run-up");
