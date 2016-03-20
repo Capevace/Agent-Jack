@@ -194,12 +194,28 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
+            <key type="filename">Jack Danger Enemy/punch-lr-0000.png</key>
+            <key type="filename">Jack Danger Enemy/punch-lr-0001.png</key>
+            <key type="filename">Jack Danger Enemy/punch-lr-0002.png</key>
+            <key type="filename">Jack Danger Enemy/punch-lr-0003.png</key>
+            <key type="filename">Jack Danger Enemy/punch-lr-0004.png</key>
+            <key type="filename">Jack Danger Enemy/punch-lr-0005.png</key>
+            <key type="filename">Jack Danger Enemy/punch-lr-0006.png</key>
+            <key type="filename">Jack Danger Enemy/punch-lr-0007.png</key>
+            <key type="filename">Jack Danger Enemy/run-down-0000.png</key>
+            <key type="filename">Jack Danger Enemy/run-down-0001.png</key>
+            <key type="filename">Jack Danger Enemy/run-down-0002.png</key>
+            <key type="filename">Jack Danger Enemy/run-down-0003.png</key>
+            <key type="filename">Jack Danger Enemy/run-down-0004.png</key>
+            <key type="filename">Jack Danger Enemy/run-down-0005.png</key>
+            <key type="filename">Jack Danger Enemy/run-down-0006.png</key>
             <key type="filename">Jack Danger Enemy/run-lr-0001.png</key>
             <key type="filename">Jack Danger Enemy/run-lr-0002.png</key>
             <key type="filename">Jack Danger Enemy/run-lr-0003.png</key>
             <key type="filename">Jack Danger Enemy/run-lr-0004.png</key>
             <key type="filename">Jack Danger Enemy/run-lr-0005.png</key>
             <key type="filename">Jack Danger Enemy/run-lr-0006.png</key>
+            <key type="filename">Jack Danger Enemy/run-lr-0007.png</key>
             <key type="filename">Jack Danger Enemy/run-lr-idle.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -208,13 +224,29 @@
         </map>
         <key>fileList</key>
         <array>
+            <filename>Jack Danger Enemy/punch-lr-0000.png</filename>
+            <filename>Jack Danger Enemy/punch-lr-0001.png</filename>
+            <filename>Jack Danger Enemy/punch-lr-0002.png</filename>
+            <filename>Jack Danger Enemy/punch-lr-0003.png</filename>
+            <filename>Jack Danger Enemy/punch-lr-0004.png</filename>
+            <filename>Jack Danger Enemy/punch-lr-0005.png</filename>
+            <filename>Jack Danger Enemy/punch-lr-0006.png</filename>
+            <filename>Jack Danger Enemy/punch-lr-0007.png</filename>
+            <filename>Jack Danger Enemy/run-down-0000.png</filename>
+            <filename>Jack Danger Enemy/run-down-0001.png</filename>
+            <filename>Jack Danger Enemy/run-down-0002.png</filename>
+            <filename>Jack Danger Enemy/run-down-0003.png</filename>
+            <filename>Jack Danger Enemy/run-down-0004.png</filename>
+            <filename>Jack Danger Enemy/run-down-0005.png</filename>
+            <filename>Jack Danger Enemy/run-down-0006.png</filename>
             <filename>Jack Danger Enemy/run-lr-0001.png</filename>
             <filename>Jack Danger Enemy/run-lr-0002.png</filename>
             <filename>Jack Danger Enemy/run-lr-0003.png</filename>
             <filename>Jack Danger Enemy/run-lr-0004.png</filename>
             <filename>Jack Danger Enemy/run-lr-0005.png</filename>
-            <filename>Jack Danger Enemy/run-lr-idle.png</filename>
             <filename>Jack Danger Enemy/run-lr-0006.png</filename>
+            <filename>Jack Danger Enemy/run-lr-0007.png</filename>
+            <filename>Jack Danger Enemy/run-lr-idle.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

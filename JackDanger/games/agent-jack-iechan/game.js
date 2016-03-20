@@ -44,6 +44,9 @@ JackDanger.AgentJackIEC.prototype.preload = function() {
 	
 	// Maze Background
 	this.load.image("maze-bg", "maze-bg.png");
+	this.load.image("maze-bg-ground", "bg/maze-bg-ground.png");
+	this.load.image("maze-bg-middle", "bg/maze-bg-middle.png");
+	this.load.image("maze-bg-top", "bg/maze-bg-top.png");
 
 	// Jack (Maze) Atlas
 	this.load.atlas("jack", "spritesheets/jack.png", "spritesheets/jack.json", Phaser.Loader.TEXTURE_ATLAS_JSON_HASH); // Jack Running

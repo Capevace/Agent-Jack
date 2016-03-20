@@ -96,10 +96,20 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 		this.main.physics.startSystem(Phaser.Physics.ARCADE);
 
 		// Set World Background
-		this.scene.background = this.main.add.sprite(this.main.world.centerX, this.main.world.height, "maze-bg");
+		this.scene.background = this.main.add.sprite(this.main.world.centerX, this.main.world.height, "maze-bg-ground");
 		this.scene.background.anchor.setTo(0.5, 1);
 		this.scene.background.scale.setTo(this.main.globalScale);
 		this.backgroundLayer.add(this.scene.background);
+
+		this.scene.middleGround = this.main.add.sprite(this.main.world.centerX, this.main.world.height, "maze-bg-middle");
+		this.scene.middleGround.anchor.setTo(0.5, 1);
+		this.scene.middleGround.scale.setTo(this.main.globalScale);
+		this.backgroundLayer.add(this.scene.middleGround);
+
+		this.scene.foreground = this.main.add.sprite(this.main.world.centerX, this.main.world.height, "maze-bg-top");
+		this.scene.foreground.anchor.setTo(0.5, 1);
+		this.scene.foreground.scale.setTo(this.main.globalScale);
+		this.foregroundLayer.add(this.scene.foreground);
 
 		this.debugAll = this.sceneData.debugAll;
 		this.debugLowerY = this.sceneData.debugLowerY;
@@ -222,7 +232,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 
 
 		// Create first gate trigger
-		this.triggersWithPlayer.createTrigger(240, 550, 84, 76, this.main, function(main) {
+		this.triggersWithPlayer.createTrigger(240, 505, 84, 50, this.main, function(main) {
 			if (main.maze.activeHack == null) {
 				main.maze.activeHack = new main.maze.Hack(main, function() {
 					main.maze.activeHack = null;
@@ -288,6 +298,8 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 				trigger: function() {
 					if (!this.used) {
 						this.used = true;
+						this.main.maze.backgroundLayer.remove(this.sprite);
+						this.sprite.destroy();
 						this.callback(this.main);
 					}
 				},
@@ -295,8 +307,16 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 				main: scope,
 				update: update,
 				used: false,
-				shouldDebug: shouldDebug ||  false
-			}
+				shouldDebug: shouldDebug ||  false,
+				sprite: scope.add.sprite(x + width/2, scope.game.world.height - y + height/2, "hack-circles", "trigger")
+			};
+
+			trigger.sprite.sourceWidth = width;
+			trigger.sprite.sourceHeight = height;
+			trigger.sprite.anchor.setTo(0.5, 0.5);
+			trigger.sprite.tint = 0xA1D490;
+			trigger.sprite.scale.setTo(1.5);
+			scope.maze.backgroundLayer.add(trigger.sprite);
 
 			this.push(trigger);
 			return trigger;

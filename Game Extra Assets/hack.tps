@@ -204,6 +204,7 @@
             <key type="filename">HackerMG/circle-3-on.png</key>
             <key type="filename">HackerMG/hack-bg-done.png</key>
             <key type="filename">HackerMG/hack-bg.png</key>
+            <key type="filename">HackerMG/trigger.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -221,6 +222,7 @@
             <filename>HackerMG/circle-3-on.png</filename>
             <filename>HackerMG/hack-bg-done.png</filename>
             <filename>HackerMG/hack-bg.png</filename>
+            <filename>HackerMG/trigger.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

@@ -79,14 +79,22 @@
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":200,"h":200},
 	"sourceSize": {"w":200,"h":200}
+},
+"trigger":
+{
+	"frame": {"x":200,"y":296,"w":32,"h":32},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
+	"sourceSize": {"w":32,"h":32}
 }},
 "meta": {
 	"app": "http://www.codeandweb.com/texturepacker",
 	"version": "1.0",
 	"image": "circles.png",
 	"format": "RGBA8888",
-	"size": {"w":228,"h":496},
+	"size": {"w":232,"h":496},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:d57a59675197fca7de9330d0a16c76d3:589d2822e9afbc8946286980f5b8ed28:14276a904b6b9c9e04e04b9bae5550ee$"
+	"smartupdate": "$TexturePacker:SmartUpdate:ae4f43c0caa24489885064b9777f9778:679d8b44a41ee202c8dfac49d6c60171:14276a904b6b9c9e04e04b9bae5550ee$"
 }
 }

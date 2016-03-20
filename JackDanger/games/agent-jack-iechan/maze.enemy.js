@@ -43,7 +43,8 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.Enemy.prototype = {
 		////
 		// Enemy Animation Run Left-Right
 		this.sprite.animations.add("run-lr-idle", ["run-lr-idle"], 1, true, false);
-		this.sprite.animations.add("run-lr", Phaser.Animation.generateFrameNames('run-lr-', 1, 6, '', 4), 8, true, false);
+		this.sprite.animations.add("run-lr", Phaser.Animation.generateFrameNames('run-lr-', 1, 7, '', 4), 8, true, false);
+		this.sprite.animations.add("run-down", Phaser.Animation.generateFrameNames('run-down-', 0, 6, '', 4), 8, true, false);
 
 		this.sprite.animations.add("punch-lr", Phaser.Animation.generateFrameNames('punch-lr-', 0, 7, '', 4), 16, false, false);
 
@@ -117,10 +118,10 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.Enemy.prototype = {
 			this.sprite.animations.play("run-lr-idle");
 		} else {
 			// Walking animations for corresponding direcitons
-			if (this.sprite.body.velocity.y != 0 || this.sprite.body.velocity.x < 0) {
+			if (Math.abs(this.sprite.body.velocity.y) < Math.abs(this.sprite.body.velocity.x)) {
 				this.sprite.animations.play("run-lr");
-			} else if (this.sprite.body.velocity.y != 0 || this.sprite.body.velocity.x < 0) {
-				this.sprite.animations.play("run-lr");
+			} else if (Math.abs(this.sprite.body.velocity.y) > Math.abs(this.sprite.body.velocity.x)) {
+				this.sprite.animations.play("run-down");
 			}
 			//  else if (this.lastDirection == this.possibleDirections.UP) {
 			// 	this.sprite.animations.play("run-up");
