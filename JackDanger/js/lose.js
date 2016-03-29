@@ -1,6 +1,6 @@
 
 
-JackDanger.GameFinished = (function() {
+JackDanger.OnLose = (function() {
     var Game = function(){};
 
     Game.prototype.init = function() {
@@ -21,22 +21,21 @@ JackDanger.GameFinished = (function() {
         this.hud.fixedToCamera = true;
         this.world.setBounds(0,0,800,450);
 
-           
+        this.back = this.add.sprite(0,0, "onlose", null, this.hud);
+
+        console.log(this.back.width);   
         
         
-        this.loseText = this.add.bitmapText(this.world.width / 2, - 80, "bigYellow", "GESCHAFFT!", 60, this.hud);
+        this.loseText = this.add.bitmapText(this.world.width / 2, - 80, "bigYellow", "VERLOREN!", 60, this.hud);
         this.loseText.anchor.set(0.5);
         var tween = this.game.add.tween(this.loseText).to({
             y: this.world.height / 2
-        }, 700, Phaser.Easing.Back.Out, true, 2000);
+        }, 700, Phaser.Easing.Back.Out, true);
 
-       
+        this.turnDown();
 
-        game.time.events.add(Phaser.Timer.SECOND * 2, this.addPushText, this);
+        game.time.events.add(Phaser.Timer.SECOND * 1, this.addPushText, this);
 
-        this.back = this.add.sprite(this.world.width / 2, this.world.height / 2, "onlose", null, this.hud);
-        this.back.anchor.set(0.5);
-         this.goFrame();
 
     }
 
@@ -49,11 +48,18 @@ JackDanger.GameFinished = (function() {
     Game.prototype.render = function() {
     }
 
-    
+    Game.prototype.fallDown = function() {
+        var tween = this.game.add.tween(this.back).to({
+            y: this.world.height + 10
+        }, 700, Phaser.Easing.Cubic.In, true, 500);
+        //tween.onComplete.add(this.fallDown, this);
+    }
 
-    Game.prototype.goFrame = function() {
-        var tween = this.game.add.tween(this.back).to({rotation: Math.PI * 1.9, x: 100, y: 100}, 2000, Phaser.Easing.Back.Out, true, 500);
-        var tween = this.game.add.tween(this.back.scale).to({x: 0.3, y: 0.3}, 2000, Phaser.Easing.Back.InOut, true, 500);
+    Game.prototype.turnDown = function() {
+        var tween = this.game.add.tween(this.back).to({
+            rotation: 1
+        }, 5000, Phaser.Easing.Elastic.Out, true, 500);
+        tween.onComplete.add(this.fallDown, this);
     }
 
     

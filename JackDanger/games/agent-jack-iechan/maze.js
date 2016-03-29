@@ -49,7 +49,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 		this.ui = new this.UserInterface(this.main);
 
 		// Setup Jack
-		this.jack = new this.Jack().init(this.main.world.centerX, this.main.world.height - 500, this.main);
+		this.jack = new this.Jack().init(this.main.world.centerX-250, this.main.world.height - 500, this.main);
 
 		jackPlayer = this.jack; // Debug!
 		console.warn("Remove global var jackPlayer + main before release!! Just for debug!!");
@@ -92,7 +92,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 		this.sceneData = this.main.cache.getJSON("maze-scene");
 
 		// Setup World + Physics
-		this.main.world.setBounds(0, 0, this.sceneData.worldSize.x, this.sceneData.worldSize.y);
+		this.main.world.setBounds(0, 0, this.sceneData.worldSize.x, this.sceneData.worldSize.y - 400);
 		this.main.physics.startSystem(Phaser.Physics.ARCADE);
 
 		// Set World Background
@@ -117,7 +117,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 		this.enemies = [];
 
 		this.currentSector = 0;
-		this.sectors = [0, 550, 1229];
+		this.sectors = [0, 550, 1638, 2171];
 
 		// Define Gate
 		this.scene.gate = {
@@ -366,6 +366,10 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 			// Sort depth after all other code was run
 			this.sortDepth();
 			this.debug();
+
+			if (this.jack.sprite.position.y <= 112.5) {
+				onVictory();
+			}
 		}
 	},
 
@@ -392,6 +396,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 
 		if (this.main.world.height - this.jack.sprite.position.y >= nextSectorY && nextSectorY != -1) {
 			this.currentSector++;
+			logInfo(this.currentSector);
 		}
 	},
 

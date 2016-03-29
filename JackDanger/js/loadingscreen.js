@@ -2,27 +2,62 @@ JackDanger.LoadingScreen = function(gameState, skip){
 	this.gameState = gameState;
 	this.skip = skip;
 
-	this.back = gameState.add.sprite(0,0, "loadingback");
-	
-	gameState.world.setBounds(0, 0, 800, 450);
+	if (JackDanger.isReload) {
+		this.skip = true;
+		return;
+	}
 
-	this.loadingText = gameState.add.bitmapText(gameState.world.width / 2 + 50, gameState.world.height - 40, "bigYellow", "0%", 30);
+	this.hud = gameState.add.group();
+	this.hud.fixedToCamera = true;
+	gameState.world.setBounds(0,0,800,450);
+
+	this.back = gameState.add.sprite(0,0, "loadingback", null, this.hud);	
+	
+	
+	this.loadingText = gameState.add.bitmapText(gameState.world.width / 2 + 50, gameState.world.height - 40, "bigYellow", "0%", 30, this.hud);
 	this.loadingText.anchor.set(0.5);
 
-	this.gameNameText = gameState.add.bitmapText(gameState.world.width / 2 - 110, 145, "bigYellow", currentGameData.name, 60);
+	this.gameNameText = gameState.add.bitmapText(gameState.world.width / 2 - 110, 145, "bigYellow", currentGameData.name, 60, this.hud);
 
 
-	this.devText = gameState.add.bitmapText(gameState.world.width / 2 - 110, 210, "white", "von " + currentGameData.developerName, 20);
+	this.devText = gameState.add.bitmapText(gameState.world.width / 2 - 110, 210, "white", "von " + currentGameData.developerName, 20, this.hud);
 
-	this.adviceText = gameState.add.bitmapText(gameState.world.width / 2 + 100, 40, "white", currentGameData.tutorialText, 25);
+	this.adviceText = gameState.add.bitmapText(gameState.world.width / 2 + 100, 40, "white", "" + currentGameData.tutorialText, 25, this.hud);
 	this.adviceText.tint = 0x323457;
 	this.adviceText.anchor.set(0.5);
 
-	this.controlsText = gameState.add.bitmapText(gameState.world.width / 2  - 20, 296, "white", currentGameData.cursorText + "", 20);
-	this.jumpText = gameState.add.bitmapText(gameState.world.width / 2  + 180, 272, "white", currentGameData.jumpText + "", 20);
-	this.shootText = gameState.add.bitmapText(gameState.world.width / 2  + 180, 318, "white", currentGameData.shootText + "", 20);
-	
+	this.controlsText = gameState.add.bitmapText(gameState.world.width / 2  - 20, 296, "white", "" + currentGameData.cursorText, 20, this.hud);
+	this.jumpText = gameState.add.bitmapText(gameState.world.width / 2  + 180, 272, "white", "" + currentGameData.jumpText, 20, this.hud);
+	this.shootText = gameState.add.bitmapText(gameState.world.width / 2  + 180, 318, "white", "" + currentGameData.shootText, 20, this.hud);
 
+
+}
+
+JackDanger.snapShot = false;
+JackDanger.isLosed = false;
+
+JackDanger.fakeRender = function(render) {
+	var r = function() {
+		if (JackDanger.snapShot) {
+			console.log("taka a snap");
+			JackDanger.snapShot = false;
+			var dataURI = this.game.canvas.toDataURL();
+		    var data = new Image();
+		    data.src = dataURI;
+
+		    game.paused = true;
+
+		    data.onload=function(){
+		    	game.paused = false;
+            	game.cache.addImage('onlose', dataURI, data);
+	            game.state.start(JackDanger.isLosed ? 'OnLose' : 'Gamefinished', true, false);
+            }
+
+		}
+		render();
+	}
+
+	return r;
 }
 
 
@@ -33,7 +68,7 @@ JackDanger.LoadingScreen.prototype = {
 	},
 
 	update: function(progress) {
-		this.loadingText.setText(progress.toFixed(0) + "%");
+		if (this.loadingText) this.loadingText.setText(progress.toFixed(0) + "%");
 		if (progress == 100) {
 			if (this.skip) {
 				this.remove();
@@ -41,7 +76,6 @@ JackDanger.LoadingScreen.prototype = {
 				this.updateId.push( setInterval(this.onUpdate.bind(this), 50) );
 				this.loadingText.setText("Drücke C zum Starten");
 				this.updateId.push(setInterval(function(){this.visible = !this.visible}.bind(this.loadingText), 1000));
-				this.world.setBounds(0, 0, 800, 450);
 			}
 			
 		}
@@ -55,16 +89,11 @@ JackDanger.LoadingScreen.prototype = {
 	},
 
 	remove: function() {
-		this.loadingText.kill();
-		this.loadingText.kill();
-		this.gameNameText.kill();
-		this.devText.kill();
-		this.adviceText.kill();
-		this.back.kill();
+		if (JackDanger.isReload == false) {
+			this.hud.destroy();
+		}
+		
 
-		this.controlsText.kill();
-		this.jumpText.kill();
-		this.shootText.kill();
 		for (var i = 0; i < this.updateId.length; i++) {
 			clearInterval(this.updateId[i]);
 		};

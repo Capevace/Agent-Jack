@@ -117,6 +117,10 @@ JackDanger.AgentJackIEC.prototype.update = function() {
 	this.colliderEditor.updateColliderDrawing();
 }
 
+JackDanger.AgentJackIEC.prototype.render = function() {
+	
+}
+
 JackDanger.AgentJackIEC.prototype.loadLevel = function (level) {
 	if (level == this.availableLevels.Maze) {
 		this.boss.disposeLevel();
