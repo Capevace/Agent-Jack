@@ -104,6 +104,86 @@
 			"maxHealth": 10,
 			"attackStrenght": 0,
 			"sector": 1
+		},
+		{
+			"x": 500,
+			"y": 1374.5,
+			"spriteName": "enemy",
+			"hitSpeed": 10,
+			"fullSpeed": 3,
+			"maxHealth": 10,
+			"attackStrenght": 0,
+			"sector": 2
+		},
+		{
+			"x": 550,
+			"y": 1394.5,
+			"spriteName": "enemy",
+			"hitSpeed": 10,
+			"fullSpeed": 3,
+			"maxHealth": 10,
+			"attackStrenght": 0,
+			"sector": 2
+		},
+		{
+			"x": 150,
+			"y": 1886,
+			"spriteName": "enemy",
+			"hitSpeed": 10,
+			"fullSpeed": 3,
+			"maxHealth": 10,
+			"attackStrenght": 0,
+			"sector": 3
+		},
+		{
+			"x": 400,
+			"y": 1866,
+			"spriteName": "enemy",
+			"hitSpeed": 10,
+			"fullSpeed": 3,
+			"maxHealth": 10,
+			"attackStrenght": 0,
+			"sector": 3
+		},
+		{
+			"x": 300,
+			"y": 2000,
+			"spriteName": "enemy",
+			"hitSpeed": 10,
+			"fullSpeed": 3,
+			"maxHealth": 10,
+			"attackStrenght": 0,
+			"sector": 3
+		},
+		{
+			"x": 350,
+			"y": 2420.5,
+			"spriteName": "enemy",
+			"hitSpeed": 10,
+			"fullSpeed": 3,
+			"maxHealth": 10,
+			"attackStrenght": 0,
+			"sector": 4
+		},
+		{
+			"x": 400,
+			"y": 2490.5,
+			"spriteName": "enemy",
+			"hitSpeed": 10,
+			"fullSpeed": 3,
+			"maxHealth": 10,
+			"attackStrenght": 0,
+			"sector": 4
+		},
+		{
+			"x": 300,
+			"y": 2420.5,
+			"spriteName": "enemy",
+			"hitSpeed": 10,
+			"fullSpeed": 3,
+			"maxHealth": 10,
+			"attackStrenght": 0,
+			"sector": 4
 		}
 	],
 	"entities": [
@@ -467,6 +547,6 @@
 		"x": 800,
 		"y": 3248
 	},
-	"debugAll": true,
-	"debugLowerY": true
+	"debugAll": false,
+	"debugLowerY": false
 }

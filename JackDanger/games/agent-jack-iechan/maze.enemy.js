@@ -59,7 +59,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.Enemy.prototype = {
 
 	// Update every frame
 	update: function (dt, jackPosition, currentSector) {
-		if (this.sector != currentSector)
+		if (this.sector > currentSector)
 			return;
 
 		this.updateAI(dt, jackPosition);

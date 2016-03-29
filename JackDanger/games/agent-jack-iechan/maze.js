@@ -6,11 +6,6 @@
 // |_|  |_/_/    \_\/_____|______|
 //     
 
-
-function setX (y) {
-	jackPlayer.sprite.position.x = x;
-}    
-
 function setY (y) {
 	jackPlayer.sprite.position.y = y;
 }        
@@ -20,7 +15,6 @@ function playBoss () {
 }
 
 var jackPlayer;
-var main;
 JackDanger.AgentJackIEC.prototype.Maze = function(parent) {
 	this.initialized = false;
 	this.main = parent;
@@ -117,7 +111,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 		this.enemies = [];
 
 		this.currentSector = 0;
-		this.sectors = [0, 550, 1638, 2171];
+		this.sectors = [0, 550, 1248, 1638, 2171];
 
 		// Define Gate
 		this.scene.gate = {
@@ -367,7 +361,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype = {
 			this.sortDepth();
 			this.debug();
 
-			if (this.jack.sprite.position.y <= 112.5) {
+			if (this.jack.sprite.position.y <= 112.5 && this.enemies.length == 0) {
 				onVictory();
 			}
 		}

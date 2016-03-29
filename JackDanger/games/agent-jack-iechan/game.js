@@ -89,12 +89,9 @@ JackDanger.AgentJackIEC.prototype.mycreate = function() {
 	this.stopped = false;
 	
 	// Init Colider Editor (Deactivate for release)
-	this.colliderEditor = new this.ColliderEditor(this.game); 
-	this.game.input.onDown.add(this.colliderEditor.startColliderDrawing, this.colliderEditor, 0);
-	this.game.input.onUp.add(this.colliderEditor.endColliderDrawing, this.colliderEditor, 0);
-	
-	// Debug
-	main = this;
+	// this.colliderEditor = new this.ColliderEditor(this.game); 
+	// this.game.input.onDown.add(this.colliderEditor.startColliderDrawing, this.colliderEditor, 0);
+	// this.game.input.onUp.add(this.colliderEditor.endColliderDrawing, this.colliderEditor, 0);
 
 	// Load Level (Maze)
 	this.loadLevel(this.availableLevels.Maze);
@@ -114,7 +111,7 @@ JackDanger.AgentJackIEC.prototype.update = function() {
 	}
 	
 	// Debug
-	this.colliderEditor.updateColliderDrawing();
+	// this.colliderEditor.updateColliderDrawing();
 }
 
 JackDanger.AgentJackIEC.prototype.render = function() {
