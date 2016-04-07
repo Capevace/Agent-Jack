@@ -76,6 +76,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.Jack.prototype = {
 		this.sprite.animations.add("punch-up", Phaser.Animation.generateFrameNames('punch-up-', 0, 5, '', 4), 20, false, false);
 		this.sprite.animations.add("punch-down", Phaser.Animation.generateFrameNames('kick-down-', 0, 10, '', 4), 30, false, false);
 
+		this.sprite.animations.add("die", Phaser.Animation.generateFrameNames('die', 0, 6, '', 4), 20, false, false);
 
 		// Player Shadow (Disabled for now)
 		//		this.sprite.shadow = main.add.sprite(main.game.world.centerX, main.game.world.centerY, "jack");
@@ -324,6 +325,9 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.Jack.prototype = {
 	},
 
 	die: function () {
-		onLose();
+		this.sprite.animations.play("die");
+		this.sprite.animations.currentAnim.onComplete.add(function () {
+			onLose();
+		}, this);
 	}
 }
