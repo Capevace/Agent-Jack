@@ -85,16 +85,16 @@ Pad = {
     justDown: function(key) {
         switch (key) {
             case this.LEFT: 
-                return Pad.justPressed_LEFT || Pad.cursors.left.justDown;
+                return Pad.isDown_LEFT || Pad.cursors.left.justDown;
                 break;
             case this.RIGHT: 
-                return Pad.justPressed_RIGHT || Pad.cursors.right.justDown;
+                return Pad.isDown_RIGHT || Pad.cursors.right.justDown;
                 break;
             case this.DOWN: 
-                return Pad.justPressed_DOWN || Pad.cursors.down.justDown;
+                return Pad.isDown_DOWN || Pad.cursors.down.justDown;
                 break;
             case this.UP: 
-                return Pad.justPressed_UP || Pad.cursors.up.justDown;
+                return Pad.isDown_UP || Pad.cursors.up.justDown;
                 break;
             case this.JUMP: 
                 return Pad.dPadJump.justPressed(30) || Pad.btnJUMP.justDown;

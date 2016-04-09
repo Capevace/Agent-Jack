@@ -1,27 +1,47 @@
+var JackDanger = {};
 var game = null;
 var games = [];
 var currentGameData = null;
 var finishedGames = [];
-function addMyGame(id, name, developerName, tutorialText, className) {
+function addMyGame(id, name, developerName, tutorialText, cursorText, jumpText, shootText, className) {
+    console.log("addmy game");
     games.push({
         id:id,
         name: name,
         developerName: developerName,
         tutorialText: tutorialText,
-        className: className
+        cursorText: cursorText,
+        jumpText: jumpText,
+        shootText: shootText,
+        className: className,
+        isTouched: false
     });
     
+    
+}
+JackDanger.isReload = false;
+
+JackDanger.reloadLevel = function() {
+    JackDanger.isReload = true;
+    game.state.start(currentGameData.id, true, false);
 }
 
 function startRandomGame() {
     var rndNr = Math.floor(Math.random() * games.length);
     currentGameData = games[rndNr];
     if (currentGameData == undefined) {
+        
             game.state.start("Gamefinished");
     } else {
+        if (currentGameData.isTouched == false) {
+            logInfo(currentGameData);
+            currentGameData.className.prototype.render = JackDanger.fakeRender(currentGameData.className.prototype.render);
+            currentGameData.isTouched = true;
+        }
         var id = currentGameData.id;
         finishedGames.push(games.splice(rndNr,1));
-        game.state.start(id);
+        JackDanger.isReload = false;
+        game.state.start(id, true, false);
     }
     
     
@@ -29,13 +49,12 @@ function startRandomGame() {
 }
 
 var loadingscreen = null;
-function addLoadingScreen(game) {
-	loadingscreen = new JackDanger.LoadingScreen();
+function addLoadingScreen(game, skip) {
+    
+    loadingscreen = new JackDanger.LoadingScreen(game, skip);
     loadingscreen.add();
-    game.load.onFileComplete.add(function( progress ) {
-        console.log("progress: " + progress);
-		loadingscreen.update(progress);
-    });
+    game.load.onFileComplete.removeAll();
+    game.load.onFileComplete.add(loadingscreen.update.bind(loadingscreen));
 }
 
 function removeLoadingScreen() {
@@ -47,14 +66,18 @@ function loadUpdate(progress) {
 }
 
 function onVictory() {
-    startRandomGame();
+    console.log("snap");
+    JackDanger.snapShot = true;
+    JackDanger.isLosed = false;
 }
 
 function onLose() {
-    game.state.start(currentGameData.id);
+    console.log("snap");
+    JackDanger.snapShot = true;
+    JackDanger.isLosed = true;
 }
 
-var JackDanger = {};
+
 
 function init() {
     logInfo("init game");
@@ -67,6 +90,7 @@ function init() {
 
     game.state.add("Preloader", JackDanger.Preloader);
     game.state.add("Gamefinished", JackDanger.GameFinished);
+    game.state.add("OnLose", JackDanger.OnLose);
 
     game.state.start("Preloader");
 

@@ -47,5 +47,29 @@ JackDanger.AgentJackIEC.prototype.ColliderEditor.prototype = {
 			width: width/this.game.main.globalScale,
 			height: height/this.game.main.globalScale
 		}));
+		logInfo('{\n\
+			"id": "name",\n\
+			"spritesheet": "",\n\
+			"sprite": "",\n\
+			"position": {"x": ' + (x - 113) + ', "y": ' + (this.game.world.height - y) + '},\n\
+			"anchor": {"x": 0, "y": 0},\n\
+			"deltaLowY": 320,\n\
+			"immovable": true,\n\
+			"sizePlayerUnderSprite": {\n\
+				"width": ' + (width/this.game.main.globalScale) + ',\n\
+				"height": ' + (height/this.game.main.globalScale) + ',\n\
+				"offsetX": 0,\n\
+				"offsetY": 0\n\
+			},\n\
+			"sizePlayerOverSprite": {\n\
+				"width": ' + (width/this.game.main.globalScale) + ',\n\
+				"height": ' + (height/this.game.main.globalScale) + ',\n\
+				"offsetX": 0,\n\
+				"offsetY": 0\n\
+			},\n\
+			"shouldDebug": false\n\
+		}');
+
+
 	}
 };

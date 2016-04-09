@@ -4,9 +4,9 @@
         <key>fileFormatVersion</key>
         <int>3</int>
         <key>texturePackerVersion</key>
-        <string>4.0.2</string>
+        <string>4.1.0</string>
         <key>fileName</key>
-        <string>/Users/Lukas/Documents/Games/Agent-Jack-ieChan/Game Extra Assets/hack.tps</string>
+        <string>/Users/Lukas/Documents/Games/Agent-Jack/Game Extra Assets/hack.tps</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -187,18 +187,42 @@
             <int>200</int>
             <key>heuristicMask</key>
             <false/>
-            <key>pivotPoint</key>
-            <enum type="SpriteSettings::PivotPoint">Center</enum>
+            <key>defaultPivotPoint</key>
+            <point_f>0.5,0.5</point_f>
+            <key>writePivotPoints</key>
+            <false/>
         </struct>
+        <key>individualSpriteSettings</key>
+        <map type="IndividualSpriteSettingsMap">
+            <key type="filename">HackerMG/circle-0-off.png</key>
+            <key type="filename">HackerMG/circle-0-on.png</key>
+            <key type="filename">HackerMG/circle-1-off.png</key>
+            <key type="filename">HackerMG/circle-1-on.png</key>
+            <key type="filename">HackerMG/circle-2-off.png</key>
+            <key type="filename">HackerMG/circle-2-on.png</key>
+            <key type="filename">HackerMG/circle-3-off.png</key>
+            <key type="filename">HackerMG/circle-3-on.png</key>
+            <key type="filename">HackerMG/hack-bg-done.png</key>
+            <key type="filename">HackerMG/hack-bg.png</key>
+            <key type="filename">HackerMG/trigger.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+            </struct>
+        </map>
         <key>fileList</key>
         <array>
-            <filename>Hack Circles/1.png</filename>
-            <filename>Hack Circles/2.png</filename>
-            <filename>Hack Circles/3.png</filename>
-            <filename>Hack Circles/4.png</filename>
-            <filename>Hack Circles/all-active.png</filename>
-            <filename>Hack Circles/center.png</filename>
-            <filename>Hack Circles/bg.png</filename>
+            <filename>HackerMG/circle-0-off.png</filename>
+            <filename>HackerMG/circle-0-on.png</filename>
+            <filename>HackerMG/circle-1-off.png</filename>
+            <filename>HackerMG/circle-1-on.png</filename>
+            <filename>HackerMG/circle-2-off.png</filename>
+            <filename>HackerMG/circle-2-on.png</filename>
+            <filename>HackerMG/circle-3-off.png</filename>
+            <filename>HackerMG/circle-3-on.png</filename>
+            <filename>HackerMG/hack-bg-done.png</filename>
+            <filename>HackerMG/hack-bg.png</filename>
+            <filename>HackerMG/trigger.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

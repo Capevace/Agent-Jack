@@ -3,7 +3,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.Hack = function (main, callback
 	this.callback = callback;
 	this.scope = scope;
 	this.active = true;
-	this.background = this.main.add.sprite(this.main.world.width/2, 0, "hack-circles", "bg"); // Change Sprite to correct one!
+	this.background = this.main.add.sprite(this.main.world.width/2, 0, "hack-circles", "hack-bg");
 	this.background.alpha = 1;
 	this.background.anchor.setTo(0.5);
 	this.background.scale.setTo(this.main.globalScale);
@@ -12,35 +12,57 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.Hack = function (main, callback
 
 	this.maxRad = (2 * Math.PI);
 
-	var circle1 = this.main.add.sprite(this.background.position.x, this.background.position.y, "hack-circles", "1");
+	var circle1 = this.main.add.sprite(this.background.position.x, this.background.position.y, "hack-circles", "circle-0-off");
 	circle1.anchor.setTo(0.5);
 	circle1.scale.setTo(this.main.globalScale);
 	circle1.rotation = Math.random() * this.maxRad;
-	circle1.tint = 0x00FF00;
+	circle1.circleName = "circle-0-";
+	circle1.checkRot = function () {
+		if (this.rotation >= 0.04886316915294853 && this.rotation >= 6.234322138)
+			return true;
+
+		return false;
+	};
 	this.main.maze.hackLayer.add(circle1);
 
-	var circle2 = this.main.add.sprite(this.background.position.x, this.background.position.y, "hack-circles", "2");
+	var circle2 = this.main.add.sprite(this.background.position.x, this.background.position.y, "hack-circles", "circle-1-off");
 	circle2.anchor.setTo(0.5);
 	circle2.scale.setTo(this.main.globalScale);
 	circle2.rotation = Math.random() * this.maxRad;
+	circle2.circleName = "circle-1-";
+	circle2.checkRot = function () {
+		if (this.rotation >= 0.04886316915294853 && this.rotation >= 6.234322138)
+			return true;
+
+		return false;
+	};
 	this.main.maze.hackLayer.add(circle2);
 
-	var circle3 = this.main.add.sprite(this.background.position.x, this.background.position.y, "hack-circles", "3");
+	var circle3 = this.main.add.sprite(this.background.position.x, this.background.position.y, "hack-circles", "circle-2-off");
 	circle3.anchor.setTo(0.5);
 	circle3.scale.setTo(this.main.globalScale);
 	circle3.rotation = Math.random() * this.maxRad;
+	circle3.circleName = "circle-2-";
+	circle3.checkRot = function () {
+		if (this.rotation >= 0.04886316915294853 && this.rotation >= 6.234322138)
+			return true;
+
+		return false;
+	};
 	this.main.maze.hackLayer.add(circle3);
 
-	var circle4 = this.main.add.sprite(this.background.position.x, this.background.position.y, "hack-circles", "4");
+	var circle4 = this.main.add.sprite(this.background.position.x, this.background.position.y, "hack-circles", "circle-3-off");
 	circle4.anchor.setTo(0.5);
 	circle4.scale.setTo(this.main.globalScale);
 	circle4.rotation = Math.random() * this.maxRad;
-	this.main.maze.hackLayer.add(circle4);
+	circle4.circleName = "circle-3-";
+	circle4.checkRot = function () {
+		if (this.rotation >= 0.04886316915294853 && this.rotation >= 6.234322138)
+			return true;
 
-	this.center = this.main.add.sprite(this.background.position.x, this.background.position.y, "hack-circles", "center");
-	this.center.anchor.setTo(0.5);
-	this.center.scale.setTo(this.main.globalScale);
-	this.main.maze.hackLayer.add(this.center);
+		return false;
+	};
+	this.main.maze.hackLayer.add(circle4);
 
 	this.circles = [circle1, circle2, circle3, circle4];
 	this.selectedCircle = 0;
@@ -94,14 +116,16 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.Hack.prototype = {
 				circle.rotation = this.maxRad - circle.rotation;
 			}
 
-			if (circle.rotation >= -0.04886316915294853 && circle.rotation >= 6.234322138) {
-				circle.tint = 0x00FF00;
+			if (circle.checkRot()) {
+				circle.frameName = circle.circleName + "on";
+				circle.tint = 0xFFFFFF;
 			} else {
 				allActive = false;
-				circle.tint = 0xFF0000;
+				circle.frameName = circle.circleName + "off";
+				circle.tint = 0xFFFFFF;
 
 				if (i == this.selectedCircle)
-					circle.tint = 0x0000FF;
+					circle.tint = 0xE3E3E3;
 			}
 		}
 
@@ -112,16 +136,20 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.Hack.prototype = {
 	
 	endGame: function () {
 		this.connectionDone = true;
-		this.dispose();
+		this.background.frameName = "hack-bg-done";
+
+		var self = this;
+		setTimeout(function () {
+			self.dispose();
+		}, 1000);
 	},
 
 
 	dispose: function () {
-		this.background.kill();
-		this.center.kill();
+		this.background.destroy();
 
 		for(var i = 0; i < this.circles.length; i++) {
-			this.circles[i].kill();
+			this.circles[i].destroy();
 		}
 
 		this.main.camera.follow(this.previousTarget, Phaser.Camera.FOLLOW_TOPDOWN_TIGHT);
