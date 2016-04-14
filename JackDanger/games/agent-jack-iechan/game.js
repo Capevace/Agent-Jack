@@ -4,22 +4,21 @@ Game type: Fighting Game
 */
 
 
-
-//   _____          __  __ ______ 
+//   _____          __  __ ______
 //  / ____|   /\   |  \/  |  ____|
-// | |  __   /  \  | \  / | |__   
-// | | |_ | / /\ \ | |\/| |  __|  
-// | |__| |/ ____ \| |  | | |____ 
+// | |  __   /  \  | \  / | |__
+// | | |_ | / /\ \ | |\/| |  __|
+// | |__| |/ ____ \| |  | | |____
 //  \_____/_/    \_\_|  |_|______|
-// 
+//
 JackDanger.AgentJackIEC = function() {};
 
 // Add Game to game register
 //hier musst du deine Eintragungen vornhemen.
-addMyGame("agent-jack-iechan", 
-    "Agent Jack \"I. Chan\"", 
-    "TriDev", 
-    "Packe dicke moves aus und infiltriere die Basis.", 
+addMyGame("agent-jack-iechan",
+    "Agent Jack \"I. Chan\"",
+    "TriDev",
+    "Packe dicke moves aus und infiltriere die Basis.",
     "Bewegen", //Steuerkreuz
     "Interagieren", //Jump button belegung
     "Kaempfen", //Shoot button belegung
@@ -41,7 +40,7 @@ JackDanger.AgentJackIEC.prototype.preload = function() {
 
 	// Maze Scenery
 	this.load.json("maze-scene", "scenes/maze-scene.json");
-	
+
 	// Maze Background
 	this.load.image("maze-bg", "maze-bg.png");
 	this.load.image("maze-bg-ground", "bg/maze-bg-ground.png");
@@ -56,7 +55,7 @@ JackDanger.AgentJackIEC.prototype.preload = function() {
 
 	// Entities (Scenery)
 	this.load.atlas("scenery", "spritesheets/scenery.png", "spritesheets/scenery.json", Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
-	
+
 	// Hack Sprites
 	this.load.atlas("hack-circles", "hack/circles.png", "hack/circles.json", Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
 
@@ -87,14 +86,14 @@ JackDanger.AgentJackIEC.prototype.mycreate = function() {
 	this.globalScale = 4; // Define global scale, every sprite gets scaled by that
 	this.game.main = this;
 	this.stopped = false;
-	
+
 	// Init Colider Editor (Deactivate for release)
-	// this.colliderEditor = new this.ColliderEditor(this.game); 
+	// this.colliderEditor = new this.ColliderEditor(this.game);
 	// this.game.input.onDown.add(this.colliderEditor.startColliderDrawing, this.colliderEditor, 0);
 	// this.game.input.onUp.add(this.colliderEditor.endColliderDrawing, this.colliderEditor, 0);
 
 	// Load Level (Maze)
-	this.loadLevel(this.availableLevels.Maze);
+	this.loadLevel(this.availableLevels.Boss);
 }
 
 // Gets executed every frame
@@ -109,13 +108,13 @@ JackDanger.AgentJackIEC.prototype.update = function() {
 	} else if (this.currentLevel == this.availableLevels.Boss) {
 		this.boss.update(dt);
 	}
-	
+
 	// Debug
 	// this.colliderEditor.updateColliderDrawing();
 }
 
 JackDanger.AgentJackIEC.prototype.render = function() {
-	
+
 }
 
 JackDanger.AgentJackIEC.prototype.loadLevel = function (level) {

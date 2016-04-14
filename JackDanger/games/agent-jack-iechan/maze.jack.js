@@ -1,10 +1,10 @@
 //       _         _____ _  __
 //      | |  /\   / ____| |/ /
-//      | | /  \ | |    | ' / 
-//  _   | |/ /\ \| |    |  <  
-// | |__| / ____ \ |____| . \ 
+//      | | /  \ | |    | ' /
+//  _   | |/ /\ \| |    |  <
+// | |__| / ____ \ |____| . \
 //  \____/_/    \_\_____|_|\_\
-//                                                                                    
+//
 JackDanger.AgentJackIEC.prototype.Maze.prototype.Jack = function() {
 	return this;
 }
@@ -145,7 +145,7 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.Jack.prototype = {
 		// Update Shadow
 		//		this.sprite.shadow.frame = this.sprite.frame;
 		//		this.sprite.shadow.scale.setTo(this.sprite.scale.x , -0.25);
-		//		this.sprite.shadow.position.setTo(this.sprite.position.x + this.sprite.shadow.offset.x, 
+		//		this.sprite.shadow.position.setTo(this.sprite.position.x + this.sprite.shadow.offset.x,
 		// this.sprite.position.y + this.sprite.height/2 + this.sprite.shadow.offset.y);
 	},
 
@@ -271,9 +271,9 @@ JackDanger.AgentJackIEC.prototype.Maze.prototype.Jack.prototype = {
 
 			// this.main.game.debug.geom(new Phaser.Rectangle(enemyHitbox.x, enemyHitbox.y, enemyHitbox.width, enemyHitbox.height));
 
-			if (hitbox.x < enemyHitbox.x + enemyHitbox.width 
-				&& hitbox.x + hitbox.width > enemyHitbox.x 
-				&& hitbox.y < enemyHitbox.y + enemyHitbox.height 
+			if (hitbox.x < enemyHitbox.x + enemyHitbox.width
+				&& hitbox.x + hitbox.width > enemyHitbox.x
+				&& hitbox.y < enemyHitbox.y + enemyHitbox.height
 				&& hitbox.height + hitbox.y > enemyHitbox.y) {
 
 

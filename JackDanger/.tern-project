@@ -1,0 +1,8 @@
+{
+  "ecmaVersion": 6,
+  "libs": [],
+  "loadEagerly": [
+    "js/*.js",
+    "games/agent-jack-iechan/*.js"
+  ]
+}

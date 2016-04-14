@@ -1,9 +1,9 @@
-//  ____   ____   _____ _____ 
+//  ____   ____   _____ _____
 // |  _ \ / __ \ / ____/ ____|
-// | |_) | |  | | (___| (___  
-// |  _ <| |  | |\___ \\___ \ 
+// | |_) | |  | | (___| (___
+// |  _ <| |  | |\___ \\___ \
 // | |_) | |__| |____) |___) |
-// |____/ \____/|_____/_____/ 
+// |____/ \____/|_____/_____/
 //
 JackDanger.AgentJackIEC.prototype.Boss = function (parent) {
 	this.initialized = false;
@@ -16,15 +16,35 @@ JackDanger.AgentJackIEC.prototype.Boss.prototype = {
 
 		this.game.world.setBounds(0, 0, 800, 450);
 		this.running = true;
+        this.groundY = 375;
 
-		this.jack = this.game.add.sprite(this.game.world.width/2, this.game.world.height - 100, "jack", "run-lr-idle-0000");
+		this.jack = this.game.add.sprite(this.game.world.width/2, this.groundY, "jack", "run-lr-idle-0000");
 		this.jack.scale.setTo(this.game.globalScale);
 		this.jack.anchor.setTo(0.5, 1);
+
+        this.game.physics.arcade.enable(this.jack); // Enable jack physics
+        this.jack.body.velocity.y = this.jack.jumpBreak;
+		this.jack.body.collideWorldBounds = true; // Enable collision with world bounds
+        this.jack.body.setSize(18, 20, 0, -25);
+        this.jack.body.immovable = false;
+
 		this.jack.animations.add("punch-lr", Phaser.Animation.generateFrameNames('punch-lr-', 0, 6, '', 4), 20, false, false);
 		this.jack.animations.add("punch-up", Phaser.Animation.generateFrameNames('punch-up-', 0, 5, '', 4), 20, false, false);
 		this.jack.animations.add("idle", ["run-lr-idle-0000"], 30, false, false);
+		this.jack.animations.add("run-lr", Phaser.Animation.generateFrameNames('run-lr-', 0, 16, '', 4), 40, true, false);
+        this.jack.animations.add("dash", ["dash-0000", "dash-0001", "dash-0002", "dash-0002", "dash-0002", "dash-0002", "dash-0002", "dash-0003", "dash-0004", "dash-0005"], 20, false, false);
+        this.jack.animations.add("dash-air", ["dash-air-0000", "dash-air-0001", "dash-air-0002", "dash-air-0002", "dash-air-0002", "dash-air-0002", "dash-air-0002", "dash-air-0003"], 20, false, false);
+        this.jack.animations.add("jump", ["jump-0000", "jump-0001", "jump-0001", "jump-0001", "jump-0001", "jump-0001", "jump-0002", "jump-0002", "jump-0002", "jump-0002", "jump-0002", "jump-0003"], 28, false, false);
 
-		this.jack.health = 100;
+        this.jack.walkingDirection = 0;
+        this.jack.walkingSpeed = 5;
+        this.jack.sliding = false;
+        this.jack.slideVelocity = 1100;
+        this.jack.slideBreak = 4000;
+        this.jack.jumping = false;
+        this.jack.jumpVelocity = 1000;
+        this.jack.jumpBreak = 5000;
+		this.jack.lives = 3;
 		this.jack.sound = {
 			hit: this.game.add.audio("jack-hit"),
 			noHit: this.game.add.audio("jack-nohit")
@@ -36,156 +56,220 @@ JackDanger.AgentJackIEC.prototype.Boss.prototype = {
 			if ((left && this.scale.x >= 0) || (!left && this.scale.x < 0))
 				this.scale.x *= -1;
 		};
-		this.jack.hit = function (left, $enemies) {
-			var hitNothing = true;
-			for (var i = 0; i < $enemies.length; i++) {
-				var enemy = $enemies[i];
-				var inRange = (enemy.isLeft) ? enemy.position.x >= 300 : enemy.position.x <= 500;
+		this.jack.hit = function () {
+            this.lives--;
 
-				if (enemy.isLeft === left && inRange) {
-					hitNothing = false;
+            logInfo(this.lives);
 
-					this.sound.hit.play(false);
-					enemy.tint = 0xFF0000;
-
-					setTimeout(function () {
-						enemy.destroy();
-					}, 50);
-
-					$enemies.splice(i, 1);
-					
-					i = $enemies.length;
-				}
-			}
-
-			if (hitNothing)
-				this.sound.noHit.play(false);
+            if (this.lives <= 0)
+                logInfo("I'm dead!");
 		};
 
-		this.enemies = [];
-		this.enemiesCount = 20;
+        this.ground = this.game.add.sprite(0, 350, "", "");
+        this.game.physics.arcade.enable(this.ground);
+        this.ground.scale.setTo(this.game.globalScale);
+        this.ground.anchor.setTo(0);
+        this.ground.body.immovable = true;
+        this.ground.body.setSize(1000, 100);
 
-		this.canPunch = true;
-		this.punchCooldown = 0;
 
-		// var self = this;
-		// var spawnMachineLoop = setInterval(function () {
-		// 	self.spawnMachine();
-		// }, 500);
+        this.enemy = this.game.add.sprite(200, 350, "enemy", "run-lr-0001");
+        this.game.physics.arcade.enable(this.enemy);
+        this.enemy.scale.setTo(this.game.globalScale * 2);
+        this.enemy.scale.x *= -1;
+        this.enemy.anchor.setTo(0.5, 0.85);
+        this.enemy.body.mass = 1000;
+        this.enemy.body.collideWorldBounds = true;
 
-		this.spawnMachineTime = 0.5;
+        this.enemy.jumpAttackTime = 0.0;
+        this.enemy.jumpAttackActive = false;
+        this.enemy.jumpAttackPerFrameX = 0;
+        this.enemy.jack = this.jack;
+
+        this.enemy.jumpOnPlayer = function (playerPosition) {
+            this.jumpAttackTime = 0.0;
+            this.jumpAttackActive = true;
+            this.jumpAttackPerFrameX = playerPosition.x - this.position.x + 50;
+        };
+        this.enemy.updateJumpAttack = function (dt) {
+            this.jumpAttackTime += dt;
+
+            var y = 800 * this.jumpAttackTime - (2000/2) * Math.pow(this.jumpAttackTime, 2);
+
+            if (y < 0) {
+                this.jumpAttackActive = false;
+                this.jumpSmash();
+            }
+
+            this.position.y = 350 - y;
+            this.position.x += this.jumpAttackPerFrameX * (dt * 1);
+        };
+        this.enemy.jumpSmash = function () {
+            if (Math.abs(this.position.x - this.jack.position.x) < 80.0) {
+                this.jack.hit();
+            }
+        };
+
+        this.enemy.shoot = function (direction) {
+            this.jumpOnPlayer(this.jack.position);
+        };
+
+        this.enemy.turnToPlayer = function () {
+            if (this.jack.position.x > this.position.x) {
+                this.scale.x = 8;
+            } else {
+                this.scale.x = -8;
+            }
+        };
+
+        this.enemy.AISteps = ["turn", "jump", "turn", "shoot_up", "turn", "jump", "turn", "shoot_down", "turn", "jump", "turn", "shoot", "turn", "recharge"];
+        this.enemy.currentAIStep = 0;
+
+        this.enemy.updateAIFunction = function () {
+
+            switch (this.AISteps[this.currentAIStep]) {
+                case "jump":
+                    this.jumpOnPlayer(this.jack.position);
+                    break;
+                case "shoot_up":
+                    this.shoot(0);
+                    break;
+                case "shoot_down":
+                    this.shoot(1);
+                    break;
+                case "shoot":
+                    this.shoot(parseInt(Math.round(Math.random())));
+                    break;
+                case "turn":
+                    this.turnToPlayer();
+                    break;
+                case "recharge":
+
+                    break;
+                default:
+                    break;
+            }
+
+            this.currentAIStep++;
+            if (this.currentAIStep >= this.AISteps.length || this.currentAIStep < 0)
+                this.currentAIStep = 0;
+        };
+        var enemy = this.enemy;
+        this.enemy.updateAI = setInterval(function () {
+            enemy.updateAIFunction();
+        }, 2000)
 	},
 
 	update: function (dt) {
-		this.updateInput(dt);
-		this.spawnMachine(dt);
+        this.updateJackInput(dt);
+
+        if (this.enemy.jumpAttackActive)
+            this.enemy.updateJumpAttack(dt);
+
+        this.updateHitDetection(dt);
+
+        this.game.game.debug.body(this.enemy);
+        //
+        // this.game.game.debug.body(this.ground);
+        // this.game.game.debug.body(this.jack);
+        // logInfo(this.jack.position.y);
+        //
+        //
+        this.game.physics.arcade.collide(this.ground, this.enemy);
+        this.game.physics.arcade.collide(this.ground, this.jack);
+        this.game.physics.arcade.collide(this.enemy, this.jack);
 	},
 
-	updateInput: function (dt) {
-		if (!this.canPunch) {
-			this.punchCooldown -= dt;
+	updateJackInput: function (dt) {
+        // Left right movement
+        if (Pad.isDown(Pad.LEFT) && !this.jack.sliding) {
+            this.jack.position.x -= this.jack.walkingSpeed;
+            this.jack.walkingDirection = 1;
 
-			if (this.punchCooldown <= 0) {
-				this.canPunch = true;
-			}
-		}
+            if (!this.jack.jumping)
+                this.jack.play("run-lr");
 
-		if (Pad.justDown(Pad.LEFT) && this.canPunch) {
-			this.jack.animations.play("punch-lr");
-			this.jack.flip(true);
-			this.jack.hit(true, this.enemies);
-			this.canPunch = false;
-			this.punchCooldown = 0.3;
-		} else if (Pad.justDown(Pad.RIGHT) && this.canPunch) {
-			this.jack.animations.play("punch-lr");
-			this.jack.flip(false);
-			this.jack.hit(false, this.enemies);
-			this.canPunch = false;
-			this.punchCooldown = 0.3;
-		} else {
-			if (!this.jack.animations.currentAnim.isPlaying) {
-				this.jack.animations.play("idle", 30, true);
-			}
-		}
+            this.jack.flip(true);
+        } else if (Pad.isDown(Pad.RIGHT) && !this.jack.sliding) {
+            this.jack.position.x += this.jack.walkingSpeed;
+            this.jack.walkingDirection = 0;
+
+            if (!this.jack.jumping)
+                this.jack.play("run-lr");
+
+            this.jack.flip(false);
+        } else if (!this.jack.sliding && !this.jack.jumping) {
+            this.jack.play("idle");
+        }
+
+        // Jump
+        if (Pad.justDown(Pad.UP) && !this.jack.jumping) {
+            this.jack.jumping = true;
+            this.jack.body.velocity.y = -this.jack.jumpVelocity;
+            this.jack.play("jump");
+        }
+
+        // Kick
+        if (Pad.justDown(Pad.SHOOT)) {
+
+        }
+
+        // Dash
+        if (Pad.justDown(Pad.JUMP) && !this.jack.sliding) {
+            this.jack.sliding = true;
+
+            if (this.jack.walkingDirection === 0) {
+                this.jack.body.velocity.x = this.jack.slideVelocity;
+            } else {
+                this.jack.body.velocity.x = -this.jack.slideVelocity;
+            }
+
+            if (this.jack.jumping)
+                this.jack.play("dash-air");
+            else
+                this.jack.play("dash");
+        }
+
+        this.updateVelocity(dt);
 	},
 
-	updateEnemies: function () {
-		for (var i = 0; i < this.enemies.length; i++) {
-			this.enemies[i].update();
-		}
-	},
+    updateVelocity: function (dt) {
+        if (this.jack.sliding) {
+            this.jack.body.velocity.y = 50;
+            if (this.jack.walkingDirection === 0) {
+                this.jack.body.velocity.x -= this.jack.slideBreak * dt;
 
-	spawnMachine: function (dt) {
-		this.spawnMachineTime -= dt;
+                if (this.jack.body.velocity.x <= 0) {
+                    this.jack.body.velocity.x = 0;
+                    this.jack.sliding = false;
+                }
+            } else {
+                this.jack.body.velocity.x += this.jack.slideBreak * dt;
 
-		if (this.spawnMachineTime <= 0) {
-			this.spawnMachineTime = 0.5;
-		} else {
-			return;
-		}
+                if (this.jack.body.velocity.x >= 0) {
+                    this.jack.body.velocity.x = 0;
+                    this.jack.sliding = false;
+                }
+            }
+        } else if (this.jack.jumping) {
+            this.jack.body.velocity.y += this.jack.jumpBreak * dt;
 
-		if (this.enemiesCount-- <= 0 && this.running) {
-			if (this.enemies.length <= 0) {
-				this.disposeLevel();
-				this.game.stop();
-				onVictory();
-			}
-			
-			return;
-		}
+            if (this.jack.body.velocity.y > 0 && this.jack.position.y >= this.groundY) {
+                this.jack.body.velocity.y = 0;
+                this.jack.position.y = this.groundY;
+                this.jack.jumping = false;
+            }
+        }
+    },
 
-		var side = Math.round(Math.random());
-
-		if (side === 0) {
-			this.spawnEnemy(true);
-		} else {
-			this.spawnEnemy(false);
-		}
-	},
-
-	spawnEnemy: function (isLeft) {
-		var x = (isLeft) ? 20 : this.game.world.width - 20;
-		var scale = (isLeft) ? 1 : -1;
-
-		var enemy = this.game.add.sprite(x, this.game.world.height - 100, "jack");
-		enemy.scale.setTo(this.game.globalScale);
-		enemy.scale.x *= scale;
-		enemy.anchor.setTo(0.5, 1);
-
-		this.game.physics.arcade.enable(enemy);
-		enemy.body.velocity.setTo(500 * scale, 0);
-
-		enemy.animations.add("punch-lr", Phaser.Animation.generateFrameNames('punch-lr-', 0, 10, '', 4), 30, false, false);
-
-		enemy.isLeft = isLeft;
-		enemy.startedAttacking = false;
-		enemy.update = function () {
-			if (this.isLeft && this.position.x >= 350) {
-				this.body.velocity = new Phaser.Point();
-				this.startAttacking();
-			} else if (!this.isLeft && this.position.x <= 450) {
-				this.body.velocity = new Phaser.Point();
-				this.startAttacking();
-			}
-		};
-		enemy.startAttacking = function () {
-			if (this.startedAttacking)
-				return;
-
-			this.startedAttacking = true;
-
-			var self = this;
-			this.attack();
-			setInterval(function () {
-				self.attack();
-			}, 400);
-		};
-		enemy.attack = function () {
-			this.animations.play("punch-lr", 30, false);
-		};
-
-		this.enemies.push(enemy);
-	},
+    updateHitDetection: function (dt) {
+        if (this.jack.sliding) {
+            // Check for hit
+            if (this.game.physics.arcade.collide(this.enemy, this.jack)) {
+                logInfo("HIT");
+            }
+        }
+    },
 
 	disposeLevel: function () {
 		if (!this.initialized) return;
@@ -196,4 +280,3 @@ JackDanger.AgentJackIEC.prototype.Boss.prototype = {
 		logInfo("Dispose Boss");
 	}
 };
-
